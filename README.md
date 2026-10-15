@@ -177,6 +177,20 @@ eagy/
 
 ## 🧰 Customization Catalog
 
+### 🤖 Scoped Sub-Agents ()
+
+Everything Gemini provides specialized subagent specifications designed for Antigravity's native  delegation and Python SDK orchestration:
+
+| Subagent | Role | Focus Area |
+| :--- | :--- | :--- |
+| **[](agents/planner.md)** | Strategic Planner | Dependency mapping, impact radius analysis, phased checklists. |
+| **[](agents/code-reviewer.md)** | Quality Auditor | Edge case verification, type safety, regression prevention, minimal diffs. |
+| **[](agents/build-repair.md)** | Build Triage Specialist | Compiler error diagnosis, test failure auto-repair, surgical fixes. |
+| **[](agents/browser-qa.md)** | Automated Visual QA | Native browser testing with automated WebP recording into artifacts. |
+| **[](agents/security-auditor.md)** | Security Auditor | Credential scanning, OWASP Top 10, dependency audit, permission gates. |
+| **[](agents/architect.md)** | Systems Architect | C4 Mermaid blueprints, sequence diagrams, and formal ADR records. |
+
+
 ### 1. Skills (`skills/`)
 Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`name` and `description`) is placed into the system prompt. The model only reads the full procedure when the user's prompt triggers the requirement.
 

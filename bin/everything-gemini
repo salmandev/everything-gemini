@@ -112,6 +112,18 @@ function listComponents() {
   printBanner();
   console.log(`${BOLD}📦 Everything Gemini Catalog:${RESET}\n`);
 
+  
+  // Scoped Subagents
+  console.log(`\n${CYAN}${BOLD}🤖 Scoped Subagents (agents/):${RESET}`);
+  const agentsDir = path.join(REPO_ROOT, 'agents');
+  if (fs.existsSync(agentsDir)) {
+    const agents = fs.readdirSync(agentsDir).filter(f => f.endsWith('.md'));
+    for (const ag of agents) {
+      const name = ag.replace('.md', '');
+      console.log(`  ${BOLD}${name.padEnd(24)}${RESET}`);
+    }
+  }
+
   // Skills
   console.log(`${CYAN}${BOLD}⚡ Skills (Progressive Disclosure):${RESET}`);
   const skillsDir = path.join(REPO_ROOT, 'skills');

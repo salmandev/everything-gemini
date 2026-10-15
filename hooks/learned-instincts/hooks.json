@@ -1,0 +1,11 @@
+{
+  "learned-instincts": {
+    "Stop": [
+      {
+        "type": "command",
+        "command": "bash ./scripts/save-instinct.sh",
+        "timeout": 10
+      }
+    ]
+  }
+}

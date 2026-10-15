@@ -1,0 +1,16 @@
+{
+  "gemini-shield": {
+    "PreToolUse": [
+      {
+        "matcher": "run_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ./scripts/shield-gate.sh",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}

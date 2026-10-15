@@ -1,0 +1,37 @@
+openapi: 3.1.0
+info:
+  title: Order Management API
+  version: 1.0.0
+  description: High-performance API contract for orders.
+paths:
+  /orders:
+    post:
+      summary: Create new order
+      operationId: createOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [items, customerId]
+              properties:
+                customerId:
+                  type: string
+                  format: uuid
+                items:
+                  type: array
+                  items:
+                    type: object
+                    required: [productId, quantity]
+                    properties:
+                      productId:
+                        type: string
+                      quantity:
+                        type: integer
+                        minimum: 1
+      responses:
+        '201':
+          description: Order created successfully
+        '400':
+          description: Validation failure
