@@ -41,4 +41,13 @@ jobs:
         run: |
           node bin/everything-gemini test-skill agent-evals
           node bin/everything-gemini info agent-evals
+          node bin/everything-gemini info planner
+          node bin/everything-gemini info gemini-shield
           node bin/everything-gemini info antigravity-sdk-orchestrator
+
+      - name: Verify Component Add & Remove CLI
+        run: |
+          node bin/everything-gemini add skill tdd-workflow
+          node bin/everything-gemini remove skill tdd-workflow
+          node bin/everything-gemini add hook safety-shield
+          node bin/everything-gemini remove hook safety-shield

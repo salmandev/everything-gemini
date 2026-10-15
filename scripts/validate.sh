@@ -7,7 +7,7 @@ ERRORS=0
 echo "🔍 Validating Everything Gemini (everything-gemini) repository..."
 
 # 1. Validate SKILL.md Frontmatter
-echo "  [1/4] Checking Skills & YAML frontmatter..."
+echo "  [1/5] Checking Skills & YAML frontmatter..."
 SKILL_FILES=$(find "$REPO_ROOT/skills" "$REPO_ROOT/plugins" -name "SKILL.md" 2>/dev/null || true)
 
 for skill_file in $SKILL_FILES; do
@@ -35,8 +35,22 @@ for skill_file in $SKILL_FILES; do
   echo "    ✔ $rel_path"
 done
 
-# 2. Validate JSON Syntax
-echo "  [2/4] Validating JSON files..."
+# 2. Validate Scoped Subagents
+echo "  [2/5] Checking Subagents specifications..."
+AGENT_FILES=$(find "$REPO_ROOT/agents" -name "*.md" 2>/dev/null || true)
+
+for agent_file in $AGENT_FILES; do
+  rel_path="${agent_file#$REPO_ROOT/}"
+  if ! grep -q "^# " "$agent_file"; then
+    echo "    ❌ ERROR: $rel_path is missing top-level '# ' title"
+    ERRORS=$((ERRORS + 1))
+  else
+    echo "    ✔ $rel_path"
+  fi
+done
+
+# 3. Validate JSON Syntax
+echo "  [3/5] Validating JSON files..."
 JSON_FILES=$(find "$REPO_ROOT" -name "*.json" ! -path "*/node_modules/*" 2>/dev/null || true)
 
 for json_file in $JSON_FILES; do
@@ -49,8 +63,8 @@ for json_file in $JSON_FILES; do
   fi
 done
 
-# 3. Validate Shell Scripts Executability
-echo "  [3/4] Verifying script permissions..."
+# 4. Validate Shell Scripts Executability
+echo "  [4/5] Verifying script permissions..."
 SH_FILES=$(find "$REPO_ROOT/scripts" "$REPO_ROOT/hooks" "$REPO_ROOT/skills" -name "*.sh" 2>/dev/null || true)
 
 for sh_file in $SH_FILES; do
@@ -62,8 +76,8 @@ for sh_file in $SH_FILES; do
   echo "    ✔ $rel_path (executable)"
 done
 
-# 4. Summary
-echo "  [4/4] Validation Summary"
+# 5. Summary
+echo "  [5/5] Validation Summary"
 if [ "$ERRORS" -gt 0 ]; then
   echo "❌ Validation failed with $ERRORS error(s)."
   exit 1
