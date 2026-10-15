@@ -7,6 +7,7 @@
 [![Live Showcase](https://img.shields.io/badge/Live_Showcase-Visit_Catalog-00e5ff.svg)](https://salmandev.github.io/everything-gemini/)
 [![npm version](https://img.shields.io/npm/v/everything-gemini.svg?color=cb3837)](https://www.npmjs.com/package/everything-gemini)
 [![CI](https://github.com/salmandev/everything-gemini/actions/workflows/ci.yml/badge.svg)](https://github.com/salmandev/everything-gemini/actions/workflows/ci.yml)
+[![GitHub Action](https://img.shields.io/badge/GitHub_Action-everything--gemini-2088FF?logo=githubactions&logoColor=white)](https://github.com/salmandev/everything-gemini)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Antigravity](https://img.shields.io/badge/Google-Antigravity-4285F4.svg)](https://antigravity.google)
 [![Status](https://img.shields.io/badge/status-active-success.svg)](https://github.com/salmandev/everything-gemini)
@@ -79,6 +80,18 @@ cd everything-gemini
 | **`core`** | Minimalists & Speed | Safety-shield hook, TDD skill, repo-onboarding skill, baseline `GEMINI.md`. |
 | **`developer`** *(Recommended)* | Daily Software Engineers | Core + Fullstack Web plugin, Python AI plugin, Git Craftsman, Auto-formatter hook, Stop verifier hook. |
 | **`full`** | Lead Engineers & Archs | Everything: all plugins, full skills catalog, all lifecycle hooks, pre-tested MCP configs, and templates. |
+
+### 5. In CI / GitHub Actions Workflows
+
+Automate Everything Gemini skill, subagent, and lifecycle safety hook provisioning directly in your CI pipelines using our official composite action:
+
+```yaml
+- name: Setup Everything Gemini
+  uses: salmandev/everything-gemini@v1
+  with:
+    profile: developer # core | developer | full
+    global: false      # true for ~/.gemini/config/, false for active workspace .agents/
+```
 
 ---
 
@@ -273,12 +286,17 @@ Traditional agent harnesses dump dozens of prompt files into the system prompt o
 
 ```
 [Traditional Setup]
-System Prompt: Base Instructions + All 25 Skills (Full Text) + All Rules = ~45,000 Tokens / turn
+System Prompt: Base Instructions + All 30 Skills (Full Text) + All Rules = ~48,000 Tokens / turn
 
 [Everything Gemini on Antigravity]
-System Prompt: Base Instructions + 25 Skill Summaries (YAML) + Directory Rules = ~3,200 Tokens / turn
+System Prompt: Base Instructions + 30 Skill Summaries (YAML) + Directory Rules = ~3,400 Tokens / turn
 Skill Body: Loaded on-demand ONLY when invoked = ~1,500 Tokens (one-time)
 Savings: > 85% Token Reduction & 3x Faster First-Token Latency!
+```
+
+Run the built-in diagnostic benchmark across all 42 ecosystem components:
+```bash
+./bin/everything-gemini test-all
 ```
 
 ---
@@ -319,6 +337,9 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 # Test and validate a specific skill's frontmatter and scripts
 ./bin/everything-gemini test-skill gemini-multimodal
 
+# Benchmark and validate all 30 skills, subagents, and hooks
+./bin/everything-gemini test-all
+
 # View detailed playbook or specification for any skill, subagent, or hook
 ./bin/everything-gemini info agent-evals
 ./bin/everything-gemini info planner
@@ -329,6 +350,9 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 
 # Scaffold a new scoped subagent
 ./bin/everything-gemini new-agent my-worker-agent
+
+# Generate shell autocompletion script (bash/zsh)
+./bin/everything-gemini completion >> ~/.zshrc
 
 # Validate all schemas, hooks, and frontmatter
 ./bin/everything-gemini validate

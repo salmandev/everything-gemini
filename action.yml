@@ -1,0 +1,35 @@
+name: 'Setup Everything Gemini Harness'
+description: 'Install Everything Gemini skills, subagents, and lifecycle safety hooks into your repository or CI workspace'
+author: 'Everything Antigravity Contributors'
+branding:
+  icon: 'shield'
+  color: 'blue'
+
+inputs:
+  profile:
+    description: 'Installation profile (core, developer, full)'
+    required: false
+    default: 'developer'
+  global:
+    description: 'Whether to install globally into ~/.gemini/config/ (true/false)'
+    required: false
+    default: 'false'
+  workspace:
+    description: 'Target workspace directory (default: active workspace .agents/)'
+    required: false
+    default: ''
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Run Everything Gemini Installer
+      shell: bash
+      run: |
+        ARGS="install --profile ${{ inputs.profile }}"
+        if [ "${{ inputs.global }}" = "true" ]; then
+          ARGS="$ARGS --global"
+        fi
+        if [ -n "${{ inputs.workspace }}" ]; then
+          ARGS="$ARGS --workspace ${{ inputs.workspace }}"
+        fi
+        node "${{ github.action_path }}/bin/everything-gemini" $ARGS
