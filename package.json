@@ -33,7 +33,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/salmanshaikh/everything-gemini.git"
+    "url": "https://github.com/salmandev/everything-gemini.git"
   },
   "engines": {
     "node": ">=18.0.0"

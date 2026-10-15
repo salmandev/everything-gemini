@@ -33,7 +33,7 @@ done
 if [ ! -f "bin/everything-gemini" ]; then
   echo -e "${YELLOW}Downloading latest everything-gemini release...${RESET}"
   TMP_DIR=$(mktemp -d)
-  git clone --depth 1 https://github.com/salmanshaikh/everything-gemini.git "$TMP_DIR/everything-gemini" 2>/dev/null || {
+  git clone --depth 1 https://github.com/salmandev/everything-gemini.git "$TMP_DIR/everything-gemini" 2>/dev/null || {
     echo "Failed to clone repository. Please ensure git is installed."
     exit 1
   }

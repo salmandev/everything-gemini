@@ -11,7 +11,7 @@ Write-Host "The premier agent harness & customization suite for Google Antigravi
 if (-not (Test-Path "bin\everything-gemini")) {
     Write-Host "Downloading latest everything-gemini release..." -ForegroundColor Yellow
     $tempDir = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), [System.IO.Path]::GetRandomFileName())
-    git clone --depth 1 https://github.com/salmanshaikh/everything-gemini.git $tempDir
+    git clone --depth 1 https://github.com/salmandev/everything-gemini.git $tempDir
     Set-Location $tempDir
 }
 

@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Antigravity](https://img.shields.io/badge/Google-Antigravity-4285F4.svg)](https://antigravity.google)
 [![Version](https://img.shields.io/badge/version-1.0.0-emerald.svg)](package.json)
-[![Status](https://img.shields.io/badge/status-active-success.svg)](https://github.com/salmanshaikh/everything-gemini)
+[![Status](https://img.shields.io/badge/status-active-success.svg)](https://github.com/salmandev/everything-gemini)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 **The open-source agent harness, multi-agent orchestrator, and performance ecosystem for Google Gemini & Antigravity.**
@@ -46,20 +46,20 @@ Run this in your terminal to install `eagy` globally or into your current projec
 
 ```bash
 # macOS / Linux
-curl -fsSL https://raw.githubusercontent.com/salmanshaikh/everything-gemini/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/salmandev/everything-gemini/main/scripts/install.sh | bash
 ```
 
 ```powershell
 # Windows (PowerShell)
-irm https://raw.githubusercontent.com/salmanshaikh/everything-gemini/main/scripts/install.ps1 | iex
+irm https://raw.githubusercontent.com/salmandev/everything-gemini/main/scripts/install.ps1 | iex
 ```
 
 ### 2. Via `eagy` CLI (Zero-Dependency)
 
 ```bash
 # Clone the repository
-git clone https://github.com/salmanshaikh/everything-gemini.git
-cd eagy
+git clone https://github.com/salmandev/everything-gemini.git
+cd everything-gemini
 
 # Run the eagy harness CLI
 ./bin/everything-gemini install --profile developer
