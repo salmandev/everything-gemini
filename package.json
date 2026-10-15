@@ -4,9 +4,9 @@
   "description": "Everything Gemini (everything-gemini) - The Ultimate Agent Harness, Multi-Agent Orchestrator & Performance Suite for Gemini & Google Antigravity",
   "main": "bin/everything-gemini",
   "bin": {
-    "everything-gemini": "./bin/everything-gemini",
-    "egemini": "./bin/everything-gemini",
-    "eagy": "./bin/everything-gemini"
+    "everything-gemini": "bin/everything-gemini",
+    "egemini": "bin/everything-gemini",
+    "eagy": "bin/everything-gemini"
   },
   "scripts": {
     "test": "bash scripts/validate.sh",
@@ -33,7 +33,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/salmandev/everything-gemini.git"
+    "url": "git+https://github.com/salmandev/everything-gemini.git"
   },
   "engines": {
     "node": ">=18.0.0"
