@@ -8,11 +8,11 @@ Slash commands in Antigravity chat trigger specialized cognitive modes, prompt r
 
 ### `/goal <prompt>`
 - **Behavior**: Enters autonomous goal-seeking mode. The agent continues executing multi-step actions until the objective is fully verified.
-- **eagy Synergy**: Combines with `hooks/goal-verifier/` to prevent premature stops if test suites or linters fail.
+- **everything-gemini Synergy**: Combines with `hooks/goal-verifier/` to prevent premature stops if test suites or linters fail.
 
 ### `/plan <prompt>`
 - **Behavior**: Generates a comprehensive architectural plan and step-by-step implementation blueprint before touching any code.
-- **eagy Synergy**: Activates the `architecture-designer` skill, automatically producing C4 Mermaid diagrams and risk analyses.
+- **everything-gemini Synergy**: Activates the `architecture-designer` skill, automatically producing C4 Mermaid diagrams and risk analyses.
 
 ### `/grill-me`
 - **Behavior**: The agent acts as an architectural interviewer, grilling the developer on edge cases, non-functional constraints, and trade-offs before generating solutions.
@@ -20,7 +20,7 @@ Slash commands in Antigravity chat trigger specialized cognitive modes, prompt r
 
 ### `/learn`
 - **Behavior**: Persists lessons learned from mistakes, corrections, or complex configurations into a permanent Knowledge Item (`<appDataDir>/knowledge`).
-- **eagy Synergy**: Connects with `repo-onboarding` and Knowledge Items schemas to build an enduring project memory.
+- **everything-gemini Synergy**: Connects with `repo-onboarding` and Knowledge Items schemas to build an enduring project memory.
 
 ### `/schedule`
 - **Behavior**: Schedules delayed one-shot timers or recurring cron jobs with reactive wakeup.

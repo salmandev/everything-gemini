@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# eagy Safety Shield: PreToolUse Security Gate
+# Everything Gemini Safety Shield: PreToolUse Security Gate
 # Reads protojson hook payload from stdin, evaluates safety, outputs JSON on stdout.
 
 set -eo pipefail
@@ -46,7 +46,7 @@ ASK_PATTERNS=(
 # Check blocked patterns
 for pattern in "${BLOCKED_PATTERNS[@]}"; do
   if [[ "$CMD" == *"$pattern"* ]]; then
-    echo "{\"decision\": \"deny\", \"reason\": \"[eagy Safety Shield] Catastrophic command pattern detected and blocked: '$pattern'\"}"
+    echo "{\"decision\": \"deny\", \"reason\": \"[Everything Gemini Safety Shield] Catastrophic command pattern detected and blocked: '$pattern'\"}"
     exit 0
   fi
 done
@@ -54,7 +54,7 @@ done
 # Check ask patterns
 for pattern in "${ASK_PATTERNS[@]}"; do
   if [[ "$CMD" == *"$pattern"* ]]; then
-    echo "{\"decision\": \"ask\", \"reason\": \"[eagy Safety Shield] Potentially destructive command requires user confirmation: '$pattern'\"}"
+    echo "{\"decision\": \"ask\", \"reason\": \"[Everything Gemini Safety Shield] Potentially destructive command requires user confirmation: '$pattern'\"}"
     exit 0
   fi
 done

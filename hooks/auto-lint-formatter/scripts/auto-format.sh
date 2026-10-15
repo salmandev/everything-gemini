@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# eagy Auto-Lint Formatter: PostToolUse Hook
+# Everything Gemini Auto-Lint Formatter: PostToolUse Hook
 # Silently runs language-appropriate formatters on modified files.
 
 set -eo pipefail

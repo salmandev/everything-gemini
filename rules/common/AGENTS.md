@@ -1,4 +1,4 @@
-# Antigravity Core Behavioral Standards (eagy)
+# Antigravity Core Behavioral Standards (everything-gemini)
 
 These standards govern all Antigravity agent interactions within this project.
 

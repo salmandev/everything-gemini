@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 /**
- * Everything Antigravity (eagy) CLI
- * Zero-dependency harness manager for Google Antigravity
+ * Everything Gemini (everything-gemini) CLI
+ * Zero-dependency harness manager for Google Antigravity & Gemini
  */
 
 const fs = require('fs');
@@ -38,7 +38,7 @@ function printHelp() {
   console.log(`  everything-gemini <command> [options]\n`);
   console.log(`${BOLD}COMMANDS:${RESET}`);
   console.log(`  ${GREEN}doctor${RESET}                      Inspect system, AGY surfaces, and configuration health`);
-  console.log(`  ${GREEN}install${RESET} [options]           Install eagy profiles into workspace or globally`);
+  console.log(`  ${GREEN}install${RESET} [options]           Install everything-gemini profiles into workspace or globally`);
   console.log(`  ${GREEN}list${RESET}                        Show all available skills, rules, hooks, and plugins`);
   console.log(`  ${GREEN}new-skill${RESET} <name>            Scaffold a new progressive-disclosure skill`);
   console.log(`  ${GREEN}new-agent${RESET} <name>            Scaffold a new scoped subagent specification`);
@@ -217,7 +217,7 @@ function installProfile(profile = 'developer', isGlobal = false, customTarget = 
     ? path.resolve(customTarget)
     : (isGlobal ? GLOBAL_CONFIG_DIR : AGENTS_DIR);
 
-  console.log(`${BOLD}🚀 Installing eagy Profile: [${GREEN}${profile}${RESET}${BOLD}]${RESET}`);
+  console.log(`${BOLD}🚀 Installing everything-gemini Profile: [${GREEN}${profile}${RESET}${BOLD}]${RESET}`);
   console.log(`Target Directory: ${CYAN}${targetDir}${RESET}\n`);
 
   if (!fs.existsSync(targetDir)) {

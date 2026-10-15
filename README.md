@@ -38,9 +38,15 @@ Out of the box, Antigravity is a formidable pair programmer. But without structu
 
 ## 🚀 Quickstart
 
-### 1. One-Line Interactive Installer
+### 1. Instant Installation via npx (Zero Setup)
 
-Run this in your terminal to install `eagy` globally or into your current project:
+Run this directly in any project directory or terminal:
+
+```bash
+npx everything-gemini install
+```
+
+### 2. One-Line Interactive Installer
 
 ```bash
 # macOS / Linux
@@ -52,18 +58,17 @@ curl -fsSL https://raw.githubusercontent.com/salmandev/everything-gemini/main/sc
 irm https://raw.githubusercontent.com/salmandev/everything-gemini/main/scripts/install.ps1 | iex
 ```
 
-### 2. Via `eagy` CLI (Zero-Dependency)
-
+### 3. Via Repository Clone
 ```bash
 # Clone the repository
 git clone https://github.com/salmandev/everything-gemini.git
 cd everything-gemini
 
-# Run the eagy harness CLI
+# Run the Everything Gemini CLI
 ./bin/everything-gemini install --profile developer
 ```
 
-### 3. Installation Profiles
+### 4. Installation Profiles
 
 | Profile | Target Audience | What Gets Installed |
 | :--- | :--- | :--- |
@@ -75,7 +80,7 @@ cd everything-gemini
 
 ## 🏗️ Architecture & Internals
 
-`eagy` is engineered specifically around Google Antigravity's internal execution engine:
+`everything-gemini` is engineered specifically around Google Antigravity's internal execution engine:
 
 ```mermaid
 flowchart TB
@@ -91,7 +96,7 @@ flowchart TB
         Workspace[".agents/ (Workspace Root)"]
     end
 
-    subgraph EagyHarness["3. eagy Harness & Engine"]
+    subgraph GeminiHarness["3. Everything Gemini Harness & Engine"]
         direction TB
         HookEngine["Lifecycle Hooks Engine\n(PreToolUse | PostToolUse | PreInvocation | Stop)"]
         Progressive["Progressive Disclosure Router\n(Injects only metadata until model decides to view)"]
@@ -105,8 +110,8 @@ flowchart TB
     end
 
     AntigravitySurfaces --> CustomizationRoots
-    CustomizationRoots --> EagyHarness
-    EagyHarness --> Capabilities
+    CustomizationRoots --> GeminiHarness
+    GeminiHarness --> Capabilities
 ```
 
 ### Key Differences: ECC vs. Everything Gemini
@@ -203,7 +208,7 @@ Antigravity automatically discovers rules by walking up from the current file's 
 
 ## 🖥️ The 4 Antigravity Surfaces
 
-Antigravity operates across four interconnected surfaces. `eagy` supports all of them seamlessly:
+Antigravity operates across four interconnected surfaces. `everything-gemini` supports all of them seamlessly:
 
 ```
 +-----------------------------------------------------------------------------------+
@@ -232,9 +237,9 @@ Antigravity operates across four interconnected surfaces. `eagy` supports all of
 
 Antigravity provides built-in slash commands in chat that activate specialized cognitive modes:
 
-| Command | Purpose | How `eagy` Enhances It |
+| Command | Purpose | How Everything Gemini Enhances It |
 | :--- | :--- | :--- |
-| **`/goal <task>`** | Long-running autonomous mode | Pairs with `eagy`'s **Goal Verifier Hook** to prevent premature termination until test suites pass. |
+| **`/goal <task>`** | Long-running autonomous mode | Pairs with Everything Gemini's **Goal Verifier Hook** to prevent premature termination until test suites pass. |
 | **`/plan <task>`** | Step-by-step implementation blueprint | Enforces architectural review, risk assessment, and mermaid diagrams before code edits. |
 | **`/grill-me`** | Interactive design interview | Asks hard architectural and trade-off questions to resolve ambiguities before implementing. |
 | **`/learn`** | Persist feedback across sessions | Automatically indexes insights into a permanent Knowledge Item (`<appDataDir>/knowledge`). |
@@ -244,13 +249,13 @@ Antigravity provides built-in slash commands in chat that activate specialized c
 
 ## 📊 Token Efficiency & Benchmark
 
-Traditional agent harnesses dump dozens of prompt files into the system prompt on every single turn. Antigravity's **Progressive Disclosure** paired with `eagy` avoids this:
+Traditional agent harnesses dump dozens of prompt files into the system prompt on every single turn. Antigravity's **Progressive Disclosure** paired with Everything Gemini avoids this:
 
 ```
 [Traditional Setup]
 System Prompt: Base Instructions + All 25 Skills (Full Text) + All Rules = ~45,000 Tokens / turn
 
-[eagy on Antigravity]
+[Everything Gemini on Antigravity]
 System Prompt: Base Instructions + 25 Skill Summaries (YAML) + Directory Rules = ~3,200 Tokens / turn
 Skill Body: Loaded on-demand ONLY when invoked = ~1,500 Tokens (one-time)
 Savings: > 85% Token Reduction & 3x Faster First-Token Latency!
@@ -260,7 +265,7 @@ Savings: > 85% Token Reduction & 3x Faster First-Token Latency!
 
 ## 🛠️ Usage & CLI Reference
 
-The zero-dependency `eagy` CLI manages your configurations effortlessly:
+The zero-dependency `everything-gemini` CLI manages your configurations effortlessly:
 
 ```bash
 # Verify your installation and check for conflicts

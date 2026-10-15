@@ -1,6 +1,6 @@
-# Contributing to Everything Antigravity (`eagy`)
+# Contributing to Everything Gemini (`everything-gemini`)
 
-Thank you for your interest in contributing to **Everything Antigravity (`eagy`)**! Our goal is to build the highest-quality, most reliable, and most token-efficient agent harness and customization ecosystem for Google Antigravity.
+Thank you for your interest in contributing to **Everything Gemini (`everything-gemini`)**! Our goal is to build the highest-quality, most reliable, and most token-efficient agent harness and customization ecosystem for Google Antigravity and Gemini.
 
 ---
 
