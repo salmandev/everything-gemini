@@ -11,6 +11,8 @@
   "scripts": {
     "test": "bash scripts/validate.sh",
     "validate": "bash scripts/validate.sh",
+    "benchmark": "node bin/everything-gemini test-all",
+    "completion": "node bin/everything-gemini completion",
     "install:core": "bash scripts/install.sh --profile core",
     "install:dev": "bash scripts/install.sh --profile developer",
     "install:full": "bash scripts/install.sh --profile full"

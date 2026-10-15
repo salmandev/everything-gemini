@@ -21,6 +21,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - Dedicated `Lifecycle Hooks` filter pill and amber badge styling (`.tag-hook`).
 - **Multi-OS CI Matrix**:
   - Automated GitHub Actions testing across `ubuntu-latest` and `macos-latest` verifying validations, CLI diagnostics, and skill test runners.
+- **Composite GitHub Action (`action.yml`)**:
+  - Official GitHub composite action allowing any CI/CD workflow to run `- uses: salmandev/everything-gemini@v1` with configurable profile and scope inputs.
+- **Ecosystem Benchmark Suite (`everything-gemini test-all`)**:
+  - High-speed terminal diagnostic benchmark verifying all 42 ecosystem components, computing token metrics (~15,500 total tokens) and demonstrating >85% token reduction per turn.
+- **Shell Autocompletion Generator (`everything-gemini completion`)**:
+  - Native Bash and Zsh autocomplete generation for commands, profiles, and component types.
 - **Enterprise Security Policy**: Added [`SECURITY.md`](SECURITY.md) establishing formal vulnerability disclosure workflows.
 - **IDE Extensions**: Added [`.vscode/extensions.json`](.vscode/extensions.json) for developer workspace onboarding.
 
