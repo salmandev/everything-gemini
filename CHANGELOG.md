@@ -4,6 +4,16 @@ All notable changes to **Everything Gemini (`everything-gemini`)** will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-10-15
+
+### Added
+- **Social Media Preview Engine**: Rich Open Graph (`og:*`) and Twitter Card (`twitter:*`) metadata embedded in `docs/index.html` for rich link unfurling on social platforms.
+- **Turnkey Launch & Marketing Kit**: Added [`docs/LAUNCH_KIT.md`](docs/LAUNCH_KIT.md) featuring viral launch tweets, a 4-part thread, Reddit discussions, and Hacker News (Show HN) copy.
+- **Enhanced CLI Catalog Discovery**: `everything-gemini list` now dynamically scans and highlights namespaced skills packaged within domain plugins.
+- **Automated NPM Release CI**: Integrated automated npm publishing within `.github/workflows/release.yml` with provenance.
+
+---
+
 ## [1.1.0] - 2026-10-15
 
 ### Added
