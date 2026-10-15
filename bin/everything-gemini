@@ -245,6 +245,9 @@ function copyRecursiveSync(src, dest) {
   } else {
     fs.mkdirSync(path.dirname(dest), { recursive: true });
     fs.copyFileSync(src, dest);
+    if (src.endsWith('.sh') || (stats.mode && (stats.mode & 0o111))) {
+      try { fs.chmodSync(dest, 0o755); } catch (e) {}
+    }
   }
 }
 
@@ -265,6 +268,7 @@ function installProfile(profile = 'developer', isGlobal = false, customTarget = 
   const targetSkills = path.join(targetDir, 'skills');
   const targetRules = path.join(targetDir, 'rules');
   const targetPlugins = path.join(targetDir, 'plugins');
+  const targetAgents = path.join(targetDir, 'agents');
   fs.mkdirSync(targetSkills, { recursive: true });
   fs.mkdirSync(targetRules, { recursive: true });
   fs.mkdirSync(targetPlugins, { recursive: true });
@@ -273,6 +277,7 @@ function installProfile(profile = 'developer', isGlobal = false, customTarget = 
   const rulesSrc = path.join(REPO_ROOT, 'rules');
   const hooksSrc = path.join(REPO_ROOT, 'hooks');
   const pluginsSrc = path.join(REPO_ROOT, 'plugins');
+  const agentsSrc = path.join(REPO_ROOT, 'agents');
 
   // Copy Common Base Rules
   const commonGemini = path.join(rulesSrc, 'common', 'GEMINI.md');
@@ -286,9 +291,8 @@ function installProfile(profile = 'developer', isGlobal = false, customTarget = 
     console.log(`  ${GREEN}✔${RESET} Installed base AGENTS.md`);
   }
 
-  // Determine what to copy based on profile
+  // 1. Core Profile
   if (profile === 'core' || profile === 'developer' || profile === 'full') {
-    // Core Skills
     const coreSkills = ['tdd-workflow', 'repo-onboarding'];
     for (const s of coreSkills) {
       const src = path.join(skillsSrc, s);
@@ -297,17 +301,28 @@ function installProfile(profile = 'developer', isGlobal = false, customTarget = 
         console.log(`  ${GREEN}✔${RESET} Installed skill: ${s}`);
       }
     }
-    // Core Hook (Safety Shield)
-    const safetyHookJson = path.join(hooksSrc, 'safety-shield', 'hooks.json');
-    if (fs.existsSync(safetyHookJson)) {
-      copyRecursiveSync(path.join(hooksSrc, 'safety-shield'), path.join(targetDir, 'hooks', 'safety-shield'));
+    const safetyHook = path.join(hooksSrc, 'safety-shield');
+    if (fs.existsSync(safetyHook)) {
+      copyRecursiveSync(safetyHook, path.join(targetDir, 'hooks', 'safety-shield'));
       console.log(`  ${GREEN}✔${RESET} Installed safety-shield hook`);
     }
   }
 
+  // 2. Developer Profile
   if (profile === 'developer' || profile === 'full') {
-    // Developer Skills
-    const devSkills = ['browser-qa-tester', 'architecture-designer', 'git-craftsman', 'performance-profiler', 'fullstack-nextjs'];
+    const devSkills = [
+      'browser-qa-tester',
+      'architecture-designer',
+      'git-craftsman',
+      'performance-profiler',
+      'fullstack-nextjs',
+      'gemini-multimodal',
+      'context-caching',
+      'subagent-handoff',
+      'security-audit',
+      'continuous-learning',
+      'ai-first-engineering'
+    ];
     for (const s of devSkills) {
       const src = path.join(skillsSrc, s);
       if (fs.existsSync(src)) {
@@ -330,6 +345,19 @@ function installProfile(profile = 'developer', isGlobal = false, customTarget = 
       console.log(`  ${GREEN}✔${RESET} Installed auto-lint-formatter hook`);
     }
 
+    // Goal-verifier hook
+    const goalHook = path.join(hooksSrc, 'goal-verifier');
+    if (fs.existsSync(goalHook)) {
+      copyRecursiveSync(goalHook, path.join(targetDir, 'hooks', 'goal-verifier'));
+      console.log(`  ${GREEN}✔${RESET} Installed goal-verifier hook`);
+    }
+
+    // Scoped Subagents (agents/)
+    if (fs.existsSync(agentsSrc)) {
+      copyRecursiveSync(agentsSrc, targetAgents);
+      console.log(`  ${GREEN}✔${RESET} Installed 6 scoped subagents (agents/)`);
+    }
+
     // Developer Plugins
     const devPlugins = ['web-fullstack', 'python-ai'];
     for (const p of devPlugins) {
@@ -341,22 +369,24 @@ function installProfile(profile = 'developer', isGlobal = false, customTarget = 
     }
   }
 
+  // 3. Full Power Profile
   if (profile === 'full') {
-    // All Skills
     copyRecursiveSync(skillsSrc, targetSkills);
-    console.log(`  ${GREEN}✔${RESET} Installed entire skills library`);
+    console.log(`  ${GREEN}✔${RESET} Installed entire skills library (30 progressive skills)`);
 
-    // All Rules
     copyRecursiveSync(rulesSrc, targetRules);
     console.log(`  ${GREEN}✔${RESET} Installed entire rules library`);
 
-    // All Plugins
     copyRecursiveSync(pluginsSrc, targetPlugins);
     console.log(`  ${GREEN}✔${RESET} Installed all modular plugins`);
 
-    // All Hooks
     copyRecursiveSync(hooksSrc, path.join(targetDir, 'hooks'));
-    console.log(`  ${GREEN}✔${RESET} Installed full lifecycle hooks suite`);
+    console.log(`  ${GREEN}✔${RESET} Installed full lifecycle hooks suite (6 hooks)`);
+
+    if (fs.existsSync(agentsSrc)) {
+      copyRecursiveSync(agentsSrc, targetAgents);
+      console.log(`  ${GREEN}✔${RESET} Installed scoped subagents (agents/)`);
+    }
 
     // MCP Config Example
     const mcpExample = path.join(REPO_ROOT, 'mcp', 'mcp_config.example.json');
@@ -366,25 +396,20 @@ function installProfile(profile = 'developer', isGlobal = false, customTarget = 
     }
   }
 
-  // Create or Merge Master hooks.json in targetDir
-  const masterHooks = {
-    "safety-shield": {
-      "PreToolUse": [
-        {
-          "matcher": "run_command",
-          "hooks": [
-            {
-              "type": "command",
-              "command": "bash ./hooks/safety-shield/scripts/safety-gate.sh",
-              "timeout": 15
-            }
-          ]
-        }
-      ]
-    }
-  };
-  fs.writeFileSync(path.join(targetDir, 'hooks.json'), JSON.stringify(masterHooks, null, 2));
-  console.log(`  ${GREEN}✔${RESET} Generated master hooks.json`);
+  // Template-driven master hooks.json generation
+  let templateHooksPath = null;
+  if (profile === 'minimal' || profile === 'core') {
+    templateHooksPath = path.join(REPO_ROOT, 'templates', 'minimal', 'hooks.json');
+  } else if (profile === 'full') {
+    templateHooksPath = path.join(REPO_ROOT, 'templates', 'full-power', 'hooks.json');
+  } else {
+    templateHooksPath = path.join(REPO_ROOT, 'templates', 'recommended', 'hooks.json');
+  }
+
+  if (fs.existsSync(templateHooksPath)) {
+    fs.copyFileSync(templateHooksPath, path.join(targetDir, 'hooks.json'));
+    console.log(`  ${GREEN}✔${RESET} Generated profile hooks.json (${profile})`);
+  }
 
   console.log(`\n${GREEN}${BOLD}🎉 Installation complete! Everything Gemini is active.${RESET}\n`);
 }
