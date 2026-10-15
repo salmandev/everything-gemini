@@ -1,0 +1,56 @@
+{
+  "gemini-shield": {
+    "PreToolUse": [
+      {
+        "matcher": "run_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ./hooks/gemini-shield/scripts/shield-gate.sh",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  },
+  "auto-lint": {
+    "PostToolUse": [
+      {
+        "matcher": "replace_file_content|write_to_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ./hooks/auto-lint-formatter/scripts/auto-format.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "goal-verifier": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ./hooks/goal-verifier/scripts/verify-goal.sh",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  },
+  "learned-instincts": {
+    "PostInvocation": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ./hooks/learned-instincts/scripts/save-instinct.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

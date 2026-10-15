@@ -1,0 +1,43 @@
+{
+  "safety-shield": {
+    "PreToolUse": [
+      {
+        "matcher": "run_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ./hooks/safety-shield/scripts/safety-gate.sh",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  },
+  "auto-lint": {
+    "PostToolUse": [
+      {
+        "matcher": "replace_file_content|write_to_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ./hooks/auto-lint-formatter/scripts/auto-format.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "goal-verifier": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ./hooks/goal-verifier/scripts/verify-goal.sh",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}
