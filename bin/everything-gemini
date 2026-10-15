@@ -51,6 +51,7 @@ function printHelp() {
   console.log(`  ${GREEN}add${RESET} <type> <name>           Add a specific skill, agent, or plugin to workspace`);
   console.log(`  ${GREEN}remove${RESET} <type> <name>        Remove a specific skill, agent, or plugin from workspace`);
   console.log(`  ${GREEN}test-skill${RESET} <name>           Validate a specific skill frontmatter & scripts`);
+  console.log(`  ${GREEN}info${RESET} <skill-name>            Display detailed instructions and trigger for a skill`);
   console.log(`  ${GREEN}validate${RESET}                    Run self-test on frontmatter, JSON schemas & hooks`);
   console.log(`  ${GREEN}help${RESET}                        Show this help message\n`);
   console.log(`${BOLD}OPTIONS for 'install':${RESET}`);
@@ -653,6 +654,70 @@ function testSkill(name) {
   console.log(`\n${GREEN}${BOLD}✨ Skill '${cleanName}' passed all validation checks!${RESET}\n`);
 }
 
+function showSkillInfo(skillName) {
+  if (!skillName) {
+    console.error(`\n${RED}Error: Please specify a skill name.${RESET}`);
+    console.log(`Usage: everything-gemini info <skill-name>\n`);
+    process.exit(1);
+  }
+
+  const cleanName = skillName.trim().replace(/^skills\//, '');
+  let skillDir = path.join(REPO_ROOT, 'skills', cleanName);
+  let pluginName = null;
+
+  if (!fs.existsSync(skillDir)) {
+    const pluginsDir = path.join(REPO_ROOT, 'plugins');
+    if (fs.existsSync(pluginsDir)) {
+      const plugins = fs.readdirSync(pluginsDir, { withFileTypes: true })
+        .filter(d => d.isDirectory())
+        .map(d => d.name);
+      for (const p of plugins) {
+        const candidate = path.join(pluginsDir, p, 'skills', cleanName);
+        if (fs.existsSync(candidate)) {
+          skillDir = candidate;
+          pluginName = p;
+          break;
+        }
+      }
+    }
+  }
+
+  const skillMd = path.join(skillDir, 'SKILL.md');
+  if (!fs.existsSync(skillMd)) {
+    console.error(`\n${RED}Error: Skill '${cleanName}' not found in catalog.${RESET}\n`);
+    process.exit(1);
+  }
+
+  printBanner();
+  console.log(`${BOLD}📖 Skill Overview: ${CYAN}${cleanName}${RESET}`);
+  if (pluginName) {
+    console.log(`Source Plugin: ${YELLOW}${pluginName}${RESET}`);
+  }
+  console.log(`Path: ${GRAY}${skillMd}${RESET}\n`);
+
+  const content = fs.readFileSync(skillMd, 'utf8');
+  const parts = content.split('---');
+  if (parts.length >= 3) {
+    const frontmatter = parts[1];
+    const descMatch = frontmatter.match(/description:\s*>?-?\s*([^\n\r]+)/);
+    if (descMatch) {
+      console.log(`${BOLD}🎯 Trigger Description:${RESET}`);
+      console.log(`  ${descMatch[1].trim()}\n`);
+    }
+
+    const body = parts.slice(2).join('---').trim();
+    const lines = body.split('\n').slice(0, 22);
+    console.log(`${BOLD}📋 Playbook Preview:${RESET}`);
+    console.log(lines.join('\n'));
+    if (body.split('\n').length > 22) {
+      console.log(`\n${GRAY}... (${body.split('\n').length - 22} more lines in ${skillMd})${RESET}`);
+    }
+  } else {
+    console.log(content.split('\n').slice(0, 25).join('\n'));
+  }
+  console.log('');
+}
+
 // CLI Argument Parsing
 const args = process.argv.slice(2);
 const command = args[0] || 'help';
@@ -678,6 +743,10 @@ switch (command) {
     break;
   case 'test-skill':
     testSkill(args[1]);
+    break;
+  case 'info':
+  case 'show':
+    showSkillInfo(args[1]);
     break;
   case 'init':
   case 'install': {

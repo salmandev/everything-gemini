@@ -308,6 +308,9 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 # Test and validate a specific skill's frontmatter and scripts
 ./bin/everything-gemini test-skill gemini-multimodal
 
+# View detailed playbook overview and triggers for a skill
+./bin/everything-gemini info agent-evals
+
 # Scaffold a new progressive-disclosure skill
 ./bin/everything-gemini new-skill my-custom-skill
 
