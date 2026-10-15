@@ -1,0 +1,38 @@
+{
+  "name": "eagy",
+  "version": "1.0.0",
+  "description": "Everything Antigravity (eagy) - The Ultimate Agent Harness, Performance Optimizer & Customization Suite for Google Antigravity",
+  "main": "bin/eagy",
+  "bin": {
+    "eagy": "./bin/eagy"
+  },
+  "scripts": {
+    "test": "bash scripts/validate.sh",
+    "validate": "bash scripts/validate.sh",
+    "install:core": "bash scripts/install.sh --profile core",
+    "install:dev": "bash scripts/install.sh --profile developer",
+    "install:full": "bash scripts/install.sh --profile full"
+  },
+  "keywords": [
+    "antigravity",
+    "agy",
+    "gemini",
+    "ai-agent",
+    "agentic-coding",
+    "mcp",
+    "skills",
+    "rules",
+    "hooks",
+    "everything-antigravity",
+    "eagy"
+  ],
+  "author": "Everything Antigravity Contributors",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/salmanshaikh/eagy.git"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "ephemeral-context": {
+    "PreInvocation": [
+      {
+        "type": "command",
+        "command": "bash ./scripts/inject-context.sh",
+        "timeout": 5
+      }
+    ]
+  }
+}

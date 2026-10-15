@@ -1,0 +1,16 @@
+{
+  "auto-lint-formatter": {
+    "PostToolUse": [
+      {
+        "matcher": "replace_file_content|write_to_file|multi_replace_file_content",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ./scripts/auto-format.sh",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}

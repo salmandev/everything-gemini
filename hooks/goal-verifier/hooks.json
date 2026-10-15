@@ -1,0 +1,11 @@
+{
+  "goal-verifier": {
+    "Stop": [
+      {
+        "type": "command",
+        "command": "bash ./scripts/verify-goal.sh",
+        "timeout": 20
+      }
+    ]
+  }
+}
