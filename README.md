@@ -207,19 +207,22 @@ Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`na
 ### 2. Lifecycle Hooks (`hooks/`)
 Hooks run shell scripts at critical lifecycle events with typed JSON contracts on `stdin`/`stdout`:
 
-- **GeminiShield (`PreToolUse`)**: Deterministic safety firewall intercepting `run_command` and denying catastrophic operations like `rm -rf /`, `mkfs`, or `git push --force origin main`.
-- **Safety Shield (`PreToolUse`)**: Intercepts `run_command` and inspects `CommandLine` against strict security guidelines before shell execution.
-- **Auto Lint Formatter (`PostToolUse`)**: Triggered after file modifications. Runs your project's linter/formatter (`prettier`, `black`, `ruff`, `gofmt`) automatically so code is always clean.
-- **Goal Verifier (`Stop`)**: Intercepts the agent's attempt to finish. If test suites are failing or background tasks are unfinished, it returns `{"decision": "continue", "reason": "Tests are still failing. Fix them before stopping."}`.
-- **Ephemeral Context Injector (`PreInvocation`)**: Injects transient warnings or guidelines before each model reasoning step without cluttering persistent conversation history.
-- **Learned Instincts**: Session learning hook that records developer corrections and feedback into persistent instincts.
+- **[`gemini-shield`](hooks/gemini-shield/hooks.json) (`PreToolUse`)**: Deterministic safety firewall intercepting `run_command` and denying catastrophic operations like `rm -rf /`, `mkfs`, or `git push --force origin main`.
+- **[`safety-shield`](hooks/safety-shield/hooks.json) (`PreToolUse`)**: Intercepts `run_command` and inspects `CommandLine` against strict security guidelines before shell execution.
+- **[`auto-lint-formatter`](hooks/auto-lint-formatter/hooks.json) (`PostToolUse`)**: Triggered after file modifications. Runs your project's linter/formatter (`prettier`, `black`, `ruff`, `gofmt`) automatically so code is always clean.
+- **[`goal-verifier`](hooks/goal-verifier/hooks.json) (`Stop`)**: Intercepts the agent's attempt to finish. If test suites are failing or background tasks are unfinished, it returns `{"decision": "continue", "reason": "Tests are still failing. Fix them before stopping."}`.
+- **[`ephemeral-context`](hooks/ephemeral-context/hooks.json) (`PreInvocation`)**: Injects transient warnings or guidelines before each model reasoning step without cluttering persistent conversation history.
+- **[`learned-instincts`](hooks/learned-instincts/hooks.json)**: Session learning hook that records developer corrections and feedback into persistent instincts.
 
 ### 3. Rules Hierarchy (`rules/`)
 Antigravity automatically discovers rules by walking up from the current file's directory to the repository root:
-- **`rules/common/GEMINI.md`**: Foundational instructions for precision, minimal changes, and strict verification.
-- **`rules/languages/typescript.md`**: Strict TypeScript, Zod validations, no `any`, modern ESM.
-- **`rules/languages/python.md`**: Python 3.12+, type hints, Pydantic v2, Ruff formatting.
-- **`rules/paradigms/security-hardened.md`**: Defense-in-depth, zero-trust file access, credential hygiene.
+- **[`rules/common/GEMINI.md`](rules/common/GEMINI.md)**: Foundational instructions for precision, minimal changes, and strict verification.
+- **[`rules/common/AGENTS.md`](rules/common/AGENTS.md)**: Multi-agent interaction protocols, dogfooding guidelines, and progressive disclosure discipline.
+- **[`rules/languages/typescript.md`](rules/languages/typescript.md)**: Strict TypeScript, Zod validations, no `any`, modern ESM.
+- **[`rules/languages/python.md`](rules/languages/python.md)**: Python 3.12+, type hints, Pydantic v2, Ruff formatting.
+- **[`rules/languages/golang.md`](rules/languages/golang.md)**: Idiomatic Go guidelines, table-driven unit tests, and structured logging.
+- **[`rules/paradigms/security-hardened.md`](rules/paradigms/security-hardened.md)**: Defense-in-depth, zero-trust file access, credential hygiene.
+- **[`rules/paradigms/tdd.md`](rules/paradigms/tdd.md)**: Enforces strict Red-Green-Refactor test cycle before writing production code.
 
 ---
 
