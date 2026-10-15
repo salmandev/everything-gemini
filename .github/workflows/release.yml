@@ -1,0 +1,42 @@
+name: Release & Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-publish:
+    name: Build, Test & Publish to NPM
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Make Scripts Executable
+        run: |
+          chmod +x scripts/validate.sh scripts/install.sh bin/everything-gemini
+          find hooks/ -type f -name "*.sh" -exec chmod +x {} +
+          find skills/ -type f -name "*.sh" -exec chmod +x {} +
+
+      - name: Run Test Suite
+        run: npm test
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            LICENSE
+            README.md
+            CHANGELOG.md

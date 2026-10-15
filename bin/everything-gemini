@@ -27,7 +27,7 @@ const GRAY = '\x1b[90m';
 
 function printBanner() {
   console.log(`
-${CYAN}${BOLD}🪐 Everything Gemini (${GREEN}everything-gemini${CYAN}) v1.0.0${RESET}
+${CYAN}${BOLD}🪐 Everything Gemini (${GREEN}everything-gemini${CYAN}) v1.0.1${RESET}
 ${GRAY}The open-source agent harness & multi-agent orchestrator for Google Gemini & Antigravity${RESET}
 `);
 }
