@@ -9,7 +9,10 @@ on:
 jobs:
   validate:
     name: Validate Skills, Rules & Hooks
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout Repository
@@ -33,3 +36,9 @@ jobs:
         run: |
           node bin/everything-gemini doctor
           node bin/everything-gemini list
+
+      - name: Verify Skill Validation & Info CLI
+        run: |
+          node bin/everything-gemini test-skill agent-evals
+          node bin/everything-gemini info agent-evals
+          node bin/everything-gemini info antigravity-sdk-orchestrator
