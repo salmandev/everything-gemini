@@ -294,6 +294,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      cursor: pointer;
     }
     .card:hover {
       background: var(--bg-card-hover);
@@ -384,6 +385,145 @@
       text-decoration: none;
     }
 
+    /* Profile Tabs */
+    .profile-tabs {
+      display: inline-flex;
+      background: rgba(16, 20, 31, 0.9);
+      border: 1px solid var(--border-color);
+      border-radius: 999px;
+      padding: 4px;
+      margin-bottom: 20px;
+      gap: 4px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .profile-tab {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .profile-tab:hover {
+      color: var(--text-main);
+    }
+    .profile-tab.active {
+      background: var(--accent-cyan);
+      color: #080a10;
+      box-shadow: 0 0 14px rgba(0, 229, 255, 0.4);
+    }
+
+    /* Modal Backdrop & Dialog */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 7, 13, 0.82);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .modal-backdrop.open {
+      display: flex;
+    }
+    .modal-dialog {
+      background: #0f1423;
+      border: 1px solid var(--border-glow);
+      border-radius: 18px;
+      max-width: 600px;
+      width: 100%;
+      padding: 32px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(0, 229, 255, 0.15);
+      position: relative;
+      animation: modalFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.95) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-muted);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: all 0.2s ease;
+    }
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+    .modal-header {
+      margin-bottom: 16px;
+    }
+    .modal-header h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      margin-top: 10px;
+    }
+    .modal-desc {
+      font-size: 0.96rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+    .modal-cmd-box {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .modal-cmd-text {
+      color: var(--accent-cyan);
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    .modal-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 20px;
+      flex-wrap: wrap;
+    }
+    .modal-btn-view {
+      color: var(--accent-cyan);
+      font-weight: 600;
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .modal-btn-view:hover {
+      text-decoration: underline;
+    }
+
     @media (max-width: 768px) {
       .hero h1 { font-size: 2.4rem; }
       .catalog-grid { grid-template-columns: 1fr; }
@@ -422,6 +562,14 @@
       <p>
         Battle-tested progressive disclosure skills, scoped subagent fleets, and deterministic lifecycle security gates engineered for Google Antigravity.
       </p>
+
+      <!-- Profile Tabs -->
+      <div class="profile-tabs">
+        <button class="profile-tab active" onclick="setInstallProfile('developer', event)">Developer</button>
+        <button class="profile-tab" onclick="setInstallProfile('core', event)">Core</button>
+        <button class="profile-tab" onclick="setInstallProfile('full', event)">Full Power</button>
+        <button class="profile-tab" onclick="setInstallProfile('global', event)">Global (~/.gemini)</button>
+      </div>
 
       <!-- Install box -->
       <div class="install-box">
@@ -480,6 +628,29 @@
       </p>
     </div>
   </footer>
+
+  <!-- Quick-View Modal -->
+  <div id="quick-view-modal" class="modal-backdrop" onclick="closeModalOnBackdrop(event)">
+    <div class="modal-dialog">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-header">
+        <span id="modal-tag" class="card-tag tag-frontier"></span>
+        <h2 id="modal-title"></h2>
+      </div>
+      <p id="modal-desc" class="modal-desc"></p>
+      
+      <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">1-Click Install Command</div>
+      <div class="modal-cmd-box">
+        <div class="modal-cmd-text" id="modal-cmd"></div>
+        <button class="card-btn-copy" id="modal-copy-btn" onclick="copyModalCmd()">Copy CLI</button>
+      </div>
+
+      <div class="modal-actions">
+        <span style="font-size: 0.82rem; color: var(--text-muted);">Google Antigravity & Gemini 3.8</span>
+        <a id="modal-github-link" href="#" target="_blank" class="modal-btn-view">View Complete Source on GitHub ↗</a>
+      </div>
+    </div>
+  </div>
 
   <script>
     const items = [
@@ -594,6 +765,11 @@
 
         const card = document.createElement('div');
         card.className = 'card';
+        card.onclick = (e) => {
+          if (!e.target.closest('.card-actions')) {
+            openModal(item, tagLabel, githubUrl, addCmd);
+          }
+        };
         card.innerHTML = `
           <div>
             <span class="card-tag ${getTagClass(item.cat)}">${tagLabel}</span>
@@ -601,12 +777,58 @@
             <p>${item.desc}</p>
           </div>
           <div class="card-actions">
-            <a href="${githubUrl}" target="_blank" class="card-btn-view">View Spec ↗</a>
-            <button class="card-btn-copy" onclick="copyCardCmd('${addCmd}', this)">Copy Add CLI</button>
+            <a href="${githubUrl}" target="_blank" class="card-btn-view" onclick="event.stopPropagation()">View Spec ↗</a>
+            <button class="card-btn-copy" onclick="event.stopPropagation(); copyCardCmd('${addCmd}', this)">Copy Add CLI</button>
           </div>
         `;
         container.appendChild(card);
       });
+    }
+
+    function openModal(item, tagLabel, githubUrl, addCmd) {
+      document.getElementById('modal-tag').className = 'card-tag ' + getTagClass(item.cat);
+      document.getElementById('modal-tag').innerText = tagLabel;
+      document.getElementById('modal-title').innerText = item.name;
+      document.getElementById('modal-desc').innerText = item.desc;
+      document.getElementById('modal-cmd').innerText = addCmd;
+      document.getElementById('modal-github-link').href = githubUrl;
+      const copyBtn = document.getElementById('modal-copy-btn');
+      copyBtn.innerText = 'Copy CLI';
+      copyBtn.style.color = '';
+      copyBtn.style.borderColor = '';
+      document.getElementById('quick-view-modal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('quick-view-modal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function closeModalOnBackdrop(e) {
+      if (e.target.id === 'quick-view-modal') {
+        closeModal();
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    function copyModalCmd() {
+      const text = document.getElementById('modal-cmd').innerText;
+      const btn = document.getElementById('modal-copy-btn');
+      copyCardCmd(text, btn);
+    }
+
+    function setInstallProfile(profile, ev) {
+      document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+      if (ev && ev.target) ev.target.classList.add('active');
+      const cmdEl = document.getElementById('cmd-text');
+      if (profile === 'developer') cmdEl.innerText = 'npx everything-gemini install --profile developer';
+      else if (profile === 'core') cmdEl.innerText = 'npx everything-gemini install --profile core';
+      else if (profile === 'full') cmdEl.innerText = 'npx everything-gemini install --profile full';
+      else if (profile === 'global') cmdEl.innerText = 'npx everything-gemini install --global';
     }
 
     function copyCardCmd(cmd, btn) {

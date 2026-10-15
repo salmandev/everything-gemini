@@ -201,14 +201,18 @@ Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`na
 - **[`security-audit`](skills/security-audit/SKILL.md)**: Scans for credentials in commit history and audits dependency risks.
 - **[`performance-profiler`](skills/performance-profiler/SKILL.md)**: Identifies CPU/memory bottlenecks, analyzes database queries, and critical paths.
 - **[`continuous-learning`](skills/continuous-learning/SKILL.md)**: Codifies corrections and developer feedback into enduring Knowledge Items.
+- **[`antigravity-sdk-orchestrator`](plugins/python-ai/skills/antigravity-sdk-orchestrator/SKILL.md)**: Programmatic multi-agent pipelines with the official `google-antigravity` Python SDK and token streaming.
+- **[`responsive-design`](plugins/web-fullstack/skills/responsive-design/SKILL.md)**: Fluid typography, mobile-first flex/grid layouts, media queries, and cross-browser accessibility.
 
 ### 2. Lifecycle Hooks (`hooks/`)
 Hooks run shell scripts at critical lifecycle events with typed JSON contracts on `stdin`/`stdout`:
 
-- **Safety Shield (`PreToolUse`)**: Intercepts `run_command` and inspects `CommandLine`. Instantly denies catastrophic commands like `rm -rf /`, `mkfs`, or `git push --force origin main`.
+- **GeminiShield (`PreToolUse`)**: Deterministic safety firewall intercepting `run_command` and denying catastrophic operations like `rm -rf /`, `mkfs`, or `git push --force origin main`.
+- **Safety Shield (`PreToolUse`)**: Intercepts `run_command` and inspects `CommandLine` against strict security guidelines before shell execution.
 - **Auto Lint Formatter (`PostToolUse`)**: Triggered after file modifications. Runs your project's linter/formatter (`prettier`, `black`, `ruff`, `gofmt`) automatically so code is always clean.
 - **Goal Verifier (`Stop`)**: Intercepts the agent's attempt to finish. If test suites are failing or background tasks are unfinished, it returns `{"decision": "continue", "reason": "Tests are still failing. Fix them before stopping."}`.
 - **Ephemeral Context Injector (`PreInvocation`)**: Injects transient warnings or guidelines before each model reasoning step without cluttering persistent conversation history.
+- **Learned Instincts**: Session learning hook that records developer corrections and feedback into persistent instincts.
 
 ### 3. Rules Hierarchy (`rules/`)
 Antigravity automatically discovers rules by walking up from the current file's directory to the repository root:
@@ -302,14 +306,20 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 # Remove a skill from your active workspace
 ./bin/everything-gemini remove skill tdd-workflow
 
+# Add or remove lifecycle safety hooks
+./bin/everything-gemini add hook safety-shield
+./bin/everything-gemini remove hook safety-shield
+
 # Add a specific plugin
 ./bin/everything-gemini add plugin web-fullstack
 
 # Test and validate a specific skill's frontmatter and scripts
 ./bin/everything-gemini test-skill gemini-multimodal
 
-# View detailed playbook overview and triggers for a skill
+# View detailed playbook or specification for any skill, subagent, or hook
 ./bin/everything-gemini info agent-evals
+./bin/everything-gemini info planner
+./bin/everything-gemini info gemini-shield
 
 # Scaffold a new progressive-disclosure skill
 ./bin/everything-gemini new-skill my-custom-skill
