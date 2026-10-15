@@ -1,4 +1,4 @@
-# 🪐 Everything Gemini ()
+# 🪐 Everything Gemini (everything-gemini)
 
 <div align="center">
 
@@ -10,15 +10,13 @@
 
 **The open-source agent harness, multi-agent orchestrator, and performance ecosystem for Google Gemini & Antigravity.**
 
-*Inspired by [Affan Mustafa's Everything Claude Code (ECC)](https://github.com/affaan-m/everything-claude-code), re-engineered and native-built for Google Antigravity (AGY).*
-
-[Quickstart](#-quickstart) • [Why eagy?](#-why-eagy) • [Architecture](#-architecture--internals) • [Customization Matrix](#-customization-catalog) • [Surfaces Guide](#-the-4-antigravity-surfaces) • [Contributing](CONTRIBUTING.md)
+[Quickstart](#-quickstart) • [What is everything-gemini?](#-what-is-everything-gemini) • [Architecture](#-architecture--internals) • [Customization Catalog](#-customization-catalog) • [Surfaces Guide](#-the-4-antigravity-surfaces) • [Contributing](CONTRIBUTING.md)
 
 </div>
 
 ---
 
-## ⚡ What is `eagy`?
+## ⚡ What is Everything Gemini?
 
 **Google Antigravity** is Google’s state-of-the-art AI-first coding platform, powered by Gemini models, an event-driven execution loop (Cortex), progressive disclosure, multi-surface orchestration (Desktop 2.0, VS Code-based IDE, `agy` CLI, and Python SDK), and localized Knowledge Items (KI).
 
@@ -28,7 +26,7 @@ Out of the box, Antigravity is a formidable pair programmer. But without structu
 - **Premature stops**: Quitting multi-step tasks before tests pass or edge cases are verified.
 - **Amnesia between sessions**: Forgetting architectural lessons learned yesterday.
 
-**Everything Antigravity (`eagy`)** solves this. It provides a battle-tested harness system consisting of:
+**Everything Gemini (`everything-gemini`)** solves this. It provides a battle-tested harness system consisting of:
 1. 🛡️ **Safety Shield & Lifecycle Hooks (`hooks.json`)**: Deterministic gating for destructive commands, auto-lint formatters, and stop-guard verifiers.
 2. 🧠 **Progressive Disclosure Skills (`skills/`)**: On-demand procedural playbooks that load *only* when needed, saving up to **85% in token overhead**.
 3. 📏 **Hierarchical Rules (`GEMINI.md` / `AGENTS.md`)**: Context-aware coding standards, zero-hallucination protocols, and clean-architecture rules.
@@ -294,6 +292,13 @@ The zero-dependency `eagy` CLI manages your configurations effortlessly:
 We welcome community contributions! You can contribute new **Skills**, **Rules**, **Lifecycle Hooks**, **MCP Blueprints**, or **Plugins**.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for full development guidelines, YAML frontmatter standards, and validation procedures.
+
+---
+
+## 🙏 Acknowledgements & Inspiration
+
+* Inspired by [Affan Mustafa's Everything Claude Code (ECC)](https://github.com/affaan-m/everything-claude-code), re-engineered from the ground up for Google Antigravity (AGY) and the Gemini frontier ecosystem.
+* Built with 💙 for the Google Antigravity & Gemini developer community.
 
 ---
 
