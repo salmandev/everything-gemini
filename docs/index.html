@@ -337,6 +337,45 @@
       font-size: 0.8rem;
       color: var(--text-muted);
     }
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .card-btn-view {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--accent-cyan);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: color 0.2s ease;
+    }
+    .card-btn-view:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+    .card-btn-copy {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-left: auto;
+      transition: all 0.2s ease;
+    }
+    .card-btn-copy:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: var(--text-main);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
 
     /* Footer */
     footer {
@@ -512,6 +551,27 @@
       }
 
       filtered.forEach(item => {
+        let githubUrl = "https://github.com/salmandev/everything-gemini";
+        let addCmd = `everything-gemini add skill ${item.name}`;
+
+        if (item.type === 'subagent' || item.name.startsWith('agents/')) {
+          const agentClean = item.name.replace('agents/', '');
+          githubUrl = `https://github.com/salmandev/everything-gemini/blob/main/agents/${agentClean}.md`;
+          addCmd = `everything-gemini add agent ${agentClean}`;
+        } else if (item.name === 'antigravity-sdk-orchestrator') {
+          githubUrl = `https://github.com/salmandev/everything-gemini/blob/main/plugins/python-ai/skills/antigravity-sdk-orchestrator/SKILL.md`;
+          addCmd = `everything-gemini add skill antigravity-sdk-orchestrator`;
+        } else if (item.name === 'responsive-design') {
+          githubUrl = `https://github.com/salmandev/everything-gemini/blob/main/plugins/web-fullstack/skills/responsive-design/SKILL.md`;
+          addCmd = `everything-gemini add skill responsive-design`;
+        } else if (item.type === 'hook') {
+          githubUrl = `https://github.com/salmandev/everything-gemini/blob/main/hooks/${item.name}/`;
+          addCmd = `everything-gemini install --profile developer`;
+        } else {
+          githubUrl = `https://github.com/salmandev/everything-gemini/blob/main/skills/${item.name}/SKILL.md`;
+          addCmd = `everything-gemini add skill ${item.name}`;
+        }
+
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
@@ -520,13 +580,26 @@
             <h3>${item.name}</h3>
             <p>${item.desc}</p>
           </div>
-          <div class="card-footer">
-            <span>Google Antigravity</span>
-            <span style="color: var(--accent-cyan);">Ready ⚡</span>
+          <div class="card-actions">
+            <a href="${githubUrl}" target="_blank" class="card-btn-view">View Spec ↗</a>
+            <button class="card-btn-copy" onclick="copyCardCmd('${addCmd}', this)">Copy Add CLI</button>
           </div>
         `;
         container.appendChild(card);
       });
+    }
+
+    function copyCardCmd(cmd, btn) {
+      navigator.clipboard.writeText(cmd);
+      const original = btn.innerText;
+      btn.innerText = 'Copied! ✔';
+      btn.style.color = '#00e676';
+      btn.style.borderColor = '#00e676';
+      setTimeout(() => {
+        btn.innerText = original;
+        btn.style.color = '';
+        btn.style.borderColor = '';
+      }, 1500);
     }
 
     function filterCategory(cat) {
