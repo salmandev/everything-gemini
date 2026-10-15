@@ -569,6 +569,7 @@
         <button class="profile-tab" onclick="setInstallProfile('core', event)">Core</button>
         <button class="profile-tab" onclick="setInstallProfile('full', event)">Full Power</button>
         <button class="profile-tab" onclick="setInstallProfile('global', event)">Global (~/.gemini)</button>
+        <button class="profile-tab" onclick="setInstallProfile('action', event)">GitHub Action</button>
       </div>
 
       <!-- Install box -->
@@ -829,6 +830,7 @@
       else if (profile === 'core') cmdEl.innerText = 'npx everything-gemini install --profile core';
       else if (profile === 'full') cmdEl.innerText = 'npx everything-gemini install --profile full';
       else if (profile === 'global') cmdEl.innerText = 'npx everything-gemini install --global';
+      else if (profile === 'action') cmdEl.innerText = '- uses: salmandev/everything-gemini@v1';
     }
 
     function copyCardCmd(cmd, btn) {
