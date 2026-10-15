@@ -4,6 +4,18 @@ All notable changes to **Everything Gemini (`everything-gemini`)** will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-10-15
+
+### Added
+- **30 Progressive Disclosure Skills Milestone**:
+  - **`agent-evals`**: Automated evaluation pipelines, LLM-as-a-judge rubrics, golden test datasets, and regression testing.
+  - **`docker-compose-orchestrator`**: Multi-container local environments (Postgres + pgvector, Redis), healthcheck dependency wiring, and persistent volumes.
+  - **`graphql-architect`**: Schema-first GraphQL APIs, DataLoader N+1 query batching, and Relay cursor-based pagination.
+- **Enterprise Security Policy**: Added [`SECURITY.md`](SECURITY.md) establishing formal vulnerability disclosure workflows.
+- **IDE Extensions**: Added [`.vscode/extensions.json`](.vscode/extensions.json) for developer workspace onboarding.
+
+---
+
 ## [1.1.1] - 2026-10-15
 
 ### Added

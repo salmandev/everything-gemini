@@ -145,7 +145,7 @@ everything-gemini/
 ├── agents/                       # Scoped subagent fleet (Planner, Reviewer, Architect, etc.)
 ├── scripts/                      # Automated installers and harness validators
 ├── plugins/                      # Reusable modular plugins (web-fullstack, python-ai, security)
-├── skills/                       # 27 Progressive disclosure skills (25 core + 2 plugins)
+├── skills/                       # 30 Progressive disclosure skills (28 core + 2 plugins)
 ├── rules/                        # Contextual guidelines & standards
 ├── hooks/                        # Event-driven lifecycle hooks (GeminiShield, Auto-lint)
 ├── mcp/                          # Production-ready MCP server blueprints
@@ -179,13 +179,16 @@ Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`na
 - **[`rag-architect`](skills/rag-architect/SKILL.md)**: RAG pipeline design, AST semantic chunking, hybrid vector-keyword retrieval, and Gemini re-ranking.
 - **[`gemini-function-calling`](skills/gemini-function-calling/SKILL.md)**: Production function declarations, structured JSON output schemas (Pydantic), and parallel tool dispatch.
 - **[`ai-first-engineering`](skills/ai-first-engineering/SKILL.md)**: Requirement decomposition, executable acceptance criteria (BDD), and blast-radius containment.
+- **[`agent-evals`](skills/agent-evals/SKILL.md)**: Automated evaluation pipelines, LLM-as-a-judge scoring, golden test datasets, and prompt regression testing.
 - **[`github-ops`](skills/github-ops/SKILL.md)**: GitHub workflow automation, PR generation, code review triage, and semantic releases with `gh` CLI & GitHub MCP.
 - **[`subagent-handoff`](skills/subagent-handoff/SKILL.md)**: Multi-agent task delegation protocol, scoped contexts, and report synthesis.
 - **[`api-craftsman`](skills/api-craftsman/SKILL.md)**: REST, OpenAPI 3.1 specifications, gRPC protos, and RFC 7807 error envelopes.
 - **[`database-architect`](skills/database-architect/SKILL.md)**: Zero-downtime migrations, concurrent indexing, and ACID schema modeling.
 - **[`fullstack-nextjs`](skills/fullstack-nextjs/SKILL.md)**: Next.js App Router, React Server Components (RSC), hydration error diagnosis, and Server Actions.
+- **[`graphql-architect`](skills/graphql-architect/SKILL.md)**: Schema-first GraphQL APIs, DataLoader N+1 query batching, and Relay cursor pagination.
 - **[`supabase-architect`](skills/supabase-architect/SKILL.md)**: Row Level Security (RLS) policies, pgvector embeddings, and edge function workflows.
 - **[`cloudflare-workers`](skills/cloudflare-workers/SKILL.md)**: Serverless edge functions, Wrangler v3, D1 SQL, and KV low-latency storage.
+- **[`docker-compose-orchestrator`](skills/docker-compose-orchestrator/SKILL.md)**: Multi-container local environments (Postgres + pgvector, Redis) with healthchecks.
 - **[`kubernetes-operator`](skills/kubernetes-operator/SKILL.md)**: Production k8s manifests, HPA autoscaling, zero-downtime rolling updates, and health probes.
 - **[`stripe-integration`](skills/stripe-integration/SKILL.md)**: Webhook signature verification, idempotent payments, and customer portal session flows.
 - **[`devops-pipeline`](skills/devops-pipeline/SKILL.md)**: Multi-stage Dockerfiles and caching GitHub Actions CI/CD workflows.

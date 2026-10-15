@@ -9,8 +9,8 @@ __pycache__/
 # OS & IDE
 .DS_Store
 Thumbs.db
-.idea/
-.vscode/
+.vscode/*
+!.vscode/*.json
 
 # Build & Logs
 *.log
