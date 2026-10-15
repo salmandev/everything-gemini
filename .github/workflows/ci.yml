@@ -1,0 +1,35 @@
+name: CI & Harness Validation
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    name: Validate Skills, Rules & Hooks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate Executable Permissions
+        run: |
+          chmod +x scripts/validate.sh scripts/install.sh bin/everything-gemini
+          find hooks/ -type f -name "*.sh" -exec chmod +x {} +
+          find skills/ -type f -name "*.sh" -exec chmod +x {} +
+
+      - name: Run Everything Gemini Test Suite
+        run: npm test
+
+      - name: Verify CLI Doctor & Listing
+        run: |
+          node bin/everything-gemini doctor
+          node bin/everything-gemini list

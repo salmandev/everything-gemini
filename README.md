@@ -111,16 +111,19 @@ flowchart TB
     EagyHarness --> Capabilities
 ```
 
-### Key Differences: ECC vs. EAGY
+### Key Differences: ECC vs. Everything Gemini
 
-| Feature | Everything Claude Code (ECC) | Everything Antigravity (EAGY) |
+> 📖 **Read the Comprehensive Architectural Breakdown**: [Everything Claude Code (ECC) vs. Everything Gemini](docs/ecc-vs-everything-gemini.md)
+
+| Feature | Everything Claude Code (ECC) | Everything Gemini (`everything-gemini`) |
 | :--- | :--- | :--- |
 | **Target Platform** | Claude Code CLI & harnesses | Antigravity 2.0 Desktop, IDE, `agy` CLI, Python SDK |
-| **Model Engine** | Claude 3.5 / 3.7 Sonnet | Gemini 3.8 / 3.x Flash & Pro |
+| **Model Engine** | Claude 3.5 / 3.7 Sonnet | Gemini 3.8 / 1.5 Flash & Pro |
 | **Context Protocol** | Direct markdown prompts | **Progressive Disclosure** (Metadata injected first, bodies lazy-loaded) |
-| **Memory System** | Flat markdown files | **Knowledge Items (KI)** + **Dual Transcripts** (`transcript.jsonl` vs `transcript_full.jsonl`) |
-| **UI Artifacts** | Standard text output | **Rich Brain Artifacts** (Interactive alerts, mermaid diagrams, carousels, live diffs) |
-| **Browser Execution** | Bash browser wrappers | **Native `browser_subagent`** with automated WebP recording |
+| **Context Window & Caching** | 200k tokens, ephemeral | **1M-2M+ tokens with Native Prefix Context Caching (~75% cost savings)** |
+| **Memory System** | Flat markdown files | **Knowledge Items (KI)** + **Adaptive Learned Instincts** |
+| **UI & Visual Multimodality** | Standard text output | **Native `browser_subagent` + WebP Screen Video Recording + Vision** |
+| **Subagents Fleet** | Manual sub-prompts | **6 Scoped Subagents (`agents/`) with Formal Handoff Protocol** |
 | **Lifecycle Hooks** | Shell scripts | Typed protojson contracts (`PreToolUse`, `PostToolUse`, `PreInvocation`, `PostInvocation`, `Stop`) |
 | **Tool Integration** | Claude tool use | **MCP standard (Stdio & SSE)** with auto-discovery & namespacing |
 
@@ -129,75 +132,55 @@ flowchart TB
 ## 📂 Repository Directory Layout
 
 ```text
-eagy/
-├── bin/
-│   └── eagy                      # Zero-dependency harness CLI
-├── scripts/
-│   ├── install.sh                # Interactive shell installer (macOS/Linux)
-│   ├── install.ps1               # PowerShell installer (Windows)
-│   └── validate.sh               # Linter/validator for skills, hooks, and configs
-├── plugins/                      # Reusable modular plugins
-│   ├── core/                     # Foundational safety and workflows
-│   ├── web-fullstack/            # Modern Next.js/React/Vite/TypeScript suite
-│   ├── python-ai/                # Python, PyTorch, and Antigravity SDK
-│   └── security-shield/          # Hardened safety gates & secret protection
-├── skills/                       # Progressive disclosure skills library
-│   ├── tdd-workflow/             # Red-Green-Refactor with auto-testing
-│   ├── browser-qa-tester/        # Autonomous browser UI testing with WebP capture
-│   ├── architecture-designer/    # System architecture, C4 & Mermaid blueprints
-│   ├── repo-onboarding/          # Fast codebase indexing into Knowledge Items (KI)
-│   ├── performance-profiler/     # Latency diagnosis & bottleneck tracing
-│   ├── git-craftsman/            # Conventional commits, micro-diffs, clean PRs
-│   ├── security-audit/           # OWASP Top 10, dependency checks & secret audit
-│   └── fullstack-nextjs/         # Next.js App Router, SSR, Server Actions
+everything-gemini/
+├── .github/                      # CI/CD workflows & issue templates
+├── bin/                          # Zero-dependency harness & scaffolding CLI
+├── agents/                       # Scoped subagent fleet (Planner, Reviewer, Architect, etc.)
+├── scripts/                      # Automated installers and harness validators
+├── plugins/                      # Reusable modular plugins (web-fullstack, python-ai, security)
+├── skills/                       # 16+ Progressive disclosure skills
 ├── rules/                        # Contextual guidelines & standards
-│   ├── common/                   # Universal rules (GEMINI.md & AGENTS.md)
-│   ├── languages/                # TypeScript, Python, Go, Rust
-│   └── paradigms/                # TDD, Security-hardened, Clean Architecture
-├── hooks/                        # Event-driven lifecycle hooks (hooks.json)
-│   ├── safety-shield/            # PreToolUse destructive command blocker
-│   ├── auto-lint-formatter/      # PostToolUse automatic formatting
-│   ├── goal-verifier/            # Stop hook preventing unfinished stops
-│   └── ephemeral-context/        # PreInvocation smart context injection
+├── hooks/                        # Event-driven lifecycle hooks (GeminiShield, Auto-lint)
 ├── mcp/                          # Production-ready MCP server blueprints
-│   ├── mcp_config.example.json   # GitHub, SQLite, PostgreSQL, Docs fetcher
-│   └── README.md                 # MCP configuration & security guide
 ├── docs/                         # The Comprehensive Antigravity Bible
-│   ├── architecture/             # Cortex loop, Progressive disclosure, Memory
-│   ├── surfaces/                 # Desktop 2.0, IDE, CLI, Python SDK
-│   ├── customization/            # Skills, Rules, Hooks, MCP guides
-│   └── workflows/                # Slash commands, Subagents, Browser QA
-└── templates/                    # Starter templates
-    ├── minimal/                  # 1-file GEMINI.md + safety hook
-    ├── recommended/              # Balanced developer configuration
-    └── full-power/               # Enterprise complete setup
+└── templates/                    # Starter templates (minimal, recommended, full-power)
 ```
 
 ---
 
 ## 🧰 Customization Catalog
 
-### 🤖 Scoped Sub-Agents ()
+### 🤖 Scoped Sub-Agents (`agents/`)
 
-Everything Gemini provides specialized subagent specifications designed for Antigravity's native  delegation and Python SDK orchestration:
+Everything Gemini provides specialized subagent specifications designed for Antigravity's native `invoke_subagent` delegation and Python SDK orchestration:
 
 | Subagent | Role | Focus Area |
 | :--- | :--- | :--- |
-| **[](agents/planner.md)** | Strategic Planner | Dependency mapping, impact radius analysis, phased checklists. |
-| **[](agents/code-reviewer.md)** | Quality Auditor | Edge case verification, type safety, regression prevention, minimal diffs. |
-| **[](agents/build-repair.md)** | Build Triage Specialist | Compiler error diagnosis, test failure auto-repair, surgical fixes. |
-| **[](agents/browser-qa.md)** | Automated Visual QA | Native browser testing with automated WebP recording into artifacts. |
-| **[](agents/security-auditor.md)** | Security Auditor | Credential scanning, OWASP Top 10, dependency audit, permission gates. |
-| **[](agents/architect.md)** | Systems Architect | C4 Mermaid blueprints, sequence diagrams, and formal ADR records. |
-
+| **[`planner`](agents/planner.md)** | Strategic Planner | Dependency mapping, impact radius analysis, phased checklists. |
+| **[`code-reviewer`](agents/code-reviewer.md)** | Quality Auditor | Edge case verification, type safety, regression prevention, minimal diffs. |
+| **[`build-repair`](agents/build-repair.md)** | Build Triage Specialist | Compiler error diagnosis, test failure auto-repair, surgical fixes. |
+| **[`browser-qa`](agents/browser-qa.md)** | Automated Visual QA | Native browser testing with automated WebP recording into artifacts. |
+| **[`security-auditor`](agents/security-auditor.md)** | Security Auditor | Credential scanning, OWASP Top 10, dependency audit, permission gates. |
+| **[`architect`](agents/architect.md)** | Systems Architect | C4 Mermaid blueprints, sequence diagrams, and formal ADR records. |
 
 ### 1. Skills (`skills/`)
 Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`name` and `description`) is placed into the system prompt. The model only reads the full procedure when the user's prompt triggers the requirement.
 
-- **[`tdd-workflow`](skills/tdd-workflow/SKILL.md)**: Strict test-first engineering loop. Disallows writing production code before an existing failing test reproduces the requirement.
-- **[`browser-qa-tester`](skills/browser-qa-tester/SKILL.md)**: Launches the native `browser_subagent` to click, type, verify layout, and inspect console logs, capturing a session video into artifacts.
-- **[`architecture-designer`](skills/architecture-designer/SKILL.md)**: Generates clear Mermaid diagrams, sequence flows, and ADRs (Architecture Decision Records).
-- **[`repo-onboarding`](skills/repo-onboarding/SKILL.md)**: Automatically scans a new repository and writes a structured Knowledge Item (`<appDataDir>/knowledge`) to give the agent permanent recall of your architecture.
+- **[`gemini-multimodal`](skills/gemini-multimodal/SKILL.md)**: Native visual reasoning over mockups, diagrams, and automated WebP browser recordings.
+- **[`context-caching`](skills/context-caching/SKILL.md)**: 1M-2M token context optimization, static prefix caching, and repository indexing.
+- **[`subagent-handoff`](skills/subagent-handoff/SKILL.md)**: Multi-agent task delegation protocol, scoped contexts, and report synthesis.
+- **[`api-craftsman`](skills/api-craftsman/SKILL.md)**: REST, OpenAPI 3.1 specifications, gRPC protos, and RFC 7807 error envelopes.
+- **[`database-architect`](skills/database-architect/SKILL.md)**: Zero-downtime migrations, concurrent indexing, and ACID schema modeling.
+- **[`devops-pipeline`](skills/devops-pipeline/SKILL.md)**: Multi-stage Dockerfiles and caching GitHub Actions CI/CD workflows.
+- **[`root-cause-debugger`](skills/root-cause-debugger/SKILL.md)**: Regression diagnosis using binary search (`git bisect`) and minimal reproduction harnesses.
+- **[`tdd-workflow`](skills/tdd-workflow/SKILL.md)**: Red-Green-Refactor loop with automated test runners.
+- **[`browser-qa-tester`](skills/browser-qa-tester/SKILL.md)**: Autonomous browser UI testing with WebP capture into artifacts.
+- **[`architecture-designer`](skills/architecture-designer/SKILL.md)**: System architecture, C4 & Mermaid blueprints.
+- **[`repo-onboarding`](skills/repo-onboarding/SKILL.md)**: Fast codebase indexing into Knowledge Items (KI).
+- **[`git-craftsman`](skills/git-craftsman/SKILL.md)**: Enforces conventional commits, atomic diffs, and clean PR descriptions.
+- **[`security-audit`](skills/security-audit/SKILL.md)**: Scans for credentials in commit history and audits dependency risks.
+- **[`performance-profiler`](skills/performance-profiler/SKILL.md)**: Identifies CPU/memory bottlenecks, analyzes database queries, and critical paths.
+- **[`fullstack-nextjs`](skills/fullstack-nextjs/SKILL.md)**: Best practices for React Server Components, hydration fixes, and Server Actions.
 - **[`git-craftsman`](skills/git-craftsman/SKILL.md)**: Enforces conventional commits, crafts atomic diffs, and writes PR summaries linked with file references.
 - **[`security-audit`](skills/security-audit/SKILL.md)**: Scans for credentials in commit history, tests for injection vulnerabilities, and verifies dependencies.
 - **[`performance-profiler`](skills/performance-profiler/SKILL.md)**: Identifies CPU/memory bottlenecks, analyzes database queries, and optimizes critical paths.

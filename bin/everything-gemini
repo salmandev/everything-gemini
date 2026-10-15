@@ -40,6 +40,8 @@ function printHelp() {
   console.log(`  ${GREEN}doctor${RESET}                      Inspect system, AGY surfaces, and configuration health`);
   console.log(`  ${GREEN}install${RESET} [options]           Install eagy profiles into workspace or globally`);
   console.log(`  ${GREEN}list${RESET}                        Show all available skills, rules, hooks, and plugins`);
+  console.log(`  ${GREEN}new-skill${RESET} <name>            Scaffold a new progressive-disclosure skill`);
+  console.log(`  ${GREEN}new-agent${RESET} <name>            Scaffold a new scoped subagent specification`);
   console.log(`  ${GREEN}add${RESET} <type> <name>           Add a specific skill, rule, or plugin to workspace`);
   console.log(`  ${GREEN}validate${RESET}                    Run self-test on frontmatter, JSON schemas & hooks`);
   console.log(`  ${GREEN}help${RESET}                        Show this help message\n`);
@@ -362,6 +364,114 @@ function runValidate() {
   }
 }
 
+function scaffoldSkill(name) {
+  if (!name) {
+    console.error(`${RED}Error: Skill name required. Example: everything-gemini new-skill my-skill${RESET}`);
+    process.exit(1);
+  }
+  const cleanName = name.toLowerCase().replace(/[^a-z0-9-]/g, '-');
+  const targetDir = path.join(REPO_ROOT, 'skills', cleanName);
+  if (fs.existsSync(targetDir)) {
+    console.error(`${RED}Error: Skill '${cleanName}' already exists at ${targetDir}${RESET}`);
+    process.exit(1);
+  }
+
+  fs.mkdirSync(path.join(targetDir, 'references'), { recursive: true });
+  fs.mkdirSync(path.join(targetDir, 'scripts'), { recursive: true });
+
+  const titleCase = cleanName.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
+  const skillMd = `---
+name: ${cleanName}
+description: >-
+  Use this skill when ... (describe triggering conditions in third person).
+---
+
+# ${titleCase}
+
+## Overview
+Provide a concise overview of what this skill achieves and when it is invoked.
+
+## Progressive Disclosure Architecture
+- Keep this main \`SKILL.md\` focused on procedural step-by-step instructions.
+- Put deep technical documentation and schemas in [references/spec.md](./references/spec.md).
+- Place deterministic automation or verification scripts in [scripts/](./scripts/).
+
+## Procedural Workflow
+1. **Analyze Requirements**: Inspect the target environment and configuration.
+2. **Execute Actions**: Run necessary tasks sequentially.
+3. **Verify Outcome**: Run validation checks.
+
+## Verification Checklist
+- [ ] Task completed with zero side-effects
+- [ ] Tests and linters pass cleanly
+`;
+
+  const specMd = `# Reference Documentation for ${cleanName}
+
+Detailed architecture, API contracts, edge cases, and background reference material.
+`;
+
+  const helperSh = `#!/usr/bin/env bash
+set -euo pipefail
+
+# Helper script for ${cleanName}
+echo "Executing ${cleanName} automated helper..."
+`;
+
+  fs.writeFileSync(path.join(targetDir, 'SKILL.md'), skillMd);
+  fs.writeFileSync(path.join(targetDir, 'references', 'spec.md'), specMd);
+  const scriptPath = path.join(targetDir, 'scripts', 'helper.sh');
+  fs.writeFileSync(scriptPath, helperSh);
+  try { fs.chmodSync(scriptPath, 0o755); } catch (e) {}
+
+  console.log(`${GREEN}✔ Created progressive disclosure skill:${RESET} ${BOLD}${cleanName}${RESET}`);
+  console.log(`  📁 ${targetDir}`);
+  console.log(`  📄 SKILL.md (YAML frontmatter + procedural workflow)`);
+  console.log(`  📄 references/spec.md (progressive reference docs)`);
+  console.log(`  🔧 scripts/helper.sh (executable helper)\n`);
+}
+
+function scaffoldAgent(name) {
+  if (!name) {
+    console.error(`${RED}Error: Agent name required. Example: everything-gemini new-agent my-agent${RESET}`);
+    process.exit(1);
+  }
+  const cleanName = name.toLowerCase().replace(/[^a-z0-9-]/g, '-');
+  const targetDir = path.join(REPO_ROOT, 'agents');
+  if (!fs.existsSync(targetDir)) fs.mkdirSync(targetDir, { recursive: true });
+  const targetFile = path.join(targetDir, `${cleanName}.md`);
+  if (fs.existsSync(targetFile)) {
+    console.error(`${RED}Error: Agent '${cleanName}' already exists at ${targetFile}${RESET}`);
+    process.exit(1);
+  }
+
+  const titleCase = cleanName.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
+  const agentMd = `# Subagent: ${titleCase}
+
+## Role & Mission
+Describe the specific purpose and focus area of this subagent.
+
+## Permitted Tools & Scope
+- **Allowed Tools**: (e.g. view_file, grep_search, run_command)
+- **Restricted Tools**: (e.g. no destructive file overwrites or network calls)
+
+## Operating Principles
+1. **Surgical Precision**: Focus exclusively on the delegated objective.
+2. **Context Efficiency**: Keep intermediate reasoning concise and return structured findings.
+3. **Deterministic Verification**: Verify all claims with code evidence before reporting.
+
+## Handoff & Synthesis
+Return structured report to parent agent:
+- **Findings / Actions Taken**:
+- **Modified Files**:
+- **Open Questions / Recommended Next Steps**:
+`;
+
+  fs.writeFileSync(targetFile, agentMd);
+  console.log(`${GREEN}✔ Created subagent profile:${RESET} ${BOLD}${cleanName}${RESET}`);
+  console.log(`  📄 ${targetFile}\n`);
+}
+
 // CLI Argument Parsing
 const args = process.argv.slice(2);
 const command = args[0] || 'help';
@@ -372,6 +482,12 @@ switch (command) {
     break;
   case 'list':
     listComponents();
+    break;
+  case 'new-skill':
+    scaffoldSkill(args[1]);
+    break;
+  case 'new-agent':
+    scaffoldAgent(args[1]);
     break;
   case 'install': {
     let profile = 'developer';
@@ -395,3 +511,4 @@ switch (command) {
     printHelp();
     break;
 }
+
