@@ -15,6 +15,11 @@ const GLOBAL_CONFIG_DIR = path.join(os.homedir(), '.gemini', 'config');
 const WORKSPACE_DIR = process.cwd();
 const AGENTS_DIR = path.join(WORKSPACE_DIR, '.agents');
 
+let VERSION = '1.0.1';
+try {
+  VERSION = require(path.join(REPO_ROOT, 'package.json')).version || '1.0.1';
+} catch (_) {}
+
 // ANSI Colors
 const RESET = '\x1b[0m';
 const BOLD = '\x1b[1m';
@@ -27,7 +32,7 @@ const GRAY = '\x1b[90m';
 
 function printBanner() {
   console.log(`
-${CYAN}${BOLD}🪐 Everything Gemini (${GREEN}everything-gemini${CYAN}) v1.0.1${RESET}
+${CYAN}${BOLD}🪐 Everything Gemini (${GREEN}everything-gemini${CYAN}) v${VERSION}${RESET}
 ${GRAY}The open-source agent harness & multi-agent orchestrator for Google Gemini & Antigravity${RESET}
 `);
 }
@@ -43,6 +48,7 @@ function printHelp() {
   console.log(`  ${GREEN}new-skill${RESET} <name>            Scaffold a new progressive-disclosure skill`);
   console.log(`  ${GREEN}new-agent${RESET} <name>            Scaffold a new scoped subagent specification`);
   console.log(`  ${GREEN}add${RESET} <type> <name>           Add a specific skill, rule, or plugin to workspace`);
+  console.log(`  ${GREEN}test-skill${RESET} <name>           Validate a specific skill frontmatter & scripts`);
   console.log(`  ${GREEN}validate${RESET}                    Run self-test on frontmatter, JSON schemas & hooks`);
   console.log(`  ${GREEN}help${RESET}                        Show this help message\n`);
   console.log(`${BOLD}OPTIONS for 'install':${RESET}`);
@@ -472,6 +478,114 @@ Return structured report to parent agent:
   console.log(`  📄 ${targetFile}\n`);
 }
 
+function addComponent(type, name) {
+  if (!type || !name) {
+    console.error(`${RED}Usage: everything-gemini add <skill|agent|plugin> <name>${RESET}`);
+    process.exit(1);
+  }
+
+  const cleanName = name.trim().toLowerCase();
+  const targetWorkspace = path.join(WORKSPACE_DIR, '.agents');
+  if (!fs.existsSync(targetWorkspace)) {
+    fs.mkdirSync(targetWorkspace, { recursive: true });
+  }
+
+  if (type === 'skill') {
+    const src = path.join(REPO_ROOT, 'skills', cleanName);
+    if (!fs.existsSync(src)) {
+      console.error(`${RED}Skill '${cleanName}' not found in catalog.${RESET}`);
+      process.exit(1);
+    }
+    const dest = path.join(targetWorkspace, 'skills', cleanName);
+    copyRecursiveSync(src, dest);
+    console.log(`${GREEN}✔ Added skill '${cleanName}' to ${dest}${RESET}`);
+  } else if (type === 'agent') {
+    const src = path.join(REPO_ROOT, 'agents', `${cleanName}.md`);
+    if (!fs.existsSync(src)) {
+      console.error(`${RED}Agent '${cleanName}' not found in catalog.${RESET}`);
+      process.exit(1);
+    }
+    const destDir = path.join(targetWorkspace, 'agents');
+    fs.mkdirSync(destDir, { recursive: true });
+    fs.copyFileSync(src, path.join(destDir, `${cleanName}.md`));
+    console.log(`${GREEN}✔ Added agent '${cleanName}' to ${destDir}${RESET}`);
+  } else if (type === 'plugin') {
+    const src = path.join(REPO_ROOT, 'plugins', cleanName);
+    if (!fs.existsSync(src)) {
+      console.error(`${RED}Plugin '${cleanName}' not found in catalog.${RESET}`);
+      process.exit(1);
+    }
+    const dest = path.join(targetWorkspace, 'plugins', cleanName);
+    copyRecursiveSync(src, dest);
+    console.log(`${GREEN}✔ Added plugin '${cleanName}' to ${dest}${RESET}`);
+  } else {
+    console.error(`${RED}Unknown type '${type}'. Use: skill, agent, or plugin.${RESET}`);
+    process.exit(1);
+  }
+}
+
+function testSkill(name) {
+  if (!name) {
+    console.error(`${RED}Usage: everything-gemini test-skill <skill-name>${RESET}`);
+    process.exit(1);
+  }
+  const cleanName = name.trim().toLowerCase();
+  const skillDir = path.join(REPO_ROOT, 'skills', cleanName);
+  const skillMd = path.join(skillDir, 'SKILL.md');
+
+  if (!fs.existsSync(skillMd)) {
+    console.error(`${RED}✖ SKILL.md not found for skill '${cleanName}' at ${skillDir}${RESET}`);
+    process.exit(1);
+  }
+
+  const content = fs.readFileSync(skillMd, 'utf8');
+  console.log(`${BOLD}🔍 Validating skill: [${CYAN}${cleanName}${RESET}${BOLD}]...${RESET}`);
+
+  if (!content.startsWith('---')) {
+    console.error(`  ${RED}✖ Missing YAML frontmatter start (---)${RESET}`);
+    process.exit(1);
+  }
+
+  const parts = content.split('---');
+  if (parts.length < 3) {
+    console.error(`  ${RED}✖ Malformed YAML frontmatter boundary${RESET}`);
+    process.exit(1);
+  }
+
+  const frontmatter = parts[1];
+  const nameMatch = frontmatter.match(/name:\s*([^\n\r]+)/);
+  const descMatch = frontmatter.match(/description:\s*>?-?\s*([^\n\r]+)/);
+
+  if (!nameMatch) {
+    console.error(`  ${RED}✖ Missing 'name' field in frontmatter${RESET}`);
+    process.exit(1);
+  }
+  console.log(`  ${GREEN}✔${RESET} Name field: ${BOLD}${nameMatch[1].trim()}${RESET}`);
+
+  if (!descMatch) {
+    console.error(`  ${RED}✖ Missing 'description' field in frontmatter${RESET}`);
+    process.exit(1);
+  }
+  console.log(`  ${GREEN}✔${RESET} Description trigger: ${GRAY}${descMatch[1].trim()}${RESET}`);
+
+  const scriptsDir = path.join(skillDir, 'scripts');
+  if (fs.existsSync(scriptsDir)) {
+    const scripts = fs.readdirSync(scriptsDir).filter(f => f.endsWith('.sh'));
+    for (const s of scripts) {
+      const fullPath = path.join(scriptsDir, s);
+      const stat = fs.statSync(fullPath);
+      const isExec = (stat.mode & 0o111) !== 0;
+      if (!isExec) {
+        console.error(`  ${RED}✖ Script ${s} is not executable. Run chmod +x${RESET}`);
+        process.exit(1);
+      }
+      console.log(`  ${GREEN}✔${RESET} Script executable: ${s}`);
+    }
+  }
+
+  console.log(`\n${GREEN}${BOLD}✨ Skill '${cleanName}' passed all validation checks!${RESET}\n`);
+}
+
 // CLI Argument Parsing
 const args = process.argv.slice(2);
 const command = args[0] || 'help';
@@ -488,6 +602,12 @@ switch (command) {
     break;
   case 'new-agent':
     scaffoldAgent(args[1]);
+    break;
+  case 'add':
+    addComponent(args[1], args[2]);
+    break;
+  case 'test-skill':
+    testSkill(args[1]);
     break;
   case 'install': {
     let profile = 'developer';

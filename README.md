@@ -290,7 +290,16 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 # Add a specific plugin
 ./bin/everything-gemini add plugin web-fullstack
 
-# Validate all schemas and frontmatter
+# Test and validate a specific skill's frontmatter and scripts
+./bin/everything-gemini test-skill gemini-multimodal
+
+# Scaffold a new progressive-disclosure skill
+./bin/everything-gemini new-skill my-custom-skill
+
+# Scaffold a new scoped subagent
+./bin/everything-gemini new-agent my-worker-agent
+
+# Validate all schemas, hooks, and frontmatter
 ./bin/everything-gemini validate
 ```
 
