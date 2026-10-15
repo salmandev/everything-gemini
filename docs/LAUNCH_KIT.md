@@ -8,11 +8,11 @@ This launch kit contains ready-to-post announcements, social copy, and submissio
 
 ### Option A: The High-Impact Single Tweet (251 chars)
 ```text
-🪐 Everything Gemini v1.1.0 is live!
+🪐 Everything Gemini v1.2.0 is live!
 
 The open-source multi-agent harness for Google Antigravity & Gemini 3.8.
 
-⚡ 27 lazy-loaded skills (Multimodal, RAG, 2M context caching)
+⚡ 30 lazy-loaded skills (Multimodal, RAG, Evals, 2M context caching)
 🤖 6 scoped subagents
 🛡️ GeminiShield safety gates
 
@@ -33,9 +33,10 @@ Introducing Everything Gemini 🪐 — the open-source agent harness & multi-age
 **Tweet 2 (Core Innovations)**:
 ```text
 Unlike traditional prompt dumps, Everything Gemini uses strict Progressive Disclosure:
-- 🧠 27 lazy-loaded skills load runbooks on demand (saving up to 85% token overhead).
+- 🧠 30 lazy-loaded skills load runbooks on demand (saving up to 85% token overhead).
 - ⚡ Exploits Gemini's 2M token context with static prefix caching.
 - 👁️ Multimodal visual QA with automated WebP recordings.
+- 🧪 Agent Evals with LLM-as-a-judge scoring rubrics.
 ```
 
 **Tweet 3 (Fleet & Safety)**:
@@ -63,7 +64,7 @@ Give it a ⭐ and let me know what skills to add next!
 
 **Title**:
 ```text
-Everything Gemini: Open-source multi-agent harness, 27 progressive skills & subagent fleet for Google Antigravity
+Everything Gemini: Open-source multi-agent harness, 30 progressive skills & subagent fleet for Google Antigravity
 ```
 
 **Body**:
@@ -74,10 +75,10 @@ With Google Antigravity rolling out across Desktop 2.0, IDE, and CLI surfaces, I
 
 ### 🌟 Key Highlights
 
-1. **27 Lazy-Loaded Progressive Disclosure Skills**:
-   - **Frontier**: Native multimodal UI testing, 2M token prefix context caching, real-time Google Search grounding, RAG with re-ranking (`rag-architect`), and typed function calling schemas.
-   - **Cloud & Backend**: Supabase RLS policies, Cloudflare Workers & D1 SQL, Kubernetes manifests with HPA, Stripe webhook verification, and Next.js App Router.
-   - **Engineering**: Test-Driven Development (Red-Green-Refactor), automated git bisect debugging, GitHub Ops, and performance profiling.
+1. **30 Lazy-Loaded Progressive Disclosure Skills**:
+   - **Frontier**: Native multimodal UI testing, 2M token prefix context caching, real-time Google Search grounding, RAG with re-ranking (`rag-architect`), agent evaluations (`agent-evals`), and typed function calling schemas.
+   - **Cloud & Backend**: Supabase RLS policies, Cloudflare Workers & D1 SQL, Kubernetes manifests with HPA, GraphQL APIs with DataLoader, Stripe webhook verification, and Next.js App Router.
+   - **Engineering & DevOps**: Docker Compose orchestrator, Test-Driven Development (Red-Green-Refactor), automated git bisect debugging, GitHub Ops, and performance profiling.
 
 2. **6 Scoped Subagents (`agents/`)**:
    - Specialized specifications for **Planner**, **Code Reviewer**, **Build Repair**, **Browser QA**, **Security Auditor**, and **Architect** with formal task delegation and boundary protocols.
@@ -120,7 +121,7 @@ As coding agents move beyond simple single-turn prompts into multi-step autonomo
 
 Inspired by Affan Mustafa's Everything Claude Code (ECC), I built Everything Gemini (everything-gemini) specifically optimized for Google Antigravity and Gemini's architecture:
 
-- Progressive Disclosure: The agent only sees metadata in its system prompt; complete procedural playbooks (27 skills) are lazy-loaded only when triggered by user intent.
+- Progressive Disclosure: The agent only sees metadata in its system prompt; complete procedural playbooks (30 skills) are lazy-loaded only when triggered by user intent.
 - Massive Context Economics: Harnesses Gemini's 1M-2M token window with static prefix caching (~75% cost reduction).
 - Scoped Subagent Fleet: Discrete roles for Planner, Reviewer, Browser QA, Build Repair, Security, and Architect.
 - GeminiShield: Deterministic PreToolUse lifecycle gates intercepting catastrophic commands.
@@ -141,7 +142,7 @@ Would love to hear your thoughts and feedback!
 As AI coding platforms evolve, developers need structured engineering workflows, deterministic safety rails, and context-efficient architectures.
 
 🪐 Everything Gemini delivers:
-✅ 27 Progressive Disclosure Skills (Multimodal vision, 2M context caching, RAG with re-ranking, Supabase, Cloudflare Workers, GitHub Ops)
+✅ 30 Progressive Disclosure Skills (Multimodal vision, 2M context caching, RAG with re-ranking, Agent Evals, Supabase, Cloudflare Workers, GitHub Ops)
 ✅ 6 Scoped Subagents with formal delegation boundaries (Planner, Reviewer, QA, Repair, Security, Architect)
 ✅ GeminiShield deterministic lifecycle safety hooks
 ✅ 1-second setup: `npx everything-gemini install`
