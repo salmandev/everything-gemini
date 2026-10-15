@@ -40,3 +40,10 @@ jobs:
             LICENSE
             README.md
             CHANGELOG.md
+
+      - name: Publish to NPM
+        if: env.NPM_TOKEN != ''
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
