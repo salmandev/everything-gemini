@@ -284,8 +284,14 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 # List all available skills, rules, hooks, and plugins
 ./bin/everything-gemini list
 
+# Initialize everything-gemini in current workspace
+./bin/everything-gemini init
+
 # Add a specific skill to your active workspace
 ./bin/everything-gemini add skill tdd-workflow
+
+# Remove a skill from your active workspace
+./bin/everything-gemini remove skill tdd-workflow
 
 # Add a specific plugin
 ./bin/everything-gemini add plugin web-fullstack

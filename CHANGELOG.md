@@ -4,6 +4,19 @@ All notable changes to **Everything Gemini (`everything-gemini`)** will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2026-10-15
+
+### Added
+- **Interactive Web Showcase**: Launched official documentation and interactive skill catalog at [https://salmandev.github.io/everything-gemini/](https://salmandev.github.io/everything-gemini/).
+- **Component Granular Management**: Added `everything-gemini add <type> <name>` to install individual skills, agents, or plugins into any workspace on demand.
+- **Skill Quality Gate**: Added `everything-gemini test-skill <name>` validating frontmatter boundary syntax, descriptions, and script execution bits.
+- **Python SDK Multi-Agent Orchestration**: Complete runnable pipeline example in `examples/python-sdk/` showcasing programmatic leasing of Planner and Reviewer subagents with token streaming.
+- **Frontier Cloud & Backend Skills**: Integrated `cloudflare-workers`, `supabase-architect`, `stripe-integration`, and `kubernetes-operator`.
+
+### Changed
+- CLI dynamically resolves package version from `package.json`.
+- Updated comprehensive CLI documentation across README and repository references.
+
 ---
 
 ## [1.0.1] - 2026-10-15

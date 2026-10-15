@@ -44,10 +44,12 @@ function printHelp() {
   console.log(`${BOLD}COMMANDS:${RESET}`);
   console.log(`  ${GREEN}doctor${RESET}                      Inspect system, AGY surfaces, and configuration health`);
   console.log(`  ${GREEN}install${RESET} [options]           Install everything-gemini profiles into workspace or globally`);
+  console.log(`  ${GREEN}init${RESET} [options]              Initialize everything-gemini in current workspace`);
   console.log(`  ${GREEN}list${RESET}                        Show all available skills, rules, hooks, and plugins`);
   console.log(`  ${GREEN}new-skill${RESET} <name>            Scaffold a new progressive-disclosure skill`);
   console.log(`  ${GREEN}new-agent${RESET} <name>            Scaffold a new scoped subagent specification`);
-  console.log(`  ${GREEN}add${RESET} <type> <name>           Add a specific skill, rule, or plugin to workspace`);
+  console.log(`  ${GREEN}add${RESET} <type> <name>           Add a specific skill, agent, or plugin to workspace`);
+  console.log(`  ${GREEN}remove${RESET} <type> <name>        Remove a specific skill, agent, or plugin from workspace`);
   console.log(`  ${GREEN}test-skill${RESET} <name>           Validate a specific skill frontmatter & scripts`);
   console.log(`  ${GREEN}validate${RESET}                    Run self-test on frontmatter, JSON schemas & hooks`);
   console.log(`  ${GREEN}help${RESET}                        Show this help message\n`);
@@ -524,6 +526,45 @@ function addComponent(type, name) {
   }
 }
 
+function removeComponent(type, name) {
+  if (!type || !name) {
+    console.error(`${RED}Usage: everything-gemini remove <skill|agent|plugin> <name>${RESET}`);
+    process.exit(1);
+  }
+
+  const cleanName = name.trim().toLowerCase();
+  const targetWorkspace = path.join(WORKSPACE_DIR, '.agents');
+
+  if (type === 'skill') {
+    const dest = path.join(targetWorkspace, 'skills', cleanName);
+    if (!fs.existsSync(dest)) {
+      console.log(`${YELLOW}Skill '${cleanName}' is not installed in ${dest}${RESET}`);
+      return;
+    }
+    fs.rmSync(dest, { recursive: true, force: true });
+    console.log(`${GREEN}✔ Removed skill '${cleanName}' from workspace.${RESET}`);
+  } else if (type === 'agent') {
+    const dest = path.join(targetWorkspace, 'agents', `${cleanName}.md`);
+    if (!fs.existsSync(dest)) {
+      console.log(`${YELLOW}Agent '${cleanName}' is not installed in ${dest}${RESET}`);
+      return;
+    }
+    fs.unlinkSync(dest);
+    console.log(`${GREEN}✔ Removed agent '${cleanName}' from workspace.${RESET}`);
+  } else if (type === 'plugin') {
+    const dest = path.join(targetWorkspace, 'plugins', cleanName);
+    if (!fs.existsSync(dest)) {
+      console.log(`${YELLOW}Plugin '${cleanName}' is not installed in ${dest}${RESET}`);
+      return;
+    }
+    fs.rmSync(dest, { recursive: true, force: true });
+    console.log(`${GREEN}✔ Removed plugin '${cleanName}' from workspace.${RESET}`);
+  } else {
+    console.error(`${RED}Unknown type '${type}'. Use: skill, agent, or plugin.${RESET}`);
+    process.exit(1);
+  }
+}
+
 function testSkill(name) {
   if (!name) {
     console.error(`${RED}Usage: everything-gemini test-skill <skill-name>${RESET}`);
@@ -606,9 +647,13 @@ switch (command) {
   case 'add':
     addComponent(args[1], args[2]);
     break;
+  case 'remove':
+    removeComponent(args[1], args[2]);
+    break;
   case 'test-skill':
     testSkill(args[1]);
     break;
+  case 'init':
   case 'install': {
     let profile = 'developer';
     let isGlobal = false;
