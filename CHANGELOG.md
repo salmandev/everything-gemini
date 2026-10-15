@@ -11,6 +11,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - **`agent-evals`**: Automated evaluation pipelines, LLM-as-a-judge rubrics, golden test datasets, and regression testing.
   - **`docker-compose-orchestrator`**: Multi-container local environments (Postgres + pgvector, Redis), healthcheck dependency wiring, and persistent volumes.
   - **`graphql-architect`**: Schema-first GraphQL APIs, DataLoader N+1 query batching, and Relay cursor-based pagination.
+- **Universal Terminal Playbook Inspector (`info` / `show`)**:
+  - `everything-gemini info <name>` seamlessly inspects and previews runbooks for skills, subagent specifications, and lifecycle hook configurations directly in the terminal.
+- **Granular Lifecycle Hook Management**:
+  - Added `everything-gemini add hook <name>` and `everything-gemini remove hook <name>` with automatic execution permission enforcement (`chmod +x`) on hook scripts.
+- **Interactive Web Showcase 42-Component Expansion**:
+  - Complete index of all 30 progressive skills, 6 scoped subagents, and 6 lifecycle hooks on [https://salmandev.github.io/everything-gemini/](https://salmandev.github.io/everything-gemini/).
+  - Direct GitHub spec links (`View Spec ↗`) and 1-click CLI copy buttons (`Copy Add CLI`) on every catalog card.
+  - Dedicated `Lifecycle Hooks` filter pill and amber badge styling (`.tag-hook`).
+- **Multi-OS CI Matrix**:
+  - Automated GitHub Actions testing across `ubuntu-latest` and `macos-latest` verifying validations, CLI diagnostics, and skill test runners.
 - **Enterprise Security Policy**: Added [`SECURITY.md`](SECURITY.md) establishing formal vulnerability disclosure workflows.
 - **IDE Extensions**: Added [`.vscode/extensions.json`](.vscode/extensions.json) for developer workspace onboarding.
 

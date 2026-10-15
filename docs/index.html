@@ -315,6 +315,7 @@
     .tag-agent { background: rgba(156, 39, 176, 0.2); color: #d05ce3; }
     .tag-backend { background: rgba(66, 133, 244, 0.18); color: #8ab4f8; }
     .tag-devops { background: rgba(0, 230, 118, 0.15); color: var(--accent-emerald); }
+    .tag-hook { background: rgba(255, 171, 0, 0.18); color: #ffab00; }
 
     .card h3 {
       font-size: 1.15rem;
@@ -439,7 +440,7 @@
       <!-- Metrics -->
       <div class="metrics">
         <div class="metric-card">
-          <div class="metric-value">30+</div>
+          <div class="metric-value">30</div>
           <div class="metric-label">Progressive Skills</div>
         </div>
         <div class="metric-card">
@@ -447,25 +448,26 @@
           <div class="metric-label">Scoped Subagents</div>
         </div>
         <div class="metric-card">
-          <div class="metric-value">&gt;85%</div>
-          <div class="metric-label">Token Overhead Saved</div>
+          <div class="metric-value">6</div>
+          <div class="metric-label">Lifecycle Hooks</div>
         </div>
         <div class="metric-card">
           <div class="metric-value">2M</div>
-          <div class="metric-label">Context Caching Ready</div>
+          <div class="metric-label">Prefix Cache Tokens</div>
         </div>
       </div>
     </section>
 
     <!-- Filters & Search -->
     <section class="filter-section">
-      <input type="text" id="search-input" class="search-bar" placeholder="🔍 Search skills, subagents, or hooks (e.g. multimodal, supabase, tdd, cloudflare)...">
+      <input type="text" id="search-input" class="search-bar" placeholder="🔍 Search skills, subagents, or hooks (e.g. multimodal, supabase, tdd, cloudflare, shield, lint)...">
       <div class="filter-pills">
-        <button class="filter-btn active" onclick="filterCategory('all')">All Components</button>
-        <button class="filter-btn" onclick="filterCategory('frontier')">Frontier & Vision</button>
-        <button class="filter-btn" onclick="filterCategory('subagent')">Scoped Subagents</button>
-        <button class="filter-btn" onclick="filterCategory('backend')">Backend & Cloud</button>
-        <button class="filter-btn" onclick="filterCategory('devops')">DevOps & Safety</button>
+        <button class="filter-btn active" onclick="filterCategory('all', event)">All Components</button>
+        <button class="filter-btn" onclick="filterCategory('frontier', event)">Frontier & Vision</button>
+        <button class="filter-btn" onclick="filterCategory('subagent', event)">Scoped Subagents</button>
+        <button class="filter-btn" onclick="filterCategory('backend', event)">Backend & Cloud</button>
+        <button class="filter-btn" onclick="filterCategory('devops', event)">DevOps & Quality</button>
+        <button class="filter-btn" onclick="filterCategory('hook', event)">Lifecycle Hooks</button>
       </div>
     </section>
 
@@ -486,42 +488,57 @@
 
   <script>
     const items = [
-      { name: "gemini-multimodal", type: "frontier", cat: "frontier", desc: "Native visual reasoning over UI mockups, converting wireframes to frontend code, diagram-to-Mermaid extraction, and visual regression QA." },
-      { name: "context-caching", type: "frontier", cat: "frontier", desc: "1M-2M token context optimization with deterministic static prefix caching, skeleton ingestion, and ~75% cost savings." },
-      { name: "gemini-grounding", type: "frontier", cat: "frontier", desc: "Live Google Search grounding to eliminate hallucinations, verify real-time APIs, and retrieve breaking documentation." },
-      { name: "rag-architect", type: "frontier", cat: "frontier", desc: "Retrieval-augmented generation pipelines, semantic AST chunking, hybrid keyword-vector search, and Gemini re-ranking." },
-      { name: "gemini-function-calling", type: "frontier", cat: "frontier", desc: "Production function declarations, structured JSON output schemas (Pydantic), parallel tool execution, and error recovery." },
+      // Frontier & Vision Skills (10)
+      { name: "gemini-multimodal", type: "skill", cat: "frontier", desc: "Native visual reasoning over UI mockups, converting wireframes to frontend code, diagram-to-Mermaid extraction, and visual regression QA." },
+      { name: "context-caching", type: "skill", cat: "frontier", desc: "1M-2M token context optimization with deterministic static prefix caching, skeleton ingestion, and ~75% cost savings." },
+      { name: "gemini-grounding", type: "skill", cat: "frontier", desc: "Live Google Search grounding to eliminate hallucinations, verify real-time APIs, and retrieve breaking documentation." },
+      { name: "rag-architect", type: "skill", cat: "frontier", desc: "Retrieval-augmented generation pipelines, semantic AST chunking, hybrid keyword-vector search, and Gemini re-ranking." },
+      { name: "gemini-function-calling", type: "skill", cat: "frontier", desc: "Production function declarations, structured JSON output schemas (Pydantic), parallel tool execution, and error recovery." },
       { name: "ai-first-engineering", type: "skill", cat: "frontier", desc: "Decomposing ambiguous specs into verifiable milestones, executable acceptance criteria (BDD), and blast-radius containment." },
+      { name: "agent-evals", type: "skill", cat: "frontier", desc: "Automated evaluation pipelines, LLM-as-a-judge rubrics, golden test datasets, and prompt regression testing." },
+      { name: "browser-qa-tester", type: "skill", cat: "frontier", desc: "Automated browser end-to-end testing with native WebP recording into artifacts for visual validation." },
+      { name: "continuous-learning", type: "skill", cat: "frontier", desc: "Adaptive Learned Instincts and Knowledge Item memory capturing developer corrections across sessions." },
+      { name: "repo-onboarding", type: "skill", cat: "frontier", desc: "Rapid codebase indexing, directory mapping, pattern extraction, and permanent Knowledge Item generation." },
+
+      // Scoped Subagents & Orchestration (9)
       { name: "subagent-handoff", type: "skill", cat: "subagent", desc: "Delegation protocol for multi-agent workflows with scoped context isolation and deterministic structured report synthesis." },
+      { name: "architecture-designer", type: "skill", cat: "subagent", desc: "Comprehensive system design architectures, Mermaid diagrams, API contracts, and Architecture Decision Records (ADRs)." },
+      { name: "antigravity-sdk-orchestrator", type: "skill", cat: "subagent", desc: "Programmatic multi-agent pipelines with the official google-antigravity Python SDK and token streaming." },
       { name: "agents/planner", type: "subagent", cat: "subagent", desc: "Strategic architect that breaks complex tasks into phased roadmaps with dependency mapping and risk radius assessment." },
       { name: "agents/code-reviewer", type: "subagent", cat: "subagent", desc: "Uncompromising reviewer enforcing minimal diffs, zero regression, strict typing, and defensive edge-case handling." },
       { name: "agents/browser-qa", type: "subagent", cat: "subagent", desc: "Autonomous UI tester driving browser_subagent with automatic WebP recording and DOM assertions into artifacts." },
       { name: "agents/build-repair", type: "subagent", cat: "subagent", desc: "Automated triage specialist isolating compiler errors and failing unit tests with surgical minimal fixes." },
       { name: "agents/security-auditor", type: "subagent", cat: "subagent", desc: "Adversarial security specialist scanning for credential leakage, injection risks, and dependency CVEs." },
       { name: "agents/architect", type: "subagent", cat: "subagent", desc: "Systems designer authoring C4 Mermaid diagrams, formal API contracts, and Architecture Decision Records (ADRs)." },
-      { name: "github-ops", type: "skill", cat: "devops", desc: "End-to-end GitHub PR generation, automated diff review, semantic release drafting, and issue triage with gh CLI & GitHub MCP." },
+
+      // Backend & Cloud Skills (8)
       { name: "supabase-architect", type: "skill", cat: "backend", desc: "Row Level Security (RLS) policies, pgvector embeddings for semantic AI search, and performant Supabase Edge Functions." },
       { name: "cloudflare-workers", type: "skill", cat: "backend", desc: "Serverless edge functions, Wrangler v3 configuration, Cloudflare D1 SQL, and KV low-latency storage." },
       { name: "database-architect", type: "skill", cat: "backend", desc: "Relational and document schema modeling, zero-downtime expand/contract migrations, and concurrent indexing." },
       { name: "api-craftsman", type: "skill", cat: "backend", desc: "Production-grade REST APIs, OpenAPI 3.1 specifications, gRPC protobuf schemas, and RFC 7807 error envelopes." },
       { name: "fullstack-nextjs", type: "skill", cat: "backend", desc: "Next.js App Router, React Server Components (RSC), hydration error diagnosis, and Server Actions." },
       { name: "stripe-integration", type: "skill", cat: "backend", desc: "Cryptographic webhook signature verification, idempotent checkouts, and customer billing portal sessions." },
+      { name: "graphql-architect", type: "skill", cat: "backend", desc: "Schema-first GraphQL APIs, DataLoader N+1 query batching, and Relay cursor-based pagination." },
+      { name: "responsive-design", type: "skill", cat: "backend", desc: "Fluid typography, mobile-first flex/grid layouts, media queries, and cross-browser accessibility." },
+
+      // DevOps & Quality Skills (9)
+      { name: "github-ops", type: "skill", cat: "devops", desc: "End-to-end GitHub PR generation, automated diff review, semantic release drafting, and issue triage with gh CLI & GitHub MCP." },
+      { name: "docker-compose-orchestrator", type: "skill", cat: "devops", desc: "Multi-container local environments, database services (Postgres, pgvector, Redis), and healthcheck wiring." },
       { name: "kubernetes-operator", type: "skill", cat: "devops", desc: "Declarative production Kubernetes manifests, HPA autoscaling, zero-downtime rolling updates, and health probes." },
       { name: "devops-pipeline", type: "skill", cat: "devops", desc: "Multi-stage Dockerfiles, GitHub Actions CI/CD workflows, and container infrastructure automation." },
-      { name: "gemini-shield", type: "hook", cat: "devops", desc: "Deterministic PreToolUse lifecycle gate blocking catastrophic commands (rm -rf, DROP TABLE, git push --force)." },
       { name: "security-audit", type: "skill", cat: "devops", desc: "OWASP Top 10 security audits, secret leakage detection, and dependency vulnerability scans." },
       { name: "tdd-workflow", type: "skill", cat: "devops", desc: "Strict Test-Driven Development (Red-Green-Refactor) loop ensuring tests exist before code is written." },
       { name: "root-cause-debugger", type: "skill", cat: "devops", desc: "Systematic regression diagnosis using binary search (git bisect), log traces, and minimal reproduction harnesses." },
-      { name: "browser-qa-tester", type: "skill", cat: "frontier", desc: "Automated browser end-to-end testing with native WebP recording for visual validation." },
-      { name: "agent-evals", type: "skill", cat: "frontier", desc: "Automated evaluation pipelines, LLM-as-a-judge rubrics, golden test datasets, and prompt regression testing." },
       { name: "git-craftsman", type: "skill", cat: "devops", desc: "Conventional atomic commits, interactive rebasing, clean branch lifecycles, and git hygiene." },
-      { name: "docker-compose-orchestrator", type: "skill", cat: "devops", desc: "Multi-container local environments, database services (Postgres, pgvector, Redis), and healthcheck wiring." },
-      { name: "graphql-architect", type: "skill", cat: "backend", desc: "Schema-first GraphQL APIs, DataLoader N+1 query batching, and Relay cursor-based pagination." },
       { name: "performance-profiler", type: "skill", cat: "devops", desc: "Application latency profiling, CPU/memory leak diagnosis, and slow query optimization." },
-      { name: "continuous-learning", type: "skill", cat: "frontier", desc: "Adaptive Learned Instincts and Knowledge Item memory capturing developer corrections across sessions." },
-      { name: "repo-onboarding", type: "skill", cat: "frontier", desc: "Rapid codebase indexing, directory mapping, pattern extraction, and Knowledge Item generation." },
-      { name: "antigravity-sdk-orchestrator", type: "skill", cat: "subagent", desc: "Programmatic multi-agent pipelines with the official google-antigravity Python SDK and token streaming." },
-      { name: "responsive-design", type: "skill", cat: "backend", desc: "Fluid typography, mobile-first flex/grid layouts, media queries, and cross-browser accessibility." }
+
+      // Lifecycle Safety Hooks (6)
+      { name: "gemini-shield", type: "hook", cat: "hook", desc: "Deterministic PreToolUse lifecycle gate blocking catastrophic commands (rm -rf, DROP TABLE, git push --force)." },
+      { name: "safety-shield", type: "hook", cat: "hook", desc: "PreToolUse shell execution firewall that inspects CLI commands against safety rules before execution." },
+      { name: "auto-lint-formatter", type: "hook", cat: "hook", desc: "PostToolUse automated formatting with project linters (prettier, black, ruff, gofmt) immediately after file edits." },
+      { name: "goal-verifier", type: "hook", cat: "hook", desc: "Stop hook intercepting agent exit, validating whether test suites pass or objectives are fulfilled before stopping." },
+      { name: "ephemeral-context", type: "hook", cat: "hook", desc: "PreInvocation hook dynamically injecting repo context, alerts, and instructions into model reasoning turns." },
+      { name: "learned-instincts", type: "hook", cat: "hook", desc: "Session learning hook that records developer corrections and feedback into persistent instincts." }
     ];
 
     let currentCat = 'all';
@@ -531,6 +548,7 @@
       if (cat === 'frontier') return 'tag-frontier';
       if (cat === 'subagent') return 'tag-agent';
       if (cat === 'backend') return 'tag-backend';
+      if (cat === 'hook') return 'tag-hook';
       return 'tag-devops';
     }
 
@@ -565,18 +583,25 @@
           githubUrl = `https://github.com/salmandev/everything-gemini/blob/main/plugins/web-fullstack/skills/responsive-design/SKILL.md`;
           addCmd = `everything-gemini add skill responsive-design`;
         } else if (item.type === 'hook') {
-          githubUrl = `https://github.com/salmandev/everything-gemini/blob/main/hooks/${item.name}/`;
-          addCmd = `everything-gemini install --profile developer`;
+          githubUrl = `https://github.com/salmandev/everything-gemini/blob/main/hooks/${item.name}/hooks.json`;
+          addCmd = `everything-gemini add hook ${item.name}`;
         } else {
           githubUrl = `https://github.com/salmandev/everything-gemini/blob/main/skills/${item.name}/SKILL.md`;
           addCmd = `everything-gemini add skill ${item.name}`;
         }
 
+        let tagLabel = '⚡ Skill';
+        if (item.type === 'subagent' || item.name.startsWith('agents/')) tagLabel = '🤖 Subagent';
+        else if (item.cat === 'frontier') tagLabel = '🪐 Frontier';
+        else if (item.cat === 'backend') tagLabel = '☁️ Backend';
+        else if (item.type === 'hook') tagLabel = '🛡️ Hook';
+        else if (item.cat === 'devops') tagLabel = '🛠️ DevOps';
+
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
           <div>
-            <span class="card-tag ${getTagClass(item.cat)}">${item.cat.toUpperCase()}</span>
+            <span class="card-tag ${getTagClass(item.cat)}">${tagLabel}</span>
             <h3>${item.name}</h3>
             <p>${item.desc}</p>
           </div>
@@ -602,10 +627,12 @@
       }, 1500);
     }
 
-    function filterCategory(cat) {
+    function filterCategory(cat, ev) {
       currentCat = cat;
       document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
+      if (ev && ev.target) {
+        ev.target.classList.add('active');
+      }
       renderCards();
     }
 

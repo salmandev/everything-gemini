@@ -48,10 +48,10 @@ function printHelp() {
   console.log(`  ${GREEN}list${RESET}                        Show all available skills, rules, hooks, and plugins`);
   console.log(`  ${GREEN}new-skill${RESET} <name>            Scaffold a new progressive-disclosure skill`);
   console.log(`  ${GREEN}new-agent${RESET} <name>            Scaffold a new scoped subagent specification`);
-  console.log(`  ${GREEN}add${RESET} <type> <name>           Add a specific skill, agent, or plugin to workspace`);
-  console.log(`  ${GREEN}remove${RESET} <type> <name>        Remove a specific skill, agent, or plugin from workspace`);
+  console.log(`  ${GREEN}add${RESET} <type> <name>           Add a specific skill, agent, hook, or plugin to workspace`);
+  console.log(`  ${GREEN}remove${RESET} <type> <name>        Remove a specific skill, agent, hook, or plugin from workspace`);
   console.log(`  ${GREEN}test-skill${RESET} <name>           Validate a specific skill frontmatter & scripts`);
-  console.log(`  ${GREEN}info${RESET} <skill-name>            Display detailed instructions and trigger for a skill`);
+  console.log(`  ${GREEN}info${RESET} <name>                  Display overview & runbook for a skill, agent, or hook`);
   console.log(`  ${GREEN}validate${RESET}                    Run self-test on frontmatter, JSON schemas & hooks`);
   console.log(`  ${GREEN}help${RESET}                        Show this help message\n`);
   console.log(`${BOLD}OPTIONS for 'install':${RESET}`);
@@ -509,7 +509,7 @@ Return structured report to parent agent:
 
 function addComponent(type, name) {
   if (!type || !name) {
-    console.error(`${RED}Usage: everything-gemini add <skill|agent|plugin> <name>${RESET}`);
+    console.error(`${RED}Usage: everything-gemini add <skill|agent|hook|plugin> <name>${RESET}`);
     process.exit(1);
   }
 
@@ -538,6 +538,21 @@ function addComponent(type, name) {
     fs.mkdirSync(destDir, { recursive: true });
     fs.copyFileSync(src, path.join(destDir, `${cleanName}.md`));
     console.log(`${GREEN}✔ Added agent '${cleanName}' to ${destDir}${RESET}`);
+  } else if (type === 'hook') {
+    const src = path.join(REPO_ROOT, 'hooks', cleanName);
+    if (!fs.existsSync(src)) {
+      console.error(`${RED}Hook '${cleanName}' not found in catalog.${RESET}`);
+      process.exit(1);
+    }
+    const dest = path.join(targetWorkspace, 'hooks', cleanName);
+    copyRecursiveSync(src, dest);
+    const scriptsDir = path.join(dest, 'scripts');
+    if (fs.existsSync(scriptsDir)) {
+      fs.readdirSync(scriptsDir).forEach(file => {
+        try { fs.chmodSync(path.join(scriptsDir, file), 0o755); } catch (e) {}
+      });
+    }
+    console.log(`${GREEN}✔ Added hook '${cleanName}' to ${dest}${RESET}`);
   } else if (type === 'plugin') {
     const src = path.join(REPO_ROOT, 'plugins', cleanName);
     if (!fs.existsSync(src)) {
@@ -548,14 +563,14 @@ function addComponent(type, name) {
     copyRecursiveSync(src, dest);
     console.log(`${GREEN}✔ Added plugin '${cleanName}' to ${dest}${RESET}`);
   } else {
-    console.error(`${RED}Unknown type '${type}'. Use: skill, agent, or plugin.${RESET}`);
+    console.error(`${RED}Unknown type '${type}'. Use: skill, agent, hook, or plugin.${RESET}`);
     process.exit(1);
   }
 }
 
 function removeComponent(type, name) {
   if (!type || !name) {
-    console.error(`${RED}Usage: everything-gemini remove <skill|agent|plugin> <name>${RESET}`);
+    console.error(`${RED}Usage: everything-gemini remove <skill|agent|hook|plugin> <name>${RESET}`);
     process.exit(1);
   }
 
@@ -578,6 +593,14 @@ function removeComponent(type, name) {
     }
     fs.unlinkSync(dest);
     console.log(`${GREEN}✔ Removed agent '${cleanName}' from workspace.${RESET}`);
+  } else if (type === 'hook') {
+    const dest = path.join(targetWorkspace, 'hooks', cleanName);
+    if (!fs.existsSync(dest)) {
+      console.log(`${YELLOW}Hook '${cleanName}' is not installed in ${dest}${RESET}`);
+      return;
+    }
+    fs.rmSync(dest, { recursive: true, force: true });
+    console.log(`${GREEN}✔ Removed hook '${cleanName}' from workspace.${RESET}`);
   } else if (type === 'plugin') {
     const dest = path.join(targetWorkspace, 'plugins', cleanName);
     if (!fs.existsSync(dest)) {
@@ -587,7 +610,7 @@ function removeComponent(type, name) {
     fs.rmSync(dest, { recursive: true, force: true });
     console.log(`${GREEN}✔ Removed plugin '${cleanName}' from workspace.${RESET}`);
   } else {
-    console.error(`${RED}Unknown type '${type}'. Use: skill, agent, or plugin.${RESET}`);
+    console.error(`${RED}Unknown type '${type}'. Use: skill, agent, hook, or plugin.${RESET}`);
     process.exit(1);
   }
 }
@@ -654,14 +677,66 @@ function testSkill(name) {
   console.log(`\n${GREEN}${BOLD}✨ Skill '${cleanName}' passed all validation checks!${RESET}\n`);
 }
 
-function showSkillInfo(skillName) {
-  if (!skillName) {
-    console.error(`\n${RED}Error: Please specify a skill name.${RESET}`);
-    console.log(`Usage: everything-gemini info <skill-name>\n`);
+function showComponentInfo(query1, query2) {
+  let target = query1;
+  let explicitType = null;
+  if (['skill', 'agent', 'hook', 'plugin'].includes(query1) && query2) {
+    explicitType = query1;
+    target = query2;
+  }
+  if (!target) {
+    console.error(`\n${RED}Error: Please specify a component name.${RESET}`);
+    console.log(`Usage: everything-gemini info [skill|agent|hook] <name>\n`);
     process.exit(1);
   }
 
-  const cleanName = skillName.trim().replace(/^skills\//, '');
+  const cleanName = target.trim().toLowerCase().replace(/^(skills|agents|hooks)\//, '');
+
+  // 1. Check Subagents if type is agent or undefined
+  if (!explicitType || explicitType === 'agent') {
+    const agentMd = path.join(REPO_ROOT, 'agents', `${cleanName}.md`);
+    if (fs.existsSync(agentMd)) {
+      printBanner();
+      console.log(`${BOLD}🤖 Subagent Specification: ${CYAN}${cleanName}${RESET}`);
+      console.log(`Path: ${GRAY}${agentMd}${RESET}\n`);
+      const content = fs.readFileSync(agentMd, 'utf8');
+      const lines = content.split('\n').slice(0, 25);
+      console.log(lines.join('\n'));
+      if (content.split('\n').length > 25) {
+        console.log(`\n${GRAY}... (${content.split('\n').length - 25} more lines in ${agentMd})${RESET}`);
+      }
+      console.log('');
+      return;
+    }
+  }
+
+  // 2. Check Hooks if type is hook or undefined
+  if (!explicitType || explicitType === 'hook') {
+    const hookDir = path.join(REPO_ROOT, 'hooks', cleanName);
+    const hookJson = path.join(hookDir, 'hooks.json');
+    if (fs.existsSync(hookJson)) {
+      printBanner();
+      console.log(`${BOLD}🛡️ Lifecycle Hook: ${CYAN}${cleanName}${RESET}`);
+      console.log(`Directory: ${GRAY}${hookDir}${RESET}\n`);
+      try {
+        const parsed = JSON.parse(fs.readFileSync(hookJson, 'utf8'));
+        console.log(`${BOLD}Configuration (hooks.json):${RESET}`);
+        console.log(JSON.stringify(parsed, null, 2));
+      } catch (e) {
+        console.log(fs.readFileSync(hookJson, 'utf8'));
+      }
+      const scriptsDir = path.join(hookDir, 'scripts');
+      if (fs.existsSync(scriptsDir)) {
+        const scripts = fs.readdirSync(scriptsDir);
+        console.log(`\n${BOLD}Hook Scripts:${RESET}`);
+        scripts.forEach(s => console.log(`  🔧 scripts/${s}`));
+      }
+      console.log('');
+      return;
+    }
+  }
+
+  // 3. Check Skills (Core or Plugin)
   let skillDir = path.join(REPO_ROOT, 'skills', cleanName);
   let pluginName = null;
 
@@ -683,39 +758,40 @@ function showSkillInfo(skillName) {
   }
 
   const skillMd = path.join(skillDir, 'SKILL.md');
-  if (!fs.existsSync(skillMd)) {
-    console.error(`\n${RED}Error: Skill '${cleanName}' not found in catalog.${RESET}\n`);
-    process.exit(1);
-  }
-
-  printBanner();
-  console.log(`${BOLD}📖 Skill Overview: ${CYAN}${cleanName}${RESET}`);
-  if (pluginName) {
-    console.log(`Source Plugin: ${YELLOW}${pluginName}${RESET}`);
-  }
-  console.log(`Path: ${GRAY}${skillMd}${RESET}\n`);
-
-  const content = fs.readFileSync(skillMd, 'utf8');
-  const parts = content.split('---');
-  if (parts.length >= 3) {
-    const frontmatter = parts[1];
-    const descMatch = frontmatter.match(/description:\s*>?-?\s*([^\n\r]+)/);
-    if (descMatch) {
-      console.log(`${BOLD}🎯 Trigger Description:${RESET}`);
-      console.log(`  ${descMatch[1].trim()}\n`);
+  if (fs.existsSync(skillMd)) {
+    printBanner();
+    console.log(`${BOLD}📖 Skill Overview: ${CYAN}${cleanName}${RESET}`);
+    if (pluginName) {
+      console.log(`Source Plugin: ${YELLOW}${pluginName}${RESET}`);
     }
+    console.log(`Path: ${GRAY}${skillMd}${RESET}\n`);
 
-    const body = parts.slice(2).join('---').trim();
-    const lines = body.split('\n').slice(0, 22);
-    console.log(`${BOLD}📋 Playbook Preview:${RESET}`);
-    console.log(lines.join('\n'));
-    if (body.split('\n').length > 22) {
-      console.log(`\n${GRAY}... (${body.split('\n').length - 22} more lines in ${skillMd})${RESET}`);
+    const content = fs.readFileSync(skillMd, 'utf8');
+    const parts = content.split('---');
+    if (parts.length >= 3) {
+      const frontmatter = parts[1];
+      const descMatch = frontmatter.match(/description:\s*>?-?\s*([^\n\r]+)/);
+      if (descMatch) {
+        console.log(`${BOLD}🎯 Trigger Description:${RESET}`);
+        console.log(`  ${descMatch[1].trim()}\n`);
+      }
+
+      const body = parts.slice(2).join('---').trim();
+      const lines = body.split('\n').slice(0, 22);
+      console.log(`${BOLD}📋 Playbook Preview:${RESET}`);
+      console.log(lines.join('\n'));
+      if (body.split('\n').length > 22) {
+        console.log(`\n${GRAY}... (${body.split('\n').length - 22} more lines in ${skillMd})${RESET}`);
+      }
+    } else {
+      console.log(content.split('\n').slice(0, 25).join('\n'));
     }
-  } else {
-    console.log(content.split('\n').slice(0, 25).join('\n'));
+    console.log('');
+    return;
   }
-  console.log('');
+
+  console.error(`\n${RED}Error: Component '${cleanName}' not found in catalog (checked skills, agents, and hooks).${RESET}\n`);
+  process.exit(1);
 }
 
 // CLI Argument Parsing
@@ -746,7 +822,7 @@ switch (command) {
     break;
   case 'info':
   case 'show':
-    showSkillInfo(args[1]);
+    showComponentInfo(args[1], args[2]);
     break;
   case 'init':
   case 'install': {
