@@ -144,7 +144,7 @@ everything-gemini/
 ├── agents/                       # Scoped subagent fleet (Planner, Reviewer, Architect, etc.)
 ├── scripts/                      # Automated installers and harness validators
 ├── plugins/                      # Reusable modular plugins (web-fullstack, python-ai, security)
-├── skills/                       # 21+ Progressive disclosure skills
+├── skills/                       # 27 Progressive disclosure skills (25 core + 2 plugins)
 ├── rules/                        # Contextual guidelines & standards
 ├── hooks/                        # Event-driven lifecycle hooks (GeminiShield, Auto-lint)
 ├── mcp/                          # Production-ready MCP server blueprints
@@ -174,9 +174,19 @@ Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`na
 
 - **[`gemini-multimodal`](skills/gemini-multimodal/SKILL.md)**: Native visual reasoning over mockups, diagrams, and automated WebP browser recordings.
 - **[`context-caching`](skills/context-caching/SKILL.md)**: 1M-2M token context optimization, static prefix caching, and repository indexing.
+- **[`gemini-grounding`](skills/gemini-grounding/SKILL.md)**: Real-time Google Search grounding, live documentation retrieval, and fact-checking.
+- **[`rag-architect`](skills/rag-architect/SKILL.md)**: RAG pipeline design, AST semantic chunking, hybrid vector-keyword retrieval, and Gemini re-ranking.
+- **[`gemini-function-calling`](skills/gemini-function-calling/SKILL.md)**: Production function declarations, structured JSON output schemas (Pydantic), and parallel tool dispatch.
+- **[`ai-first-engineering`](skills/ai-first-engineering/SKILL.md)**: Requirement decomposition, executable acceptance criteria (BDD), and blast-radius containment.
+- **[`github-ops`](skills/github-ops/SKILL.md)**: GitHub workflow automation, PR generation, code review triage, and semantic releases with `gh` CLI & GitHub MCP.
 - **[`subagent-handoff`](skills/subagent-handoff/SKILL.md)**: Multi-agent task delegation protocol, scoped contexts, and report synthesis.
 - **[`api-craftsman`](skills/api-craftsman/SKILL.md)**: REST, OpenAPI 3.1 specifications, gRPC protos, and RFC 7807 error envelopes.
 - **[`database-architect`](skills/database-architect/SKILL.md)**: Zero-downtime migrations, concurrent indexing, and ACID schema modeling.
+- **[`fullstack-nextjs`](skills/fullstack-nextjs/SKILL.md)**: Next.js App Router, React Server Components (RSC), hydration error diagnosis, and Server Actions.
+- **[`supabase-architect`](skills/supabase-architect/SKILL.md)**: Row Level Security (RLS) policies, pgvector embeddings, and edge function workflows.
+- **[`cloudflare-workers`](skills/cloudflare-workers/SKILL.md)**: Serverless edge functions, Wrangler v3, D1 SQL, and KV low-latency storage.
+- **[`kubernetes-operator`](skills/kubernetes-operator/SKILL.md)**: Production k8s manifests, HPA autoscaling, zero-downtime rolling updates, and health probes.
+- **[`stripe-integration`](skills/stripe-integration/SKILL.md)**: Webhook signature verification, idempotent payments, and customer portal session flows.
 - **[`devops-pipeline`](skills/devops-pipeline/SKILL.md)**: Multi-stage Dockerfiles and caching GitHub Actions CI/CD workflows.
 - **[`root-cause-debugger`](skills/root-cause-debugger/SKILL.md)**: Regression diagnosis using binary search (`git bisect`) and minimal reproduction harnesses.
 - **[`tdd-workflow`](skills/tdd-workflow/SKILL.md)**: Red-Green-Refactor loop with automated test runners.
@@ -186,13 +196,6 @@ Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`na
 - **[`git-craftsman`](skills/git-craftsman/SKILL.md)**: Enforces conventional commits, atomic diffs, and clean PR descriptions.
 - **[`security-audit`](skills/security-audit/SKILL.md)**: Scans for credentials in commit history and audits dependency risks.
 - **[`performance-profiler`](skills/performance-profiler/SKILL.md)**: Identifies CPU/memory bottlenecks, analyzes database queries, and critical paths.
-- **[`gemini-grounding`](skills/gemini-grounding/SKILL.md)**: Real-time Google Search grounding, live documentation retrieval, and fact-checking.
-- **[`rag-architect`](skills/rag-architect/SKILL.md)**: RAG pipeline design, AST semantic chunking, hybrid vector-keyword retrieval, and Gemini re-ranking.
-- **[`gemini-function-calling`](skills/gemini-function-calling/SKILL.md)**: Production function declarations, structured JSON output schemas (Pydantic), and parallel tool dispatch.
-- **[`supabase-architect`](skills/supabase-architect/SKILL.md)**: Row Level Security (RLS) policies, pgvector embeddings, and edge function workflows.
-- **[`cloudflare-workers`](skills/cloudflare-workers/SKILL.md)**: Serverless edge functions, Wrangler v3, D1 SQL, and KV low-latency storage.
-- **[`kubernetes-operator`](skills/kubernetes-operator/SKILL.md)**: Production k8s manifests, HPA autoscaling, zero-downtime rolling updates, and health probes.
-- **[`stripe-integration`](skills/stripe-integration/SKILL.md)**: Webhook signature verification, idempotent payments, and customer portal session flows.
 - **[`continuous-learning`](skills/continuous-learning/SKILL.md)**: Codifies corrections and developer feedback into enduring Knowledge Items.
 
 ### 2. Lifecycle Hooks (`hooks/`)

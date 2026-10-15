@@ -4,6 +4,19 @@ All notable changes to **Everything Gemini (`everything-gemini`)** will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-10-15
+
+### Added
+- **27 Progressive Disclosure Skills Milestone**:
+  - **`github-ops`**: End-to-end GitHub automation, PR generation, code review triage, and semantic releases via `gh` CLI and GitHub MCP.
+  - **`ai-first-engineering`**: Requirement decomposition, executable acceptance criteria, and blast-radius containment.
+  - **`rag-architect`**: RAG engineering with `text-embedding-004`, hybrid search (dense + BM25), and Gemini re-ranking.
+  - **`gemini-function-calling`**: Production tool schemas, Pydantic output formatting, parallel execution, and error recovery envelopes.
+- **Interactive Web Catalog Expansion**: Updated [https://salmandev.github.io/everything-gemini/](https://salmandev.github.io/everything-gemini/) to feature all 27 progressive skills with instant search and category filtering.
+- **Enhanced CLI Commands**: Added `everything-gemini init` for quickstart setup, `everything-gemini remove <type> <name>` for component uninstallation, and `everything-gemini test-skill <name>` for validation.
+
+---
+
 ## [1.0.2] - 2026-10-15
 
 ### Added
@@ -11,7 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **Component Granular Management**: Added `everything-gemini add <type> <name>` to install individual skills, agents, or plugins into any workspace on demand.
 - **Skill Quality Gate**: Added `everything-gemini test-skill <name>` validating frontmatter boundary syntax, descriptions, and script execution bits.
 - **Python SDK Multi-Agent Orchestration**: Complete runnable pipeline example in `examples/python-sdk/` showcasing programmatic leasing of Planner and Reviewer subagents with token streaming.
-- **Frontier Cloud & AI Skills**: Integrated `rag-architect`, `gemini-function-calling`, `cloudflare-workers`, `supabase-architect`, `stripe-integration`, and `kubernetes-operator` (totaling 25 progressive disclosure skills).
+- **Frontier Cloud & AI Skills**: Integrated `cloudflare-workers`, `supabase-architect`, `stripe-integration`, and `kubernetes-operator`.
 
 ### Changed
 - CLI dynamically resolves package version from `package.json`.

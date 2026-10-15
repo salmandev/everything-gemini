@@ -349,7 +349,7 @@
     <div class="container nav-inner">
       <a href="#" class="brand">
         🪐 Everything Gemini
-        <span class="brand-badge">v1.0.2</span>
+        <span class="brand-badge">v1.1.0</span>
       </a>
       <div class="nav-links">
         <a href="https://github.com/salmandev/everything-gemini" class="nav-link">GitHub</a>
@@ -384,7 +384,7 @@
       <!-- Metrics -->
       <div class="metrics">
         <div class="metric-card">
-          <div class="metric-value">25+</div>
+          <div class="metric-value">27+</div>
           <div class="metric-label">Progressive Skills</div>
         </div>
         <div class="metric-card">
@@ -436,6 +436,7 @@
       { name: "gemini-grounding", type: "frontier", cat: "frontier", desc: "Live Google Search grounding to eliminate hallucinations, verify real-time APIs, and retrieve breaking documentation." },
       { name: "rag-architect", type: "frontier", cat: "frontier", desc: "Retrieval-augmented generation pipelines, semantic AST chunking, hybrid keyword-vector search, and Gemini re-ranking." },
       { name: "gemini-function-calling", type: "frontier", cat: "frontier", desc: "Production function declarations, structured JSON output schemas (Pydantic), parallel tool execution, and error recovery." },
+      { name: "ai-first-engineering", type: "skill", cat: "frontier", desc: "Decomposing ambiguous specs into verifiable milestones, executable acceptance criteria (BDD), and blast-radius containment." },
       { name: "subagent-handoff", type: "skill", cat: "subagent", desc: "Delegation protocol for multi-agent workflows with scoped context isolation and deterministic structured report synthesis." },
       { name: "agents/planner", type: "subagent", cat: "subagent", desc: "Strategic architect that breaks complex tasks into phased roadmaps with dependency mapping and risk radius assessment." },
       { name: "agents/code-reviewer", type: "subagent", cat: "subagent", desc: "Uncompromising reviewer enforcing minimal diffs, zero regression, strict typing, and defensive edge-case handling." },
@@ -443,6 +444,7 @@
       { name: "agents/build-repair", type: "subagent", cat: "subagent", desc: "Automated triage specialist isolating compiler errors and failing unit tests with surgical minimal fixes." },
       { name: "agents/security-auditor", type: "subagent", cat: "subagent", desc: "Adversarial security specialist scanning for credential leakage, injection risks, and dependency CVEs." },
       { name: "agents/architect", type: "subagent", cat: "subagent", desc: "Systems designer authoring C4 Mermaid diagrams, formal API contracts, and Architecture Decision Records (ADRs)." },
+      { name: "github-ops", type: "skill", cat: "devops", desc: "End-to-end GitHub PR generation, automated diff review, semantic release drafting, and issue triage with gh CLI & GitHub MCP." },
       { name: "supabase-architect", type: "skill", cat: "backend", desc: "Row Level Security (RLS) policies, pgvector embeddings for semantic AI search, and performant Supabase Edge Functions." },
       { name: "cloudflare-workers", type: "skill", cat: "backend", desc: "Serverless edge functions, Wrangler v3 configuration, Cloudflare D1 SQL, and KV low-latency storage." },
       { name: "database-architect", type: "skill", cat: "backend", desc: "Relational and document schema modeling, zero-downtime expand/contract migrations, and concurrent indexing." },
@@ -455,7 +457,13 @@
       { name: "security-audit", type: "skill", cat: "devops", desc: "OWASP Top 10 security audits, secret leakage detection, and dependency vulnerability scans." },
       { name: "tdd-workflow", type: "skill", cat: "devops", desc: "Strict Test-Driven Development (Red-Green-Refactor) loop ensuring tests exist before code is written." },
       { name: "root-cause-debugger", type: "skill", cat: "devops", desc: "Systematic regression diagnosis using binary search (git bisect), log traces, and minimal reproduction harnesses." },
-      { name: "browser-qa-tester", type: "skill", cat: "frontier", desc: "Automated browser end-to-end testing with native WebP recording for visual validation." }
+      { name: "browser-qa-tester", type: "skill", cat: "frontier", desc: "Automated browser end-to-end testing with native WebP recording for visual validation." },
+      { name: "git-craftsman", type: "skill", cat: "devops", desc: "Conventional atomic commits, interactive rebasing, clean branch lifecycles, and git hygiene." },
+      { name: "performance-profiler", type: "skill", cat: "devops", desc: "Application latency profiling, CPU/memory leak diagnosis, and slow query optimization." },
+      { name: "continuous-learning", type: "skill", cat: "frontier", desc: "Adaptive Learned Instincts and Knowledge Item memory capturing developer corrections across sessions." },
+      { name: "repo-onboarding", type: "skill", cat: "frontier", desc: "Rapid codebase indexing, directory mapping, pattern extraction, and Knowledge Item generation." },
+      { name: "antigravity-sdk-orchestrator", type: "skill", cat: "subagent", desc: "Programmatic multi-agent pipelines with the official google-antigravity Python SDK and token streaming." },
+      { name: "responsive-design", type: "skill", cat: "backend", desc: "Fluid typography, mobile-first flex/grid layouts, media queries, and cross-browser accessibility." }
     ];
 
     let currentCat = 'all';
