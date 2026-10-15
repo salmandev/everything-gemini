@@ -1,14 +1,14 @@
-# 🪐 Everything Antigravity (`eagy`)
+# 🪐 Everything Gemini ()
 
 <div align="center">
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Antigravity](https://img.shields.io/badge/Google-Antigravity-4285F4.svg)](https://antigravity.google)
 [![Version](https://img.shields.io/badge/version-1.0.0-emerald.svg)](package.json)
-[![Status](https://img.shields.io/badge/status-active-success.svg)](https://github.com/salmanshaikh/eagy)
+[![Status](https://img.shields.io/badge/status-active-success.svg)](https://github.com/salmanshaikh/everything-gemini)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-**The open-source agent harness, performance optimizer, and customization ecosystem for Google Antigravity.**
+**The open-source agent harness, multi-agent orchestrator, and performance ecosystem for Google Gemini & Antigravity.**
 
 *Inspired by [Affan Mustafa's Everything Claude Code (ECC)](https://github.com/affaan-m/everything-claude-code), re-engineered and native-built for Google Antigravity (AGY).*
 
@@ -46,23 +46,23 @@ Run this in your terminal to install `eagy` globally or into your current projec
 
 ```bash
 # macOS / Linux
-curl -fsSL https://raw.githubusercontent.com/salmanshaikh/eagy/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/salmanshaikh/everything-gemini/main/scripts/install.sh | bash
 ```
 
 ```powershell
 # Windows (PowerShell)
-irm https://raw.githubusercontent.com/salmanshaikh/eagy/main/scripts/install.ps1 | iex
+irm https://raw.githubusercontent.com/salmanshaikh/everything-gemini/main/scripts/install.ps1 | iex
 ```
 
 ### 2. Via `eagy` CLI (Zero-Dependency)
 
 ```bash
 # Clone the repository
-git clone https://github.com/salmanshaikh/eagy.git
+git clone https://github.com/salmanshaikh/everything-gemini.git
 cd eagy
 
 # Run the eagy harness CLI
-./bin/eagy install --profile developer
+./bin/everything-gemini install --profile developer
 ```
 
 ### 3. Installation Profiles
@@ -269,25 +269,25 @@ The zero-dependency `eagy` CLI manages your configurations effortlessly:
 
 ```bash
 # Verify your installation and check for conflicts
-./bin/eagy doctor
+./bin/everything-gemini doctor
 
 # Install a specific profile into the current workspace (.agents/)
-./bin/eagy install --profile developer
+./bin/everything-gemini install --profile developer
 
 # Install globally for all projects (~/.gemini/config/)
-./bin/eagy install --global --profile core
+./bin/everything-gemini install --global --profile core
 
 # List all available skills, rules, hooks, and plugins
-./bin/eagy list
+./bin/everything-gemini list
 
 # Add a specific skill to your active workspace
-./bin/eagy add skill tdd-workflow
+./bin/everything-gemini add skill tdd-workflow
 
 # Add a specific plugin
-./bin/eagy add plugin web-fullstack
+./bin/everything-gemini add plugin web-fullstack
 
 # Validate all schemas and frontmatter
-./bin/eagy validate
+./bin/everything-gemini validate
 ```
 
 ---

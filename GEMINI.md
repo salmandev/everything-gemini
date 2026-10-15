@@ -1,8 +1,8 @@
-# Everything Antigravity (eagy) Repository Guidelines
+# Everything Gemini (everything-gemini) Repository Guidelines
 
-When contributing to or modifying the `eagy` repository:
+When contributing to or modifying the `everything-gemini` repository:
 
-1. **Dogfooding Antigravity & eagy**:
+1. **Dogfooding Antigravity & everything-gemini**:
    - Adhere strictly to Antigravity's progressive disclosure principles.
    - All new skills must include YAML frontmatter (`name`, `description` in third person).
    - All hook scripts must receive protojson on stdin and output valid JSON on stdout.

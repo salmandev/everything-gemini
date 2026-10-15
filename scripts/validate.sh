@@ -4,7 +4,7 @@ set -eo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ERRORS=0
 
-echo "🔍 Validating Everything Antigravity (eagy) repository..."
+echo "🔍 Validating Everything Gemini (everything-gemini) repository..."
 
 # 1. Validate SKILL.md Frontmatter
 echo "  [1/4] Checking Skills & YAML frontmatter..."
@@ -68,6 +68,6 @@ if [ "$ERRORS" -gt 0 ]; then
   echo "❌ Validation failed with $ERRORS error(s)."
   exit 1
 else
-  echo "✨ All validations passed successfully! eagy is pristine."
+  echo "✨ All validations passed successfully! everything-gemini is pristine."
   exit 0
 fi

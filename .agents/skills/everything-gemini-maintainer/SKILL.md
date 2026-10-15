@@ -1,10 +1,10 @@
 ---
-name: eagy-maintainer
+name: everything-gemini-maintainer
 description: >-
-  Maintains, audits, and expands the Everything Antigravity (eagy) repository itself. Use when adding new skills, plugins, hooks, or running test suites in eagy.
+  Maintains, audits, and expands the Everything Gemini (everything-gemini) repository itself. Use when adding new skills, plugins, hooks, or running test suites in eagy.
 ---
 
-# eagy Maintainer Skill
+# Everything Gemini Maintainer Skill
 
 Use this workflow to contribute to and maintain the `eagy` repository.
 

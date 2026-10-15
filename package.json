@@ -1,10 +1,12 @@
 {
-  "name": "eagy",
+  "name": "everything-gemini",
   "version": "1.0.0",
-  "description": "Everything Antigravity (eagy) - The Ultimate Agent Harness, Performance Optimizer & Customization Suite for Google Antigravity",
-  "main": "bin/eagy",
+  "description": "Everything Gemini (everything-gemini) - The Ultimate Agent Harness, Multi-Agent Orchestrator & Performance Suite for Gemini & Google Antigravity",
+  "main": "bin/everything-gemini",
   "bin": {
-    "eagy": "./bin/eagy"
+    "everything-gemini": "./bin/everything-gemini",
+    "egemini": "./bin/everything-gemini",
+    "eagy": "./bin/everything-gemini"
   },
   "scripts": {
     "test": "bash scripts/validate.sh",
@@ -14,23 +16,24 @@
     "install:full": "bash scripts/install.sh --profile full"
   },
   "keywords": [
+    "gemini",
+    "google-gemini",
     "antigravity",
     "agy",
-    "gemini",
     "ai-agent",
-    "agentic-coding",
+    "multi-agent",
     "mcp",
     "skills",
     "rules",
     "hooks",
-    "everything-antigravity",
-    "eagy"
+    "everything-gemini",
+    "egemini"
   ],
   "author": "Everything Antigravity Contributors",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/salmanshaikh/eagy.git"
+    "url": "https://github.com/salmanshaikh/everything-gemini.git"
   },
   "engines": {
     "node": ">=18.0.0"
