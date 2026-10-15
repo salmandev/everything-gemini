@@ -329,22 +329,15 @@
       line-height: 1.5;
       margin-bottom: 16px;
     }
-    .card-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 14px;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
     .card-actions {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 10px;
       margin-top: 14px;
       padding-top: 14px;
       border-top: 1px solid rgba(255, 255, 255, 0.08);
+      flex-wrap: wrap;
     }
     .card-btn-view {
       font-size: 0.78rem;
@@ -394,6 +387,7 @@
     @media (max-width: 768px) {
       .hero h1 { font-size: 2.4rem; }
       .catalog-grid { grid-template-columns: 1fr; }
+      .nav-links { gap: 12px; flex-wrap: wrap; justify-content: flex-end; }
     }
   </style>
 </head>
@@ -410,6 +404,7 @@
         <a href="https://github.com/salmandev/everything-gemini" class="nav-link">GitHub</a>
         <a href="https://www.npmjs.com/package/everything-gemini" class="nav-link">NPM</a>
         <a href="https://twitter.com/intent/tweet?text=%F0%9F%AA%90%20Everything%20Gemini%20v1.2.0%20is%20live%21%20The%20open-source%20multi-agent%20harness%20for%20Google%20Antigravity%20%26%20Gemini%203.8%20with%2030%20progressive%20skills%2C%206%20subagents%2C%20and%20safety%20gates.%0A%0A%F0%9F%91%89%20https%3A%2F%2Fsalmandev.github.io%2Feverything-gemini%2F" target="_blank" class="nav-link" style="color: var(--accent-cyan); font-weight: 600;">🐦 Share on X</a>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fsalmandev.github.io%2Feverything-gemini%2F" target="_blank" class="nav-link" style="color: #00a0dc; font-weight: 600;">💼 Share on LinkedIn</a>
         <a href="https://github.com/salmandev/everything-gemini" target="_blank" class="btn-github">
           ⭐ Star on GitHub
         </a>
