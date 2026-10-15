@@ -149,7 +149,33 @@ function listComponents() {
         const match = content.match(/description:\s*>?-?\s*([^\n\r]+)/);
         if (match) desc = match[1].trim();
       }
-      console.log(`  ${BOLD}${skill.padEnd(24)}${RESET} ${GRAY}${desc}${RESET}`);
+      console.log(`  ${BOLD}${skill.padEnd(28)}${RESET} ${GRAY}${desc}${RESET}`);
+    }
+  }
+
+  // Also scan plugin skills
+  const pluginsDirForSkills = path.join(REPO_ROOT, 'plugins');
+  if (fs.existsSync(pluginsDirForSkills)) {
+    const plugins = fs.readdirSync(pluginsDirForSkills, { withFileTypes: true })
+      .filter(d => d.isDirectory())
+      .map(d => d.name);
+    for (const plugin of plugins) {
+      const pSkillsDir = path.join(pluginsDirForSkills, plugin, 'skills');
+      if (fs.existsSync(pSkillsDir)) {
+        const pSkills = fs.readdirSync(pSkillsDir, { withFileTypes: true })
+          .filter(d => d.isDirectory())
+          .map(d => d.name);
+        for (const skill of pSkills) {
+          const skillMd = path.join(pSkillsDir, skill, 'SKILL.md');
+          let desc = 'No description';
+          if (fs.existsSync(skillMd)) {
+            const content = fs.readFileSync(skillMd, 'utf8');
+            const match = content.match(/description:\s*>?-?\s*([^\n\r]+)/);
+            if (match) desc = match[1].trim();
+          }
+          console.log(`  ${BOLD}${skill.padEnd(28)}${RESET} ${CYAN}[${plugin}]${RESET} ${GRAY}${desc}${RESET}`);
+        }
+      }
     }
   }
 

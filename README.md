@@ -6,6 +6,7 @@
 
 [![Live Showcase](https://img.shields.io/badge/Live_Showcase-Visit_Catalog-00e5ff.svg)](https://salmandev.github.io/everything-gemini/)
 [![npm version](https://img.shields.io/npm/v/everything-gemini.svg?color=cb3837)](https://www.npmjs.com/package/everything-gemini)
+[![CI](https://github.com/salmandev/everything-gemini/actions/workflows/ci.yml/badge.svg)](https://github.com/salmandev/everything-gemini/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Antigravity](https://img.shields.io/badge/Google-Antigravity-4285F4.svg)](https://antigravity.google)
 [![Status](https://img.shields.io/badge/status-active-success.svg)](https://github.com/salmandev/everything-gemini)
