@@ -35,6 +35,7 @@
     "type": "git",
     "url": "git+https://github.com/salmandev/everything-gemini.git"
   },
+  "homepage": "https://salmandev.github.io/everything-gemini/",
   "engines": {
     "node": ">=18.0.0"
   }

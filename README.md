@@ -4,6 +4,7 @@
 
 <img src="assets/banner.jpg" alt="Everything Gemini Banner" width="100%" style="border-radius: 12px; margin-bottom: 16px;" />
 
+[![Live Showcase](https://img.shields.io/badge/Live_Showcase-Visit_Catalog-00e5ff.svg)](https://salmandev.github.io/everything-gemini/)
 [![npm version](https://img.shields.io/npm/v/everything-gemini.svg?color=cb3837)](https://www.npmjs.com/package/everything-gemini)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Antigravity](https://img.shields.io/badge/Google-Antigravity-4285F4.svg)](https://antigravity.google)
@@ -12,7 +13,7 @@
 
 **The open-source agent harness, multi-agent orchestrator, and performance ecosystem for Google Gemini & Antigravity.**
 
-[Quickstart](#-quickstart) • [What is everything-gemini?](#-what-is-everything-gemini) • [Architecture](#-architecture--internals) • [Customization Catalog](#-customization-catalog) • [Surfaces Guide](#-the-4-antigravity-surfaces) • [Contributing](CONTRIBUTING.md)
+[Live Interactive Showcase](https://salmandev.github.io/everything-gemini/) • [Quickstart](#-quickstart) • [What is everything-gemini?](#-what-is-everything-gemini) • [Architecture](#-architecture--internals) • [Customization Catalog](#-customization-catalog) • [Surfaces Guide](#-the-4-antigravity-surfaces) • [Contributing](CONTRIBUTING.md)
 
 </div>
 
