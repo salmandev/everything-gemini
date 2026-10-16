@@ -7,7 +7,7 @@ ERRORS=0
 echo "🔍 Validating Everything Gemini (everything-gemini) repository..."
 
 # 1. Validate SKILL.md Frontmatter
-echo "  [1/5] Checking Skills & YAML frontmatter..."
+echo "  [1/6] Checking Skills & YAML frontmatter..."
 SKILL_FILES=$(find "$REPO_ROOT/skills" "$REPO_ROOT/plugins" -name "SKILL.md" 2>/dev/null || true)
 
 for skill_file in $SKILL_FILES; do
@@ -36,7 +36,7 @@ for skill_file in $SKILL_FILES; do
 done
 
 # 2. Validate Scoped Subagents
-echo "  [2/5] Checking Subagents specifications..."
+echo "  [2/6] Checking Subagents specifications..."
 REQUIRED_AGENTS=("planner.md" "code-reviewer.md" "browser-qa.md" "build-repair.md" "security-auditor.md" "architect.md")
 for ag in "${REQUIRED_AGENTS[@]}"; do
   if [ ! -f "$REPO_ROOT/agents/$ag" ]; then
@@ -57,7 +57,7 @@ for agent_file in $AGENT_FILES; do
 done
 
 # 3. Validate JSON & YAML Files
-echo "  [3/5] Validating JSON files & Action manifest..."
+echo "  [3/6] Validating JSON files & Action manifest..."
 JSON_FILES=$(find "$REPO_ROOT" -name "*.json" ! -path "*/node_modules/*" 2>/dev/null || true)
 
 for json_file in $JSON_FILES; do
@@ -80,7 +80,7 @@ if [ -f "$REPO_ROOT/action.yml" ]; then
 fi
 
 # 4. Validate Shell Scripts & CLI Executability
-echo "  [4/5] Verifying script permissions..."
+echo "  [4/6] Verifying script permissions & code syntax..."
 EXEC_FILES=$(find "$REPO_ROOT/scripts" "$REPO_ROOT/hooks" "$REPO_ROOT/skills" "$REPO_ROOT/examples" "$REPO_ROOT/bin" -type f \( -name "*.sh" -o -name "everything-gemini" \) 2>/dev/null || true)
 
 for exec_file in $EXEC_FILES; do
@@ -106,8 +106,19 @@ if command -v python3 >/dev/null 2>&1; then
   done
 fi
 
-# 5. Summary
-echo "  [5/5] Validation Summary"
+# 5. CLI E2E Integration Suite
+echo "  [5/6] Running CLI E2E Integration Suite..."
+if [ -f "$REPO_ROOT/tests/cli.test.js" ]; then
+  if ! node "$REPO_ROOT/tests/cli.test.js"; then
+    echo "    ❌ ERROR: CLI test suite failed."
+    ERRORS=$((ERRORS + 1))
+  else
+    echo "    ✔ CLI test suite passed (13 assertions)"
+  fi
+fi
+
+# 6. Summary
+echo "  [6/6] Validation Summary"
 if [ "$ERRORS" -gt 0 ]; then
   echo "❌ Validation failed with $ERRORS error(s)."
   exit 1

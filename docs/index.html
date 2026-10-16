@@ -571,6 +571,8 @@
         <button class="profile-tab" onclick="setInstallProfile('global', event)">Global (~/.gemini)</button>
         <button class="profile-tab" onclick="setInstallProfile('status', event)">Status Check</button>
         <button class="profile-tab" onclick="setInstallProfile('update', event)">Update Ecosystem</button>
+        <button class="profile-tab" onclick="setInstallProfile('dryrun', event)">Dry Run Preview</button>
+        <button class="profile-tab" onclick="setInstallProfile('json', event)">JSON Export</button>
         <button class="profile-tab" onclick="setInstallProfile('doctor', event)">Doctor</button>
         <button class="profile-tab" onclick="setInstallProfile('action', event)">GitHub Action</button>
       </div>
@@ -835,6 +837,8 @@
       else if (profile === 'global') cmdEl.innerText = 'npx everything-gemini install --global';
       else if (profile === 'status') cmdEl.innerText = 'npx everything-gemini status';
       else if (profile === 'update') cmdEl.innerText = 'npx everything-gemini update';
+      else if (profile === 'dryrun') cmdEl.innerText = 'npx everything-gemini install --profile developer --dry-run';
+      else if (profile === 'json') cmdEl.innerText = 'npx everything-gemini status --json';
       else if (profile === 'doctor') cmdEl.innerText = 'npx everything-gemini doctor';
       else if (profile === 'action') cmdEl.innerText = '- uses: salmandev/everything-gemini@v1';
     }

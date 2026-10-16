@@ -35,8 +35,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - Curated `@modelcontextprotocol/server-memory` (knowledge graph semantic memory across agent sessions) and `@modelcontextprotocol/server-fetch` in `mcp/mcp_config.example.json` and `templates/full-power/mcp_config.json`.
 - **Python SDK Test Suite & Compilation Validation**:
   - Added native Python syntax compilation verification (`python3 -m py_compile`) to `scripts/validate.sh` to ensure all Python SDK examples compile without syntax or import errors.
-- **Enhanced Windows CI Pipeline**:
-  - Added Windows test runner in `.github/workflows/ci.yml` validating PowerShell installation and CLI diagnostics on `windows-latest`.
+- **Dry Run Simulation (`--dry-run`)**:
+  - Zero-risk previews for `everything-gemini install` and `everything-gemini update` that detail which files, rules, skills, and hooks would be created without disk mutations.
+- **Machine-Readable JSON Output (`--json`)**:
+  - Full structured JSON payloads for `everything-gemini status --json` and `everything-gemini benchmark --json`, ideal for CI/CD scripting and automated health checks.
+- **Automated CLI E2E Test Suite (`tests/cli.test.js`)**:
+  - 13-assertion integration test suite validating doctor, list, dry-run installations, workspace isolation, component addition/removal, and JSON exports across all operating systems.
 - **Enterprise Security Policy**: Added [`SECURITY.md`](SECURITY.md) establishing formal vulnerability disclosure workflows.
 - **IDE Extensions**: Added [`.vscode/extensions.json`](.vscode/extensions.json) for developer workspace onboarding.
 

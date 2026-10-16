@@ -59,11 +59,13 @@ function printHelp() {
   console.log(`  ${GREEN}validate${RESET}                    Run self-test on frontmatter, JSON schemas & hooks`);
   console.log(`  ${GREEN}version, -v, --version${RESET}      Print everything-gemini version`);
   console.log(`  ${GREEN}help, -h, --help${RESET}            Show this help message\n`);
-  console.log(`${BOLD}OPTIONS for 'install':${RESET}`);
+  console.log(`${BOLD}GLOBAL & COMMAND OPTIONS:${RESET}`);
   console.log(`  ${CYAN}--profile <core|developer|full>${RESET}   Installation preset profile (default: developer)`);
-  console.log(`  ${CYAN}--global${RESET}                          Install globally into ~/.gemini/config/`);
-  console.log(`  ${CYAN}--workspace <path>${RESET}                Install into custom workspace directory`);
-  console.log(`  ${CYAN}--force${RESET}                          Overwrite existing configuration files\n`);
+  console.log(`  ${CYAN}--global${RESET}                          Target global config (~/.gemini/config/)`);
+  console.log(`  ${CYAN}--workspace <path>${RESET}                Target custom workspace directory`);
+  console.log(`  ${CYAN}--dry-run${RESET}                         Preview actions without modifying files on disk`);
+  console.log(`  ${CYAN}--json${RESET}                            Output machine-readable JSON (status, benchmark)`);
+  console.log(`  ${CYAN}--force${RESET}                           Overwrite existing configuration files\n`);
 }
 
 function runDoctor() {
@@ -195,11 +197,27 @@ function listComponents() {
         if (item.isDirectory()) {
           findRules(path.join(dir, item.name), `${prefix}${item.name}/`);
         } else if (item.name.endsWith('.md')) {
-          console.log(`  ${BOLD}${(prefix + item.name).padEnd(32)}${RESET}`);
+          console.log(`  ${BOLD}${(prefix + item.name).padEnd(36)}${RESET}`);
         }
       }
     }
     findRules(rulesDir);
+  }
+
+  // Plugin Packaged Rules
+  if (fs.existsSync(pluginsDirForSkills)) {
+    const plugins = fs.readdirSync(pluginsDirForSkills, { withFileTypes: true })
+      .filter(d => d.isDirectory())
+      .map(d => d.name);
+    for (const plugin of plugins) {
+      const pRulesDir = path.join(pluginsDirForSkills, plugin, 'rules');
+      if (fs.existsSync(pRulesDir)) {
+        const pRules = fs.readdirSync(pRulesDir).filter(f => f.endsWith('.md'));
+        for (const r of pRules) {
+          console.log(`  ${BOLD}${(`plugins/${plugin}/rules/${r}`).padEnd(36)}${RESET}`);
+        }
+      }
+    }
   }
 
   // Hooks
@@ -254,16 +272,20 @@ function copyRecursiveSync(src, dest) {
   }
 }
 
-function installProfile(profile = 'developer', isGlobal = false, customTarget = null) {
+function installProfile(profile = 'developer', isGlobal = false, customTarget = null, isDryRun = false) {
   printBanner();
   const targetDir = customTarget 
     ? path.resolve(customTarget)
     : (isGlobal ? GLOBAL_CONFIG_DIR : AGENTS_DIR);
 
+  if (isDryRun) {
+    console.log(`${YELLOW}${BOLD}🔍 DRY RUN MODE ACTIVATED - No files will be modified on disk.${RESET}`);
+  }
+
   console.log(`${BOLD}🚀 Installing everything-gemini Profile: [${GREEN}${profile}${RESET}${BOLD}]${RESET}`);
   console.log(`Target Directory: ${CYAN}${targetDir}${RESET}\n`);
 
-  if (!fs.existsSync(targetDir)) {
+  if (!isDryRun && !fs.existsSync(targetDir)) {
     fs.mkdirSync(targetDir, { recursive: true });
   }
 
@@ -272,9 +294,11 @@ function installProfile(profile = 'developer', isGlobal = false, customTarget = 
   const targetRules = path.join(targetDir, 'rules');
   const targetPlugins = path.join(targetDir, 'plugins');
   const targetAgents = path.join(targetDir, 'agents');
-  fs.mkdirSync(targetSkills, { recursive: true });
-  fs.mkdirSync(targetRules, { recursive: true });
-  fs.mkdirSync(targetPlugins, { recursive: true });
+  if (!isDryRun) {
+    fs.mkdirSync(targetSkills, { recursive: true });
+    fs.mkdirSync(targetRules, { recursive: true });
+    fs.mkdirSync(targetPlugins, { recursive: true });
+  }
 
   const skillsSrc = path.join(REPO_ROOT, 'skills');
   const rulesSrc = path.join(REPO_ROOT, 'rules');
@@ -286,12 +310,12 @@ function installProfile(profile = 'developer', isGlobal = false, customTarget = 
   const commonGemini = path.join(rulesSrc, 'common', 'GEMINI.md');
   const commonAgents = path.join(rulesSrc, 'common', 'AGENTS.md');
   if (fs.existsSync(commonGemini)) {
-    fs.copyFileSync(commonGemini, path.join(targetDir, 'GEMINI.md'));
-    console.log(`  ${GREEN}✔${RESET} Installed base GEMINI.md`);
+    if (!isDryRun) fs.copyFileSync(commonGemini, path.join(targetDir, 'GEMINI.md'));
+    console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} base GEMINI.md`);
   }
   if (fs.existsSync(commonAgents)) {
-    fs.copyFileSync(commonAgents, path.join(targetDir, 'AGENTS.md'));
-    console.log(`  ${GREEN}✔${RESET} Installed base AGENTS.md`);
+    if (!isDryRun) fs.copyFileSync(commonAgents, path.join(targetDir, 'AGENTS.md'));
+    console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} base AGENTS.md`);
   }
 
   // 1. Core Profile
@@ -300,14 +324,14 @@ function installProfile(profile = 'developer', isGlobal = false, customTarget = 
     for (const s of coreSkills) {
       const src = path.join(skillsSrc, s);
       if (fs.existsSync(src)) {
-        copyRecursiveSync(src, path.join(targetSkills, s));
-        console.log(`  ${GREEN}✔${RESET} Installed skill: ${s}`);
+        if (!isDryRun) copyRecursiveSync(src, path.join(targetSkills, s));
+        console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} skill: ${s}`);
       }
     }
     const safetyHook = path.join(hooksSrc, 'safety-shield');
     if (fs.existsSync(safetyHook)) {
-      copyRecursiveSync(safetyHook, path.join(targetDir, 'hooks', 'safety-shield'));
-      console.log(`  ${GREEN}✔${RESET} Installed safety-shield hook`);
+      if (!isDryRun) copyRecursiveSync(safetyHook, path.join(targetDir, 'hooks', 'safety-shield'));
+      console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} safety-shield hook`);
     }
   }
 
@@ -329,36 +353,36 @@ function installProfile(profile = 'developer', isGlobal = false, customTarget = 
     for (const s of devSkills) {
       const src = path.join(skillsSrc, s);
       if (fs.existsSync(src)) {
-        copyRecursiveSync(src, path.join(targetSkills, s));
-        console.log(`  ${GREEN}✔${RESET} Installed skill: ${s}`);
+        if (!isDryRun) copyRecursiveSync(src, path.join(targetSkills, s));
+        console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} skill: ${s}`);
       }
     }
 
     // Developer Language Rules
     const langRules = path.join(rulesSrc, 'languages');
     if (fs.existsSync(langRules)) {
-      copyRecursiveSync(langRules, targetRules);
-      console.log(`  ${GREEN}✔${RESET} Installed language rules (TypeScript, Python, Go)`);
+      if (!isDryRun) copyRecursiveSync(langRules, targetRules);
+      console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} language rules (TypeScript, Python, Go)`);
     }
 
     // Auto-lint formatter hook
     const lintHook = path.join(hooksSrc, 'auto-lint-formatter');
     if (fs.existsSync(lintHook)) {
-      copyRecursiveSync(lintHook, path.join(targetDir, 'hooks', 'auto-lint-formatter'));
-      console.log(`  ${GREEN}✔${RESET} Installed auto-lint-formatter hook`);
+      if (!isDryRun) copyRecursiveSync(lintHook, path.join(targetDir, 'hooks', 'auto-lint-formatter'));
+      console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} auto-lint-formatter hook`);
     }
 
     // Goal-verifier hook
     const goalHook = path.join(hooksSrc, 'goal-verifier');
     if (fs.existsSync(goalHook)) {
-      copyRecursiveSync(goalHook, path.join(targetDir, 'hooks', 'goal-verifier'));
-      console.log(`  ${GREEN}✔${RESET} Installed goal-verifier hook`);
+      if (!isDryRun) copyRecursiveSync(goalHook, path.join(targetDir, 'hooks', 'goal-verifier'));
+      console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} goal-verifier hook`);
     }
 
     // Scoped Subagents (agents/)
     if (fs.existsSync(agentsSrc)) {
-      copyRecursiveSync(agentsSrc, targetAgents);
-      console.log(`  ${GREEN}✔${RESET} Installed 6 scoped subagents (agents/)`);
+      if (!isDryRun) copyRecursiveSync(agentsSrc, targetAgents);
+      console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} 6 scoped subagents (agents/)`);
     }
 
     // Developer Plugins
@@ -366,36 +390,36 @@ function installProfile(profile = 'developer', isGlobal = false, customTarget = 
     for (const p of devPlugins) {
       const src = path.join(pluginsSrc, p);
       if (fs.existsSync(src)) {
-        copyRecursiveSync(src, path.join(targetPlugins, p));
-        console.log(`  ${GREEN}✔${RESET} Installed plugin: ${p}`);
+        if (!isDryRun) copyRecursiveSync(src, path.join(targetPlugins, p));
+        console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} plugin: ${p}`);
       }
     }
   }
 
   // 3. Full Power Profile
   if (profile === 'full') {
-    copyRecursiveSync(skillsSrc, targetSkills);
-    console.log(`  ${GREEN}✔${RESET} Installed entire skills library (30 progressive skills)`);
+    if (!isDryRun) copyRecursiveSync(skillsSrc, targetSkills);
+    console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} entire skills library (30 progressive skills)`);
 
-    copyRecursiveSync(rulesSrc, targetRules);
-    console.log(`  ${GREEN}✔${RESET} Installed entire rules library`);
+    if (!isDryRun) copyRecursiveSync(rulesSrc, targetRules);
+    console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} entire rules library`);
 
-    copyRecursiveSync(pluginsSrc, targetPlugins);
-    console.log(`  ${GREEN}✔${RESET} Installed all modular plugins`);
+    if (!isDryRun) copyRecursiveSync(pluginsSrc, targetPlugins);
+    console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} all modular plugins`);
 
-    copyRecursiveSync(hooksSrc, path.join(targetDir, 'hooks'));
-    console.log(`  ${GREEN}✔${RESET} Installed full lifecycle hooks suite (6 hooks)`);
+    if (!isDryRun) copyRecursiveSync(hooksSrc, path.join(targetDir, 'hooks'));
+    console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} full lifecycle hooks suite (6 hooks)`);
 
     if (fs.existsSync(agentsSrc)) {
-      copyRecursiveSync(agentsSrc, targetAgents);
-      console.log(`  ${GREEN}✔${RESET} Installed scoped subagents (agents/)`);
+      if (!isDryRun) copyRecursiveSync(agentsSrc, targetAgents);
+      console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} scoped subagents (agents/)`);
     }
 
     // MCP Config Example
     const mcpExample = path.join(REPO_ROOT, 'mcp', 'mcp_config.example.json');
     if (fs.existsSync(mcpExample)) {
-      fs.copyFileSync(mcpExample, path.join(targetDir, 'mcp_config.json'));
-      console.log(`  ${GREEN}✔${RESET} Installed mcp_config.json`);
+      if (!isDryRun) fs.copyFileSync(mcpExample, path.join(targetDir, 'mcp_config.json'));
+      console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} mcp_config.json`);
     }
   }
 
@@ -410,42 +434,100 @@ function installProfile(profile = 'developer', isGlobal = false, customTarget = 
   }
 
   if (fs.existsSync(templateHooksPath)) {
-    fs.copyFileSync(templateHooksPath, path.join(targetDir, 'hooks.json'));
-    console.log(`  ${GREEN}✔${RESET} Generated profile hooks.json (${profile})`);
+    if (!isDryRun) fs.copyFileSync(templateHooksPath, path.join(targetDir, 'hooks.json'));
+    console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would generate' : 'Generated'} profile hooks.json (${profile})`);
   }
 
+  if (isDryRun) {
+    console.log(`\n${GREEN}${BOLD}✨ Dry run preview complete! 0 files modified on disk.${RESET}\n`);
+  } else {
+    console.log(`\n${GREEN}${BOLD}✨ Installation complete! Everything Gemini is ready.${RESET}\n`);
+  }
 }
 
-function runStatus(isGlobal = false, customTarget = null) {
-  printBanner();
+function runStatus(isGlobal = false, customTarget = null, asJson = false) {
   const targetDir = customTarget 
     ? path.resolve(customTarget)
     : (isGlobal ? GLOBAL_CONFIG_DIR : AGENTS_DIR);
 
-  console.log(`${BOLD}📊 Everything Gemini Workspace Status${RESET}`);
-  console.log(`Directory: ${CYAN}${targetDir}${RESET}\n`);
+  const isInitialized = fs.existsSync(targetDir);
+  const geminiRule = path.join(targetDir, 'GEMINI.md');
+  const agentsRule = path.join(targetDir, 'AGENTS.md');
+  const hasGemini = fs.existsSync(geminiRule);
+  const hasAgents = fs.existsSync(agentsRule);
 
-  if (!fs.existsSync(targetDir)) {
-    console.log(`  ${YELLOW}○ Workspace is not initialized.${RESET}`);
-    console.log(`    Run ${GREEN}everything-gemini install${RESET} to set up.\n`);
-    return;
-  }
-
-  // 1. Rules
-  const hasGemini = fs.existsSync(path.join(targetDir, 'GEMINI.md'));
-  const hasAgents = fs.existsSync(path.join(targetDir, 'AGENTS.md'));
-  console.log(`${CYAN}${BOLD}📜 Base Rules:${RESET}`);
-  console.log(`  ${hasGemini ? GREEN + '✔' : GRAY + '○'}${RESET} GEMINI.md ${hasGemini ? '(active)' : '(not installed)'}`);
-  console.log(`  ${hasAgents ? GREEN + '✔' : GRAY + '○'}${RESET} AGENTS.md ${hasAgents ? '(active)' : '(not installed)'}`);
-
-  // 2. Installed Skills
+  // 1. Installed Skills
   const skillsDir = path.join(targetDir, 'skills');
   let installedSkills = [];
   if (fs.existsSync(skillsDir)) {
     installedSkills = fs.readdirSync(skillsDir, { withFileTypes: true })
       .filter(d => d.isDirectory())
-      .map(d => d.name);
+      .map(d => d.name)
+      .sort();
   }
+
+  // 2. Subagents
+  const agentsDir = path.join(targetDir, 'agents');
+  let installedAgents = [];
+  if (fs.existsSync(agentsDir)) {
+    installedAgents = fs.readdirSync(agentsDir)
+      .filter(f => f.endsWith('.md'))
+      .map(f => f.replace('.md', ''))
+      .sort();
+  }
+
+  // 3. Hooks
+  const hooksFile = path.join(targetDir, 'hooks.json');
+  let hooksSummary = {};
+  if (fs.existsSync(hooksFile)) {
+    try {
+      hooksSummary = JSON.parse(fs.readFileSync(hooksFile, 'utf8'));
+    } catch (e) {}
+  }
+
+  if (asJson) {
+    const payload = {
+      version: VERSION,
+      targetDir,
+      isGlobal,
+      isInitialized,
+      rules: {
+        gemini: hasGemini,
+        agents: hasAgents
+      },
+      skills: {
+        installedCount: installedSkills.length,
+        totalCatalogCount: 30,
+        installed: installedSkills
+      },
+      subagents: {
+        installedCount: installedAgents.length,
+        totalCatalogCount: 6,
+        installed: installedAgents
+      },
+      hooks: {
+        activeCount: Object.keys(hooksSummary).length,
+        active: Object.keys(hooksSummary)
+      }
+    };
+    console.log(JSON.stringify(payload, null, 2));
+    return;
+  }
+
+  printBanner();
+  console.log(`${BOLD}📊 Everything Gemini Workspace Status${RESET}`);
+  console.log(`Directory: ${CYAN}${targetDir}${RESET}\n`);
+
+  if (!isInitialized) {
+    console.log(`  ${YELLOW}○ Workspace is not initialized.${RESET}`);
+    console.log(`    Run ${GREEN}everything-gemini install${RESET} to set up.\n`);
+    return;
+  }
+
+  console.log(`${CYAN}${BOLD}📜 Base Rules:${RESET}`);
+  console.log(`  ${hasGemini ? GREEN + '✔' : GRAY + '○'}${RESET} GEMINI.md ${hasGemini ? '(active)' : '(not installed)'}`);
+  console.log(`  ${hasAgents ? GREEN + '✔' : GRAY + '○'}${RESET} AGENTS.md ${hasAgents ? '(active)' : '(not installed)'}`);
+
   console.log(`\n${CYAN}${BOLD}⚡ Installed Skills (${installedSkills.length}/30):${RESET}`);
   if (installedSkills.length === 0) {
     console.log(`  ${GRAY}(no skills installed)${RESET}`);
@@ -455,14 +537,6 @@ function runStatus(isGlobal = false, customTarget = null) {
     }
   }
 
-  // 3. Subagents
-  const agentsDir = path.join(targetDir, 'agents');
-  let installedAgents = [];
-  if (fs.existsSync(agentsDir)) {
-    installedAgents = fs.readdirSync(agentsDir)
-      .filter(f => f.endsWith('.md'))
-      .map(f => f.replace('.md', ''));
-  }
   console.log(`\n${CYAN}${BOLD}🤖 Scoped Subagents (${installedAgents.length}/6):${RESET}`);
   if (installedAgents.length === 0) {
     console.log(`  ${GRAY}(no subagents installed)${RESET}`);
@@ -472,20 +546,13 @@ function runStatus(isGlobal = false, customTarget = null) {
     }
   }
 
-  // 4. Hooks
-  const hooksFile = path.join(targetDir, 'hooks.json');
   console.log(`\n${CYAN}${BOLD}🛡️ Lifecycle Hooks:${RESET}`);
-  if (fs.existsSync(hooksFile)) {
-    try {
-      const hooksData = JSON.parse(fs.readFileSync(hooksFile, 'utf8'));
-      const hookNames = Object.keys(hooksData);
-      console.log(`  ${GREEN}✔${RESET} hooks.json configured (${hookNames.length} hooks active):`);
-      for (const h of hookNames) {
-        const events = Object.keys(hooksData[h]).join(', ');
-        console.log(`    • ${BOLD}${h}${RESET} [${GRAY}${events}${RESET}]`);
-      }
-    } catch (e) {
-      console.log(`  ${RED}✖ Invalid hooks.json syntax${RESET}`);
+  const hookNames = Object.keys(hooksSummary);
+  if (hookNames.length > 0) {
+    console.log(`  ${GREEN}✔${RESET} hooks.json configured (${hookNames.length} hooks active):`);
+    for (const h of hookNames) {
+      const events = Object.keys(hooksSummary[h]).join(', ');
+      console.log(`    • ${BOLD}${h}${RESET} [${GRAY}${events}${RESET}]`);
     }
   } else {
     console.log(`  ${GRAY}(no hooks.json found)${RESET}`);
@@ -493,12 +560,15 @@ function runStatus(isGlobal = false, customTarget = null) {
   console.log('');
 }
 
-function runUpdate(isGlobal = false, customTarget = null) {
+function runUpdate(isGlobal = false, customTarget = null, isDryRun = false) {
   printBanner();
   const targetDir = customTarget 
     ? path.resolve(customTarget)
     : (isGlobal ? GLOBAL_CONFIG_DIR : AGENTS_DIR);
 
+  if (isDryRun) {
+    console.log(`${YELLOW}${BOLD}🔍 DRY RUN MODE ACTIVATED - No files will be modified on disk.${RESET}`);
+  }
   console.log(`${BOLD}🔄 Updating Installed Components in: ${CYAN}${targetDir}${RESET}\n`);
 
   if (!fs.existsSync(targetDir)) {
@@ -520,8 +590,11 @@ function runUpdate(isGlobal = false, customTarget = null) {
     for (const s of installed) {
       const src = path.join(REPO_ROOT, 'skills', s);
       if (fs.existsSync(src)) {
-        copyRecursiveSync(src, path.join(targetSkills, s));
+        if (!isDryRun) copyRecursiveSync(src, path.join(targetSkills, s));
         updatedSkills++;
+        if (isDryRun) {
+          console.log(`  ${CYAN}[DRY RUN]${RESET} Would update skill: ${s}`);
+        }
       }
     }
   }
@@ -534,8 +607,11 @@ function runUpdate(isGlobal = false, customTarget = null) {
     for (const a of installed) {
       const src = path.join(REPO_ROOT, 'agents', a);
       if (fs.existsSync(src)) {
-        fs.copyFileSync(src, path.join(targetAgents, a));
+        if (!isDryRun) fs.copyFileSync(src, path.join(targetAgents, a));
         updatedAgents++;
+        if (isDryRun) {
+          console.log(`  ${CYAN}[DRY RUN]${RESET} Would update subagent: ${a}`);
+        }
       }
     }
   }
@@ -549,8 +625,11 @@ function runUpdate(isGlobal = false, customTarget = null) {
     for (const h of installed) {
       const src = path.join(REPO_ROOT, 'hooks', h);
       if (fs.existsSync(src)) {
-        copyRecursiveSync(src, path.join(targetHooks, h));
+        if (!isDryRun) copyRecursiveSync(src, path.join(targetHooks, h));
         updatedHooks++;
+        if (isDryRun) {
+          console.log(`  ${CYAN}[DRY RUN]${RESET} Would refresh hook: ${h}`);
+        }
       }
     }
   }
@@ -558,17 +637,23 @@ function runUpdate(isGlobal = false, customTarget = null) {
   // 4. Refresh base rules if present
   const rulesSrc = path.join(REPO_ROOT, 'rules', 'common');
   if (fs.existsSync(path.join(targetDir, 'GEMINI.md')) && fs.existsSync(path.join(rulesSrc, 'GEMINI.md'))) {
-    fs.copyFileSync(path.join(rulesSrc, 'GEMINI.md'), path.join(targetDir, 'GEMINI.md'));
+    if (!isDryRun) fs.copyFileSync(path.join(rulesSrc, 'GEMINI.md'), path.join(targetDir, 'GEMINI.md'));
+    if (isDryRun) console.log(`  ${CYAN}[DRY RUN]${RESET} Would refresh base GEMINI.md`);
   }
   if (fs.existsSync(path.join(targetDir, 'AGENTS.md')) && fs.existsSync(path.join(rulesSrc, 'AGENTS.md'))) {
-    fs.copyFileSync(path.join(rulesSrc, 'AGENTS.md'), path.join(targetDir, 'AGENTS.md'));
+    if (!isDryRun) fs.copyFileSync(path.join(rulesSrc, 'AGENTS.md'), path.join(targetDir, 'AGENTS.md'));
+    if (isDryRun) console.log(`  ${CYAN}[DRY RUN]${RESET} Would refresh base AGENTS.md`);
   }
 
-  console.log(`  ${GREEN}✔${RESET} Synced ${BOLD}${updatedSkills}${RESET} installed skills to latest catalog versions`);
-  console.log(`  ${GREEN}✔${RESET} Synced ${BOLD}${updatedAgents}${RESET} subagent specifications`);
-  console.log(`  ${GREEN}✔${RESET} Refreshed ${BOLD}${updatedHooks}${RESET} lifecycle hook scripts & verified permissions`);
-  console.log(`  ${GREEN}✔${RESET} Refreshed base GEMINI.md & AGENTS.md rules\n`);
-  console.log(`${GREEN}${BOLD}✨ Update complete! Everything Gemini is up to date.${RESET}\n`);
+  if (isDryRun) {
+    console.log(`\n${GREEN}${BOLD}✨ Dry run preview complete! 0 files modified on disk.${RESET}\n`);
+  } else {
+    console.log(`  ${GREEN}✔${RESET} Synced ${BOLD}${updatedSkills}${RESET} installed skills to latest catalog versions`);
+    console.log(`  ${GREEN}✔${RESET} Synced ${BOLD}${updatedAgents}${RESET} subagent specifications`);
+    console.log(`  ${GREEN}✔${RESET} Refreshed ${BOLD}${updatedHooks}${RESET} lifecycle hook scripts & verified permissions`);
+    console.log(`  ${GREEN}✔${RESET} Refreshed base GEMINI.md & AGENTS.md rules\n`);
+    console.log(`${GREEN}${BOLD}✨ Update complete! Everything Gemini is up to date.${RESET}\n`);
+  }
 }
 
 function runValidate() {
@@ -866,12 +951,11 @@ function testSkill(name) {
   console.log(`\n${GREEN}${BOLD}✨ Skill '${cleanName}' passed all validation checks!${RESET}\n`);
 }
 
-function testAllSkills() {
-  printBanner();
-  console.log(`${BOLD}🧪 Benchmarking & Validating All Skills, Subagents & Hooks...${RESET}\n`);
+function testAllSkills(asJson = false) {
   const startTime = Date.now();
   let skillCount = 0;
   let totalChars = 0;
+  const skillsGathered = [];
 
   // 1. Core Skills
   const skillsDir = path.join(REPO_ROOT, 'skills');
@@ -880,7 +964,12 @@ function testAllSkills() {
     .map(d => d.name)
     .sort();
 
-  console.log(`${CYAN}${BOLD}⚡ Skills Validation (Progressive Disclosure):${RESET}`);
+  if (!asJson) {
+    printBanner();
+    console.log(`${BOLD}🧪 Benchmarking & Validating All Skills, Subagents & Hooks...${RESET}\n`);
+    console.log(`${CYAN}${BOLD}⚡ Skills Validation (Progressive Disclosure):${RESET}`);
+  }
+
   for (const s of skills) {
     const md = path.join(skillsDir, s, 'SKILL.md');
     if (fs.existsSync(md)) {
@@ -888,7 +977,10 @@ function testAllSkills() {
       totalChars += content.length;
       skillCount++;
       const estTokens = Math.round(content.length / 4);
-      console.log(`  ${GREEN}✔${RESET} ${s.padEnd(30)} ${GRAY}(~${estTokens} tokens)${RESET}`);
+      skillsGathered.push({ name: s, plugin: null, tokens: estTokens });
+      if (!asJson) {
+        console.log(`  ${GREEN}✔${RESET} ${s.padEnd(30)} ${GRAY}(~${estTokens} tokens)${RESET}`);
+      }
     }
   }
 
@@ -913,7 +1005,10 @@ function testAllSkills() {
             totalChars += content.length;
             skillCount++;
             const estTokens = Math.round(content.length / 4);
-            console.log(`  ${GREEN}✔${RESET} ${(`${s} [${p}]`).padEnd(30)} ${GRAY}(~${estTokens} tokens)${RESET}`);
+            skillsGathered.push({ name: s, plugin: p, tokens: estTokens });
+            if (!asJson) {
+              console.log(`  ${GREEN}✔${RESET} ${(`${s} [${p}]`).padEnd(30)} ${GRAY}(~${estTokens} tokens)${RESET}`);
+            }
           }
         }
       }
@@ -921,27 +1016,48 @@ function testAllSkills() {
   }
 
   // 3. Subagents
-  console.log(`\n${CYAN}${BOLD}🤖 Scoped Subagents Validation:${RESET}`);
+  if (!asJson) console.log(`\n${CYAN}${BOLD}🤖 Scoped Subagents Validation:${RESET}`);
   const agentsDir = path.join(REPO_ROOT, 'agents');
-  const agents = fs.readdirSync(agentsDir).filter(f => f.endsWith('.md')).sort();
-  for (const a of agents) {
-    console.log(`  ${GREEN}✔${RESET} ${a.replace('.md', '').padEnd(30)}`);
+  const agents = fs.readdirSync(agentsDir).filter(f => f.endsWith('.md')).sort().map(f => f.replace('.md', ''));
+  if (!asJson) {
+    for (const a of agents) {
+      console.log(`  ${GREEN}✔${RESET} ${a.padEnd(30)}`);
+    }
   }
 
   // 4. Lifecycle Hooks
-  console.log(`\n${CYAN}${BOLD}🛡️ Lifecycle Hooks Validation:${RESET}`);
+  if (!asJson) console.log(`\n${CYAN}${BOLD}🛡️ Lifecycle Hooks Validation:${RESET}`);
   const hooksDir = path.join(REPO_ROOT, 'hooks');
   const hooks = fs.readdirSync(hooksDir, { withFileTypes: true })
     .filter(d => d.isDirectory())
     .map(d => d.name)
     .sort();
-  for (const h of hooks) {
-    console.log(`  ${GREEN}✔${RESET} ${h.padEnd(30)}`);
+  if (!asJson) {
+    for (const h of hooks) {
+      console.log(`  ${GREEN}✔${RESET} ${h.padEnd(30)}`);
+    }
   }
 
   const duration = ((Date.now() - startTime) / 1000).toFixed(2);
   const totalTokens = Math.round(totalChars / 4);
   const tokenSavings = Math.round(totalTokens * 0.85);
+
+  if (asJson) {
+    console.log(JSON.stringify({
+      version: VERSION,
+      totalComponents: skillCount + agents.length + hooks.length,
+      progressiveSkillsCount: skillCount,
+      scopedAgentsCount: agents.length,
+      lifecycleHooksCount: hooks.length,
+      totalRunbookTokens: totalTokens,
+      estimatedTokensSavedPerTurn: tokenSavings,
+      latencySeconds: parseFloat(duration),
+      skills: skillsGathered,
+      agents,
+      hooks
+    }, null, 2));
+    return;
+  }
 
   console.log(`\n${GREEN}${BOLD}✨ Benchmark Summary:${RESET}`);
   console.log(`  Total Components: ${BOLD}${skillCount + agents.length + hooks.length}${RESET}`);
@@ -1164,9 +1280,11 @@ switch (command) {
     break;
   case 'test-all':
   case 'test-skills':
-  case 'benchmark':
-    testAllSkills();
+  case 'benchmark': {
+    const asJson = args.includes('--json');
+    testAllSkills(asJson);
     break;
+  }
   case 'completion':
     printCompletion();
     break;
@@ -1178,21 +1296,25 @@ switch (command) {
   case 'check': {
     let isGlobal = false;
     let customTarget = null;
+    let asJson = false;
     for (let i = 1; i < args.length; i++) {
       if (args[i] === '--global') isGlobal = true;
+      else if (args[i] === '--json') asJson = true;
       else if (args[i] === '--workspace' && args[i + 1]) customTarget = args[++i];
     }
-    runStatus(isGlobal, customTarget);
+    runStatus(isGlobal, customTarget, asJson);
     break;
   }
   case 'update': {
     let isGlobal = false;
     let customTarget = null;
+    let isDryRun = false;
     for (let i = 1; i < args.length; i++) {
       if (args[i] === '--global') isGlobal = true;
+      else if (args[i] === '--dry-run') isDryRun = true;
       else if (args[i] === '--workspace' && args[i + 1]) customTarget = args[++i];
     }
-    runUpdate(isGlobal, customTarget);
+    runUpdate(isGlobal, customTarget, isDryRun);
     break;
   }
   case 'init':
@@ -1200,12 +1322,14 @@ switch (command) {
     let profile = 'developer';
     let isGlobal = false;
     let customTarget = null;
+    let isDryRun = false;
     for (let i = 1; i < args.length; i++) {
       if (args[i] === '--profile' && args[i + 1]) profile = args[++i];
       else if (args[i] === '--global') isGlobal = true;
+      else if (args[i] === '--dry-run') isDryRun = true;
       else if (args[i] === '--workspace' && args[i + 1]) customTarget = args[++i];
     }
-    installProfile(profile, isGlobal, customTarget);
+    installProfile(profile, isGlobal, customTarget, isDryRun);
     break;
   }
   case 'validate':

@@ -313,10 +313,15 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 # Inspect active workspace status dashboard (installed skills, subagents, hooks)
 ./bin/everything-gemini status
 ./bin/everything-gemini status --global
+./bin/everything-gemini status --json
 
 # Update installed ecosystem components in-place to latest catalog versions
 ./bin/everything-gemini update
 ./bin/everything-gemini update --global
+./bin/everything-gemini update --dry-run
+
+# Preview an installation without modifying disk
+./bin/everything-gemini install --profile developer --dry-run
 
 # Install a specific profile into the current workspace (.agents/)
 ./bin/everything-gemini install --profile developer
@@ -346,8 +351,9 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 # Test and validate a specific skill's frontmatter and scripts
 ./bin/everything-gemini test-skill gemini-multimodal
 
-# Benchmark and validate all 30 skills, subagents, and hooks
+# Benchmark and validate all 30 skills, subagents, and hooks (human or JSON)
 ./bin/everything-gemini test-all
+./bin/everything-gemini benchmark --json
 
 # View detailed playbook or specification for any skill, subagent, or hook
 ./bin/everything-gemini info agent-evals
