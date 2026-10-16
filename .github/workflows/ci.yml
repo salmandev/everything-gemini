@@ -45,6 +45,23 @@ jobs:
           node bin/everything-gemini info gemini-shield
           node bin/everything-gemini info antigravity-sdk-orchestrator
 
+      - name: Verify Benchmark & Shell Completion
+        run: |
+          npm run benchmark
+          npm run completion
+          node bin/everything-gemini --version
+
+      - name: Verify Installer Script (install.sh)
+        run: |
+          bash scripts/install.sh --profile developer --workspace ./tmp-ci-agents
+
+      - name: Self-Test Composite GitHub Action (action.yml)
+        uses: ./
+        with:
+          profile: developer
+          global: false
+          workspace: ./tmp-action-agents
+
       - name: Verify Component Add & Remove CLI
         run: |
           node bin/everything-gemini add skill tdd-workflow
