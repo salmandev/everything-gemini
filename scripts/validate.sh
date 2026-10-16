@@ -37,8 +37,15 @@ done
 
 # 2. Validate Scoped Subagents
 echo "  [2/5] Checking Subagents specifications..."
-AGENT_FILES=$(find "$REPO_ROOT/agents" -name "*.md" 2>/dev/null || true)
+REQUIRED_AGENTS=("planner.md" "code-reviewer.md" "browser-qa.md" "build-repair.md" "security-auditor.md" "architect.md")
+for ag in "${REQUIRED_AGENTS[@]}"; do
+  if [ ! -f "$REPO_ROOT/agents/$ag" ]; then
+    echo "    ❌ ERROR: Required subagent specification 'agents/$ag' is missing!"
+    ERRORS=$((ERRORS + 1))
+  fi
+done
 
+AGENT_FILES=$(find "$REPO_ROOT/agents" -name "*.md" 2>/dev/null || true)
 for agent_file in $AGENT_FILES; do
   rel_path="${agent_file#$REPO_ROOT/}"
   if ! grep -q "^# " "$agent_file"; then
@@ -49,8 +56,8 @@ for agent_file in $AGENT_FILES; do
   fi
 done
 
-# 3. Validate JSON Syntax
-echo "  [3/5] Validating JSON files..."
+# 3. Validate JSON & YAML Files
+echo "  [3/5] Validating JSON files & Action manifest..."
 JSON_FILES=$(find "$REPO_ROOT" -name "*.json" ! -path "*/node_modules/*" 2>/dev/null || true)
 
 for json_file in $JSON_FILES; do
@@ -63,15 +70,24 @@ for json_file in $JSON_FILES; do
   fi
 done
 
-# 4. Validate Shell Scripts Executability
-echo "  [4/5] Verifying script permissions..."
-SH_FILES=$(find "$REPO_ROOT/scripts" "$REPO_ROOT/hooks" "$REPO_ROOT/skills" -name "*.sh" 2>/dev/null || true)
+if [ -f "$REPO_ROOT/action.yml" ]; then
+  if grep -q "name:" "$REPO_ROOT/action.yml" && grep -q "runs:" "$REPO_ROOT/action.yml"; then
+    echo "    ✔ action.yml (composite GitHub action valid)"
+  else
+    echo "    ❌ ERROR: action.yml is missing required composite action fields"
+    ERRORS=$((ERRORS + 1))
+  fi
+fi
 
-for sh_file in $SH_FILES; do
-  rel_path="${sh_file#$REPO_ROOT/}"
-  if [ ! -x "$sh_file" ]; then
+# 4. Validate Shell Scripts & CLI Executability
+echo "  [4/5] Verifying script permissions..."
+EXEC_FILES=$(find "$REPO_ROOT/scripts" "$REPO_ROOT/hooks" "$REPO_ROOT/skills" "$REPO_ROOT/examples" "$REPO_ROOT/bin" -type f \( -name "*.sh" -o -name "everything-gemini" \) 2>/dev/null || true)
+
+for exec_file in $EXEC_FILES; do
+  rel_path="${exec_file#$REPO_ROOT/}"
+  if [ ! -x "$exec_file" ]; then
     echo "    ⚠️ Fixing executable bit on: $rel_path"
-    chmod +x "$sh_file"
+    chmod +x "$exec_file"
   fi
   echo "    ✔ $rel_path (executable)"
 done
