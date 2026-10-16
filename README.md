@@ -383,6 +383,12 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for full development guidelines, YAML fro
 
 ---
 
+## 🌟 Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=salmandev/everything-gemini&type=Date)](https://star-history.com/#salmandev/everything-gemini&Date)
+
+---
+
 ## 🙏 Acknowledgements & Inspiration
 
 * Inspired by [Affan Mustafa's Everything Claude Code (ECC)](https://github.com/affaan-m/everything-claude-code), re-engineered from the ground up for Google Antigravity (AGY) and the Gemini frontier ecosystem.
