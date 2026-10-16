@@ -135,6 +135,30 @@ The validator checks:
 
 ---
 
+## 🎯 Community Wishlist & Good First Issues
+
+Looking for inspiration on what to contribute? The community has requested the following progressive disclosure skills and subagents:
+
+### 🌟 High-Demand Skills Wishlist
+| Skill Identifier | Category | Purpose | Suggested Trigger |
+| :--- | :--- | :--- | :--- |
+| **`svelte-kit-architect`** | Frontend | Svelte 5 runes, SvelteKit form actions, server-side data loading, and adapter configs | SvelteKit app development |
+| **`redis-cache-patterns`** | Backend | Redis distributed locks (Redlock), Pub/Sub, rate limit sliding windows, and caching patterns | Redis cache and session stores |
+| **`clickhouse-analytics`** | Database | High-throughput OLAP schemas, MergeTree engines, material views, and vector search | Big data & analytical querying |
+| **`wasm-rust-optimizer`** | Performance | WebAssembly compilation with `wasm-pack`, memory buffers, and SIMD optimizations | High-performance client-side compute |
+| **`fastapi-production`** | Python AI | Pydantic v2 schemas, background tasks, dependency injection, and ASGI deployment | Production FastAPI services |
+
+### How to Build a Wishlist Item:
+1. Open an issue using the [Skill Proposal template](.github/ISSUE_TEMPLATE/skill_proposal.md).
+2. Scaffold the skill instantly using the CLI:
+   ```bash
+   ./bin/everything-gemini new-skill svelte-kit-architect
+   ```
+3. Author procedural instructions in `SKILL.md` (< 250 lines) and put deep reference docs in `references/spec.md`.
+4. Validate with `npm test` and submit your Pull Request!
+
+---
+
 ## 📝 Pull Request Process
 
 1. Fork the repository and create your branch from `main`:

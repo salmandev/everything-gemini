@@ -40,7 +40,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **Machine-Readable JSON Output (`--json`)**:
   - Full structured JSON payloads for `everything-gemini status --json` and `everything-gemini benchmark --json`, ideal for CI/CD scripting and automated health checks.
 - **Automated CLI E2E Test Suite (`tests/cli.test.js`)**:
-  - 13-assertion integration test suite validating doctor, list, dry-run installations, workspace isolation, component addition/removal, and JSON exports across all operating systems.
+  - 15-assertion integration test suite validating doctor, list, dry-run installations, workspace isolation, component addition/removal, completion installation, and JSON exports across all operating systems.
+- **Automated Shell Completion Installer (`everything-gemini completion --install`)**:
+  - Automatically and idempotently installs tab completions into user shell configuration files (`~/.zshrc`, `~/.bashrc`, or custom `--rc`) with `--dry-run` inspection.
+- **Curated Redis Cache MCP Server Blueprint**:
+  - Added `@modelcontextprotocol/server-redis` to `mcp/mcp_config.example.json`, `templates/full-power/mcp_config.json`, and documented in `mcp/README.md`.
+- **Automated Relative Documentation Link Validator**:
+  - Integrated recursive markdown relative link verification into Phase 3 of `scripts/validate.sh` to prevent broken links across all documentation and skill files.
+- **Community Contributor Onboarding & Wishlist**:
+  - Added GitHub issue templates for Subagent Proposals and Feature Requests, plus a curated wishlist of high-demand skills in `CONTRIBUTING.md`.
 - **Enterprise Security Policy**: Added [`SECURITY.md`](SECURITY.md) establishing formal vulnerability disclosure workflows.
 - **IDE Extensions**: Added [`.vscode/extensions.json`](.vscode/extensions.json) for developer workspace onboarding.
 

@@ -55,7 +55,7 @@ function printHelp() {
   console.log(`  ${GREEN}test-skill${RESET} <name>           Validate a specific skill frontmatter & scripts`);
   console.log(`  ${GREEN}test-all${RESET}                    Benchmark & validate all 30 skills, subagents & hooks`);
   console.log(`  ${GREEN}info${RESET} <name>                  Display overview & runbook for a skill, agent, or hook`);
-  console.log(`  ${GREEN}completion${RESET}                Generate shell autocompletion script (bash/zsh)`);
+  console.log(`  ${GREEN}completion${RESET} [--install]        Generate or install shell autocompletion script (bash/zsh)`);
   console.log(`  ${GREEN}validate${RESET}                    Run self-test on frontmatter, JSON schemas & hooks`);
   console.log(`  ${GREEN}version, -v, --version${RESET}      Print everything-gemini version`);
   console.log(`  ${GREEN}help, -h, --help${RESET}            Show this help message\n`);
@@ -1067,7 +1067,7 @@ function testAllSkills(asJson = false) {
   console.log(`  Diagnostic Latency: ${BOLD}${duration}s${RESET}\n`);
 }
 
-function printCompletion() {
+function printCompletion(installMode = false, isDryRun = false, customRc = null) {
   const script = `
 # Everything Gemini Bash/Zsh completion
 _everything_gemini() {
@@ -1117,8 +1117,41 @@ _everything_gemini() {
   esac
 }
 complete -F _everything_gemini everything-gemini egemini eagy
-`;
-  console.log(script.trim());
+`.trim();
+
+  if (!installMode) {
+    console.log(script);
+    return;
+  }
+
+  printBanner();
+  console.log(`${BOLD}🐚 Shell Autocompletion Installer${RESET}\n`);
+
+  let targetRc = customRc;
+  if (!targetRc) {
+    const isZsh = (process.env.SHELL && process.env.SHELL.includes('zsh')) || fs.existsSync(path.join(os.homedir(), '.zshrc'));
+    targetRc = isZsh ? path.join(os.homedir(), '.zshrc') : path.join(os.homedir(), '.bashrc');
+  }
+
+  if (fs.existsSync(targetRc)) {
+    const currentContent = fs.readFileSync(targetRc, 'utf8');
+    if (currentContent.includes('_everything_gemini()')) {
+      console.log(`  ${YELLOW}ℹ${RESET} Autocompletion is already configured in ${BOLD}${targetRc}${RESET}`);
+      console.log(`    To reload, run: ${GREEN}source ${targetRc}${RESET}\n`);
+      return;
+    }
+  }
+
+  if (isDryRun) {
+    console.log(`  ${CYAN}[DRY RUN]${RESET} Would append completion script to: ${BOLD}${targetRc}${RESET}\n`);
+    return;
+  }
+
+  const payload = `\n\n# Everything Gemini Autocompletion\n${script}\n`;
+  fs.appendFileSync(targetRc, payload, 'utf8');
+  console.log(`  ${GREEN}✔${RESET} Successfully installed autocompletion into: ${BOLD}${targetRc}${RESET}`);
+  console.log(`\n${GREEN}${BOLD}✨ Ready! Reload your shell with:${RESET}`);
+  console.log(`  ${CYAN}source ${targetRc}${RESET}\n`);
 }
 
 function showComponentInfo(query1, query2) {
@@ -1285,9 +1318,16 @@ switch (command) {
     testAllSkills(asJson);
     break;
   }
-  case 'completion':
-    printCompletion();
+  case 'completion': {
+    const installMode = args.includes('--install') || args.includes('-i');
+    const isDryRun = args.includes('--dry-run');
+    let customRc = null;
+    for (let i = 1; i < args.length; i++) {
+      if (args[i] === '--rc' && args[i + 1]) customRc = args[++i];
+    }
+    printCompletion(installMode, isDryRun, customRc);
     break;
+  }
   case 'info':
   case 'show':
     showComponentInfo(args[1], args[2]);

@@ -106,10 +106,30 @@ it('should generate shell autocompletion script', () => {
   assert.match(res.stdout, /complete -F _everything_gemini/);
 });
 
+it('should support completion --install --dry-run', () => {
+  const res = runCli('completion --install --dry-run');
+  assert.strictEqual(res.status, 0);
+  assert.match(res.stdout, /DRY RUN/);
+  assert.match(res.stdout, /Would append completion script/);
+});
+
 // 6. Sandboxed Workspace Tests
 const tempWorkspace = fs.mkdtempSync(path.join(os.tmpdir(), 'egemini-test-'));
 
 try {
+  it('should install completion script idempotently to a custom rc file', () => {
+    const customRc = path.join(tempWorkspace, 'test.bashrc');
+    fs.writeFileSync(customRc, '# existing rc\n');
+    const res1 = runCli(`completion --install --rc "${customRc}"`);
+    assert.strictEqual(res1.status, 0);
+    assert.match(res1.stdout, /Successfully installed autocompletion/);
+    assert(fs.readFileSync(customRc, 'utf8').includes('_everything_gemini()'));
+
+    // Test idempotency
+    const res2 = runCli(`completion --install --rc "${customRc}"`);
+    assert.strictEqual(res2.status, 0);
+    assert.match(res2.stdout, /already configured/);
+  });
   // Dry run installation
   it('should support --dry-run on install without creating directories', () => {
     const dryWorkspace = path.join(tempWorkspace, 'dry-run-workspace');

@@ -37,7 +37,7 @@ Out of the box, Antigravity is a formidable pair programmer. But without structu
 2. 🧠 **Progressive Disclosure Skills (`skills/`)**: On-demand procedural playbooks that load *only* when needed, saving up to **85% in token overhead**.
 3. 📏 **Hierarchical Rules (`GEMINI.md` / `AGENTS.md`)**: Context-aware coding standards, zero-hallucination protocols, and clean-architecture rules.
 4. 🔌 **Plug-and-Play Plugins (`plugins/`)**: Domain bundles for Fullstack Web, Python AI, DevOps, and Security.
-5. 🌐 **Curated MCP Servers (`mcp/`)**: Production blueprints for Persistent Semantic Memory (`@modelcontextprotocol/server-memory`), Web Fetch (`server-fetch`), GitHub, PostgreSQL, and SQLite.
+5. 🌐 **Curated MCP Servers (`mcp/`)**: Production blueprints for Persistent Semantic Memory (`@modelcontextprotocol/server-memory`), High-Performance Cache (`@modelcontextprotocol/server-redis`), Web Fetch (`server-fetch`), GitHub, PostgreSQL, and SQLite.
 6. 🤖 **Subagent & Browser Automation**: Specialized recipes for autonomous browser subagents with automated WebP recording.
 
 ---
@@ -369,6 +369,11 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 # Generate shell autocompletion script (bash/zsh)
 ./bin/everything-gemini completion >> ~/.zshrc
 
+# Or automatically install autocompletion idempotently into your active shell rc
+./bin/everything-gemini completion --install
+./bin/everything-gemini completion --install --dry-run
+./bin/everything-gemini completion --install --rc ~/.bashrc
+
 # Validate all schemas, hooks, and frontmatter
 ./bin/everything-gemini validate
 ```
@@ -379,6 +384,7 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 
 We welcome community contributions! You can contribute new **Skills**, **Rules**, **Lifecycle Hooks**, **MCP Blueprints**, or **Plugins**.
 
+Check out our [Community Wishlist & Good First Issues](CONTRIBUTING.md#community-wishlist--good-first-issues) for high-impact skills ready to be built.
 See [CONTRIBUTING.md](CONTRIBUTING.md) for full development guidelines, YAML frontmatter standards, and validation procedures.
 
 ---

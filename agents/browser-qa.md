@@ -21,6 +21,6 @@ The `browser-qa` subagent is an autonomous visual and interaction test engineer.
 ## Handoff Output Contract
 The subagent MUST return a structured markdown report containing:
 - **Test Summary**: Flow tested (e.g. "User Signup & Onboarding").
-- **Visual Evidence**: Markdown embed linking to the recorded WebP video (`![QA Recording](path/to/recording.webp)`).
+- **Visual Evidence**: Markdown embed linking to the recorded WebP video in artifacts (`![QA Recording](<artifacts-dir>/recording.webp)`).
 - **Console & Network Health**: Any unhandled JavaScript exceptions or 4xx/5xx HTTP calls observed.
 - **Defects Discovered**: Clear reproduction steps for any UI or interaction bugs found.

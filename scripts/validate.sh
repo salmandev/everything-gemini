@@ -79,6 +79,42 @@ if [ -f "$REPO_ROOT/action.yml" ]; then
   fi
 fi
 
+# Validate Relative Documentation Links
+if ! node -e "
+const fs = require('fs');
+const path = require('path');
+const mdFiles = [
+  'README.md', 'CONTRIBUTING.md', 'SECURITY.md', 'CHANGELOG.md',
+  ...fs.readdirSync('skills').map(s => 'skills/' + s + '/SKILL.md'),
+  ...fs.readdirSync('agents').map(a => 'agents/' + a)
+];
+let broken = 0;
+for (const file of mdFiles) {
+  if (!fs.existsSync(file)) continue;
+  let content = fs.readFileSync(file, 'utf8');
+  content = content.replace(/\`\`\`[\s\S]*?\`\`\`/g, '');
+  content = content.replace(/\`[^\`]*?\`/g, '');
+  const matches = content.matchAll(/\[([^\]]+)\]\(([^)]+)\)/g);
+  for (const m of matches) {
+    const link = m[2];
+    if (link.startsWith('http://') || link.startsWith('https://') || link.startsWith('#') || link.startsWith('mailto:') || link.startsWith('file://')) continue;
+    const cleanLink = link.split('#')[0];
+    if (!cleanLink) continue;
+    const resolved = path.resolve(path.dirname(file), cleanLink);
+    if (!fs.existsSync(resolved)) {
+      console.error('Broken link in ' + file + ' -> ' + link);
+      broken++;
+    }
+  }
+}
+if (broken > 0) process.exit(1);
+" 2>/dev/null; then
+  echo "    ❌ ERROR: Broken relative links detected in documentation"
+  ERRORS=$((ERRORS + 1))
+else
+  echo "    ✔ Documentation relative links verified"
+fi
+
 # 4. Validate Shell Scripts & CLI Executability
 echo "  [4/6] Verifying script permissions & code syntax..."
 EXEC_FILES=$(find "$REPO_ROOT/scripts" "$REPO_ROOT/hooks" "$REPO_ROOT/skills" "$REPO_ROOT/examples" "$REPO_ROOT/bin" -type f \( -name "*.sh" -o -name "everything-gemini" \) 2>/dev/null || true)

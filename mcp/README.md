@@ -37,5 +37,20 @@ Antigravity connects to a remote MCP endpoint over HTTPS:
 }
 ```
 
+## Curated MCP Server Blueprints
+
+Everything Gemini bundles ready-to-use blueprints in `mcp/mcp_config.example.json`:
+
+| Server Name | Package | Purpose | Transport |
+| :--- | :--- | :--- | :--- |
+| **`memory`** | `@modelcontextprotocol/server-memory` | Persistent knowledge graph semantic memory across agent sessions | Stdio |
+| **`fetch`** | `@modelcontextprotocol/server-fetch` | Efficient HTTP scraping and web documentation extraction | Stdio |
+| **`redis`** | `@modelcontextprotocol/server-redis` | High-speed key-value caching, Pub/Sub, and distributed locks | Stdio |
+| **`github`** | `@modelcontextprotocol/server-github` | Pull requests, issues, repo search, and commit inspection | Stdio |
+| **`postgres`** | `@modelcontextprotocol/server-postgres` | PostgreSQL relational schema inspection and SQL queries | Stdio |
+| **`sqlite`** | `@modelcontextprotocol/server-sqlite` | Local SQLite database querying and table inspection | Stdio |
+| **`filesystem`** | `@modelcontextprotocol/server-filesystem` | Direct multi-directory filesystem inspection | Stdio |
+
 ## Tool Auto-Discovery & Execution
 Once connected, tools declared by MCP servers are automatically injected into the agent's system prompt and executed through Antigravity's Language Server. Inspect active MCP servers in the Antigravity UI via **Additional Options (...) > MCP Servers**.
+
