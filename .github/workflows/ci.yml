@@ -68,3 +68,7 @@ jobs:
           node bin/everything-gemini remove skill tdd-workflow
           node bin/everything-gemini add hook safety-shield
           node bin/everything-gemini remove hook safety-shield
+
+      - name: Cleanup Temporary Test Directories
+        run: |
+          node -e "['./tmp-ci-agents', './tmp-action-agents'].forEach(d => { try { require('fs').rmSync(d, {recursive: true, force: true}); } catch(e){} })"
