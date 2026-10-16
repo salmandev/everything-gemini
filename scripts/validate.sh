@@ -92,6 +92,20 @@ for exec_file in $EXEC_FILES; do
   echo "    ✔ $rel_path (executable)"
 done
 
+# Validate Python examples syntax
+if command -v python3 >/dev/null 2>&1; then
+  PY_FILES=$(find "$REPO_ROOT/examples" -name "*.py" 2>/dev/null || true)
+  for py_file in $PY_FILES; do
+    rel_path="${py_file#$REPO_ROOT/}"
+    if ! python3 -m py_compile "$py_file" 2>/dev/null; then
+      echo "    ❌ ERROR: Syntax error in $rel_path"
+      ERRORS=$((ERRORS + 1))
+    else
+      echo "    ✔ $rel_path (valid Python syntax)"
+    fi
+  done
+fi
+
 # 5. Summary
 echo "  [5/5] Validation Summary"
 if [ "$ERRORS" -gt 0 ]; then

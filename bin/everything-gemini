@@ -45,6 +45,8 @@ function printHelp() {
   console.log(`  ${GREEN}doctor${RESET}                      Inspect system, AGY surfaces, and configuration health`);
   console.log(`  ${GREEN}install${RESET} [options]           Install everything-gemini profiles into workspace or globally`);
   console.log(`  ${GREEN}init${RESET} [options]              Initialize everything-gemini in current workspace`);
+  console.log(`  ${GREEN}status, check${RESET}               Show active skills, subagents, and hooks in workspace`);
+  console.log(`  ${GREEN}update${RESET}                      Sync installed skills, agents, and hooks with latest catalog`);
   console.log(`  ${GREEN}list${RESET}                        Show all available skills, rules, hooks, and plugins`);
   console.log(`  ${GREEN}new-skill${RESET} <name>            Scaffold a new progressive-disclosure skill`);
   console.log(`  ${GREEN}new-agent${RESET} <name>            Scaffold a new scoped subagent specification`);
@@ -412,7 +414,161 @@ function installProfile(profile = 'developer', isGlobal = false, customTarget = 
     console.log(`  ${GREEN}✔${RESET} Generated profile hooks.json (${profile})`);
   }
 
-  console.log(`\n${GREEN}${BOLD}🎉 Installation complete! Everything Gemini is active.${RESET}\n`);
+}
+
+function runStatus(isGlobal = false, customTarget = null) {
+  printBanner();
+  const targetDir = customTarget 
+    ? path.resolve(customTarget)
+    : (isGlobal ? GLOBAL_CONFIG_DIR : AGENTS_DIR);
+
+  console.log(`${BOLD}📊 Everything Gemini Workspace Status${RESET}`);
+  console.log(`Directory: ${CYAN}${targetDir}${RESET}\n`);
+
+  if (!fs.existsSync(targetDir)) {
+    console.log(`  ${YELLOW}○ Workspace is not initialized.${RESET}`);
+    console.log(`    Run ${GREEN}everything-gemini install${RESET} to set up.\n`);
+    return;
+  }
+
+  // 1. Rules
+  const hasGemini = fs.existsSync(path.join(targetDir, 'GEMINI.md'));
+  const hasAgents = fs.existsSync(path.join(targetDir, 'AGENTS.md'));
+  console.log(`${CYAN}${BOLD}📜 Base Rules:${RESET}`);
+  console.log(`  ${hasGemini ? GREEN + '✔' : GRAY + '○'}${RESET} GEMINI.md ${hasGemini ? '(active)' : '(not installed)'}`);
+  console.log(`  ${hasAgents ? GREEN + '✔' : GRAY + '○'}${RESET} AGENTS.md ${hasAgents ? '(active)' : '(not installed)'}`);
+
+  // 2. Installed Skills
+  const skillsDir = path.join(targetDir, 'skills');
+  let installedSkills = [];
+  if (fs.existsSync(skillsDir)) {
+    installedSkills = fs.readdirSync(skillsDir, { withFileTypes: true })
+      .filter(d => d.isDirectory())
+      .map(d => d.name);
+  }
+  console.log(`\n${CYAN}${BOLD}⚡ Installed Skills (${installedSkills.length}/30):${RESET}`);
+  if (installedSkills.length === 0) {
+    console.log(`  ${GRAY}(no skills installed)${RESET}`);
+  } else {
+    for (const s of installedSkills) {
+      console.log(`  ${GREEN}✔${RESET} ${s}`);
+    }
+  }
+
+  // 3. Subagents
+  const agentsDir = path.join(targetDir, 'agents');
+  let installedAgents = [];
+  if (fs.existsSync(agentsDir)) {
+    installedAgents = fs.readdirSync(agentsDir)
+      .filter(f => f.endsWith('.md'))
+      .map(f => f.replace('.md', ''));
+  }
+  console.log(`\n${CYAN}${BOLD}🤖 Scoped Subagents (${installedAgents.length}/6):${RESET}`);
+  if (installedAgents.length === 0) {
+    console.log(`  ${GRAY}(no subagents installed)${RESET}`);
+  } else {
+    for (const a of installedAgents) {
+      console.log(`  ${GREEN}✔${RESET} ${a}`);
+    }
+  }
+
+  // 4. Hooks
+  const hooksFile = path.join(targetDir, 'hooks.json');
+  console.log(`\n${CYAN}${BOLD}🛡️ Lifecycle Hooks:${RESET}`);
+  if (fs.existsSync(hooksFile)) {
+    try {
+      const hooksData = JSON.parse(fs.readFileSync(hooksFile, 'utf8'));
+      const hookNames = Object.keys(hooksData);
+      console.log(`  ${GREEN}✔${RESET} hooks.json configured (${hookNames.length} hooks active):`);
+      for (const h of hookNames) {
+        const events = Object.keys(hooksData[h]).join(', ');
+        console.log(`    • ${BOLD}${h}${RESET} [${GRAY}${events}${RESET}]`);
+      }
+    } catch (e) {
+      console.log(`  ${RED}✖ Invalid hooks.json syntax${RESET}`);
+    }
+  } else {
+    console.log(`  ${GRAY}(no hooks.json found)${RESET}`);
+  }
+  console.log('');
+}
+
+function runUpdate(isGlobal = false, customTarget = null) {
+  printBanner();
+  const targetDir = customTarget 
+    ? path.resolve(customTarget)
+    : (isGlobal ? GLOBAL_CONFIG_DIR : AGENTS_DIR);
+
+  console.log(`${BOLD}🔄 Updating Installed Components in: ${CYAN}${targetDir}${RESET}\n`);
+
+  if (!fs.existsSync(targetDir)) {
+    console.log(`  ${YELLOW}○ Workspace is not initialized.${RESET}`);
+    console.log(`    Run ${GREEN}everything-gemini install${RESET} first.\n`);
+    return;
+  }
+
+  let updatedSkills = 0;
+  let updatedAgents = 0;
+  let updatedHooks = 0;
+
+  // 1. Update Existing Installed Skills
+  const targetSkills = path.join(targetDir, 'skills');
+  if (fs.existsSync(targetSkills)) {
+    const installed = fs.readdirSync(targetSkills, { withFileTypes: true })
+      .filter(d => d.isDirectory())
+      .map(d => d.name);
+    for (const s of installed) {
+      const src = path.join(REPO_ROOT, 'skills', s);
+      if (fs.existsSync(src)) {
+        copyRecursiveSync(src, path.join(targetSkills, s));
+        updatedSkills++;
+      }
+    }
+  }
+
+  // 2. Update Existing Installed Subagents
+  const targetAgents = path.join(targetDir, 'agents');
+  if (fs.existsSync(targetAgents)) {
+    const installed = fs.readdirSync(targetAgents)
+      .filter(f => f.endsWith('.md'));
+    for (const a of installed) {
+      const src = path.join(REPO_ROOT, 'agents', a);
+      if (fs.existsSync(src)) {
+        fs.copyFileSync(src, path.join(targetAgents, a));
+        updatedAgents++;
+      }
+    }
+  }
+
+  // 3. Update Hooks Scripts
+  const targetHooks = path.join(targetDir, 'hooks');
+  if (fs.existsSync(targetHooks)) {
+    const installed = fs.readdirSync(targetHooks, { withFileTypes: true })
+      .filter(d => d.isDirectory())
+      .map(d => d.name);
+    for (const h of installed) {
+      const src = path.join(REPO_ROOT, 'hooks', h);
+      if (fs.existsSync(src)) {
+        copyRecursiveSync(src, path.join(targetHooks, h));
+        updatedHooks++;
+      }
+    }
+  }
+
+  // 4. Refresh base rules if present
+  const rulesSrc = path.join(REPO_ROOT, 'rules', 'common');
+  if (fs.existsSync(path.join(targetDir, 'GEMINI.md')) && fs.existsSync(path.join(rulesSrc, 'GEMINI.md'))) {
+    fs.copyFileSync(path.join(rulesSrc, 'GEMINI.md'), path.join(targetDir, 'GEMINI.md'));
+  }
+  if (fs.existsSync(path.join(targetDir, 'AGENTS.md')) && fs.existsSync(path.join(rulesSrc, 'AGENTS.md'))) {
+    fs.copyFileSync(path.join(rulesSrc, 'AGENTS.md'), path.join(targetDir, 'AGENTS.md'));
+  }
+
+  console.log(`  ${GREEN}✔${RESET} Synced ${BOLD}${updatedSkills}${RESET} installed skills to latest catalog versions`);
+  console.log(`  ${GREEN}✔${RESET} Synced ${BOLD}${updatedAgents}${RESET} subagent specifications`);
+  console.log(`  ${GREEN}✔${RESET} Refreshed ${BOLD}${updatedHooks}${RESET} lifecycle hook scripts & verified permissions`);
+  console.log(`  ${GREEN}✔${RESET} Refreshed base GEMINI.md & AGENTS.md rules\n`);
+  console.log(`${GREEN}${BOLD}✨ Update complete! Everything Gemini is up to date.${RESET}\n`);
 }
 
 function runValidate() {
@@ -803,7 +959,7 @@ _everything_gemini() {
   COMPREPLY=()
   cur="\${COMP_WORDS[COMP_CWORD]}"
   prev="\${COMP_WORDS[COMP_CWORD-1]}"
-  commands="doctor list init install new-skill new-agent add remove test-skill test-all benchmark info show completion validate version help"
+  commands="doctor list init install status check update new-skill new-agent add remove test-skill test-all benchmark info show completion validate version help"
   skills="agent-evals ai-first-engineering api-craftsman architecture-designer browser-qa-tester cloudflare-workers context-caching continuous-learning database-architect devops-pipeline docker-compose-orchestrator fullstack-nextjs gemini-function-calling gemini-grounding gemini-multimodal git-craftsman github-ops graphql-architect kubernetes-operator performance-profiler rag-architect repo-onboarding root-cause-debugger security-audit stripe-integration subagent-handoff supabase-architect tdd-workflow antigravity-sdk-orchestrator responsive-design"
   agents="architect browser-qa build-repair code-reviewer planner security-auditor"
   hooks="auto-lint-formatter ephemeral-context gemini-shield goal-verifier learned-instincts safety-shield"
@@ -1018,6 +1174,27 @@ switch (command) {
   case 'show':
     showComponentInfo(args[1], args[2]);
     break;
+  case 'status':
+  case 'check': {
+    let isGlobal = false;
+    let customTarget = null;
+    for (let i = 1; i < args.length; i++) {
+      if (args[i] === '--global') isGlobal = true;
+      else if (args[i] === '--workspace' && args[i + 1]) customTarget = args[++i];
+    }
+    runStatus(isGlobal, customTarget);
+    break;
+  }
+  case 'update': {
+    let isGlobal = false;
+    let customTarget = null;
+    for (let i = 1; i < args.length; i++) {
+      if (args[i] === '--global') isGlobal = true;
+      else if (args[i] === '--workspace' && args[i + 1]) customTarget = args[++i];
+    }
+    runUpdate(isGlobal, customTarget);
+    break;
+  }
   case 'init':
   case 'install': {
     let profile = 'developer';

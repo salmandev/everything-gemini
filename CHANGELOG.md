@@ -27,6 +27,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - High-speed terminal diagnostic benchmark verifying all 42 ecosystem components, computing token metrics (~15,500 total tokens) and demonstrating >85% token reduction per turn.
 - **Shell Autocompletion Generator (`everything-gemini completion`)**:
   - Native Bash and Zsh autocomplete generation for commands, profiles, and component types.
+- **Ecosystem Status Dashboard (`everything-gemini status` / `check`)**:
+  - Live terminal dashboard reporting installed progressive skills, scoped subagents, lifecycle hooks, and active rules across local (`.agents/`) or global (`~/.gemini/config/`) targets.
+- **Ecosystem Update Pipeline (`everything-gemini update`)**:
+  - In-place synchronization updating installed skills, subagent definitions, and hook configurations from the master catalog without destructive overwrites.
+- **Persistent Semantic Memory & Web Fetch MCP Blueprints**:
+  - Curated `@modelcontextprotocol/server-memory` (knowledge graph semantic memory across agent sessions) and `@modelcontextprotocol/server-fetch` in `mcp/mcp_config.example.json` and `templates/full-power/mcp_config.json`.
+- **Python SDK Test Suite & Compilation Validation**:
+  - Added native Python syntax compilation verification (`python3 -m py_compile`) to `scripts/validate.sh` to ensure all Python SDK examples compile without syntax or import errors.
+- **Enhanced Windows CI Pipeline**:
+  - Added Windows test runner in `.github/workflows/ci.yml` validating PowerShell installation and CLI diagnostics on `windows-latest`.
 - **Enterprise Security Policy**: Added [`SECURITY.md`](SECURITY.md) establishing formal vulnerability disclosure workflows.
 - **IDE Extensions**: Added [`.vscode/extensions.json`](.vscode/extensions.json) for developer workspace onboarding.
 

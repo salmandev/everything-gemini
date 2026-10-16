@@ -37,7 +37,7 @@ Out of the box, Antigravity is a formidable pair programmer. But without structu
 2. 🧠 **Progressive Disclosure Skills (`skills/`)**: On-demand procedural playbooks that load *only* when needed, saving up to **85% in token overhead**.
 3. 📏 **Hierarchical Rules (`GEMINI.md` / `AGENTS.md`)**: Context-aware coding standards, zero-hallucination protocols, and clean-architecture rules.
 4. 🔌 **Plug-and-Play Plugins (`plugins/`)**: Domain bundles for Fullstack Web, Python AI, DevOps, and Security.
-5. 🌐 **Curated MCP Servers (`mcp/`)**: Pre-configured connections for GitHub, PostgreSQL, SQLite, and Documentation scrapers.
+5. 🌐 **Curated MCP Servers (`mcp/`)**: Production blueprints for Persistent Semantic Memory (`@modelcontextprotocol/server-memory`), Web Fetch (`server-fetch`), GitHub, PostgreSQL, and SQLite.
 6. 🤖 **Subagent & Browser Automation**: Specialized recipes for autonomous browser subagents with automated WebP recording.
 
 ---
@@ -309,6 +309,14 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 ```bash
 # Verify your installation and check for conflicts
 ./bin/everything-gemini doctor
+
+# Inspect active workspace status dashboard (installed skills, subagents, hooks)
+./bin/everything-gemini status
+./bin/everything-gemini status --global
+
+# Update installed ecosystem components in-place to latest catalog versions
+./bin/everything-gemini update
+./bin/everything-gemini update --global
 
 # Install a specific profile into the current workspace (.agents/)
 ./bin/everything-gemini install --profile developer
