@@ -140,13 +140,15 @@ The validator checks:
 Looking for inspiration on what to contribute? The community has requested the following progressive disclosure skills and subagents:
 
 ### 🌟 High-Demand Skills Wishlist
-| Skill Identifier | Category | Purpose | Suggested Trigger |
+| Skill Identifier | Category | Purpose | Status |
 | :--- | :--- | :--- | :--- |
-| **`svelte-kit-architect`** | Frontend | Svelte 5 runes, SvelteKit form actions, server-side data loading, and adapter configs | SvelteKit app development |
-| **`redis-cache-patterns`** | Backend | Redis distributed locks (Redlock), Pub/Sub, rate limit sliding windows, and caching patterns | Redis cache and session stores |
-| **`clickhouse-analytics`** | Database | High-throughput OLAP schemas, MergeTree engines, material views, and vector search | Big data & analytical querying |
-| **`wasm-rust-optimizer`** | Performance | WebAssembly compilation with `wasm-pack`, memory buffers, and SIMD optimizations | High-performance client-side compute |
-| **`fastapi-production`** | Python AI | Pydantic v2 schemas, background tasks, dependency injection, and ASGI deployment | Production FastAPI services |
+| **`fastapi-production`** | Python AI | Pydantic v2, lifespan handlers, JWT auth, and K8s probes | ✅ *Shipped in v1.3.0* |
+| **`redis-cache-patterns`** | Backend | Distributed locks (Redlock), sliding-window rate limits, and streams | ✅ *Shipped in v1.3.0* |
+| **`svelte-kit-architect`** | Frontend | Svelte 5 runes, SvelteKit form actions, server load functions | ✅ *Shipped in v1.3.0* |
+| **`clickhouse-analytics`** | Database | High-throughput OLAP schemas, MergeTree engines, and material views | 🚀 *Open for PR* |
+| **`wasm-rust-optimizer`** | Performance | WebAssembly compilation with `wasm-pack`, memory buffers, SIMD | 🚀 *Open for PR* |
+| **`temporal-workflows`** | Orchestration | Resilient distributed workflows, retry policies, and child activities | 🚀 *Open for PR* |
+| **`trpc-react-query`** | Fullstack | End-to-end type safety, tRPC v11 routers, and TanStack Query v5 | 🚀 *Open for PR* |
 
 ### How to Build a Wishlist Item:
 1. Open an issue using the [Skill Proposal template](.github/ISSUE_TEMPLATE/skill_proposal.md).

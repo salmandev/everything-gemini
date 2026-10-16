@@ -90,8 +90,8 @@ it('should benchmark ecosystem components and output valid JSON with --json', ()
   const res = runCli('benchmark --json');
   assert.strictEqual(res.status, 0);
   const data = JSON.parse(res.stdout);
-  assert.strictEqual(data.totalComponents, 42);
-  assert.strictEqual(data.progressiveSkillsCount, 30);
+  assert.strictEqual(data.totalComponents, 45);
+  assert.strictEqual(data.progressiveSkillsCount, 33);
   assert.strictEqual(data.scopedAgentsCount, 6);
   assert.strictEqual(data.lifecycleHooksCount, 6);
   assert(data.totalRunbookTokens > 10000, 'Expected >10,000 runbook tokens');

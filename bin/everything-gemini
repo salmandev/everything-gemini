@@ -399,7 +399,7 @@ function installProfile(profile = 'developer', isGlobal = false, customTarget = 
   // 3. Full Power Profile
   if (profile === 'full') {
     if (!isDryRun) copyRecursiveSync(skillsSrc, targetSkills);
-    console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} entire skills library (30 progressive skills)`);
+    console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} entire skills library (33 progressive skills)`);
 
     if (!isDryRun) copyRecursiveSync(rulesSrc, targetRules);
     console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} entire rules library`);
@@ -1076,7 +1076,7 @@ _everything_gemini() {
   cur="\${COMP_WORDS[COMP_CWORD]}"
   prev="\${COMP_WORDS[COMP_CWORD-1]}"
   commands="doctor list init install status check update new-skill new-agent add remove test-skill test-all benchmark info show completion validate version help"
-  skills="agent-evals ai-first-engineering api-craftsman architecture-designer browser-qa-tester cloudflare-workers context-caching continuous-learning database-architect devops-pipeline docker-compose-orchestrator fullstack-nextjs gemini-function-calling gemini-grounding gemini-multimodal git-craftsman github-ops graphql-architect kubernetes-operator performance-profiler rag-architect repo-onboarding root-cause-debugger security-audit stripe-integration subagent-handoff supabase-architect tdd-workflow antigravity-sdk-orchestrator responsive-design"
+  skills="agent-evals ai-first-engineering api-craftsman architecture-designer browser-qa-tester cloudflare-workers context-caching continuous-learning database-architect devops-pipeline docker-compose-orchestrator fastapi-production fullstack-nextjs gemini-function-calling gemini-grounding gemini-multimodal git-craftsman github-ops graphql-architect kubernetes-operator performance-profiler rag-architect redis-cache-patterns repo-onboarding root-cause-debugger security-audit stripe-integration subagent-handoff supabase-architect svelte-kit-architect tdd-workflow antigravity-sdk-orchestrator responsive-design"
   agents="architect browser-qa build-repair code-reviewer planner security-auditor"
   hooks="auto-lint-formatter ephemeral-context gemini-shield goal-verifier learned-instincts safety-shield"
   plugins="core python-ai security-shield web-fullstack"

@@ -4,6 +4,20 @@ All notable changes to **Everything Gemini (`everything-gemini`)** will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-10-16
+
+### Added
+- **33 Progressive Disclosure Skills Milestone**:
+  - **`fastapi-production`**: Production async FastAPI architecture, Pydantic v2 schemas, lifespan context management, JWT auth, dependency injection, and Kubernetes health probes.
+  - **`redis-cache-patterns`**: Enterprise Redis caching (cache-aside with jitter), safe distributed locks with atomic Lua token release (Redlock), sliding-window rate limiting, and streams.
+  - **`svelte-kit-architect`**: Modern SvelteKit web applications using Svelte 5 runes (`$state`, `$derived`, `$effect`, `$props`), SSR/prerendering, and progressive form actions.
+- **Viral Launch & Distribution Kit (`docs/launch-kit.md`)**:
+  - Comprehensive copy-paste submissions for Hacker News (Show HN), X/Twitter 6-tweet launch thread, Reddit (r/LocalLLaMA & r/programming), and Product Hunt.
+- **Showcase Web App 45-Component Expansion**:
+  - Live index now hosts 33 progressive skills, 6 scoped subagents, and 6 lifecycle hooks with instant search and 1-click CLI copy buttons.
+- **CLI Shell Completion Updates**:
+  - Added new skills to Bash and Zsh autocomplete dictionary in `everything-gemini completion`.
+
 ## [1.2.0] - 2026-10-15
 
 ### Added
