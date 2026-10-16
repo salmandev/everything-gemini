@@ -8,9 +8,18 @@ param (
 Write-Host "🪐 Everything Gemini (everything-gemini) Installer" -ForegroundColor Cyan
 Write-Host "The premier agent harness & customization suite for Google Antigravity`n" -ForegroundColor Gray
 
+$origDir = Get-Location
+$tempDir = ""
+$cleanupTemp = $false
+
+if (-not $Global -and $Workspace -eq "") {
+    $Workspace = Join-Path $origDir ".agents"
+}
+
 if (-not (Test-Path "bin\everything-gemini")) {
     Write-Host "Downloading latest everything-gemini release..." -ForegroundColor Yellow
     $tempDir = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), [System.IO.Path]::GetRandomFileName())
+    $cleanupTemp = $true
     git clone --depth 1 https://github.com/salmandev/everything-gemini.git $tempDir
     Set-Location $tempDir
 }
@@ -24,3 +33,8 @@ if ($Workspace -ne "") {
 }
 
 node bin\everything-gemini @cliArgs
+
+if ($cleanupTemp -and (Test-Path $tempDir)) {
+    Set-Location $origDir
+    Remove-Item -Recurse -Force $tempDir -ErrorAction SilentlyContinue
+}

@@ -15,9 +15,12 @@ echo "  🪐 Everything Gemini (everything-gemini) Installer"
 echo "  The premier agent harness & customization suite for Google Antigravity"
 echo -e "${RESET}"
 
+ORIG_DIR="$(pwd)"
 PROFILE="developer"
 INSTALL_GLOBAL=false
 TARGET_DIR=""
+TMP_DIR=""
+CLEANUP_TMP=false
 
 while [[ "$#" -gt 0 ]]; do
   case $1 in
@@ -29,10 +32,15 @@ while [[ "$#" -gt 0 ]]; do
   shift
 done
 
-# If run directly via curl pipe, clone into temporary directory or clone repo
+if [ "$INSTALL_GLOBAL" = false ] && [ -z "$TARGET_DIR" ]; then
+  TARGET_DIR="$ORIG_DIR/.agents"
+fi
+
+# If run directly via curl pipe, clone into temporary directory
 if [ ! -f "bin/everything-gemini" ]; then
   echo -e "${YELLOW}Downloading latest everything-gemini release...${RESET}"
   TMP_DIR=$(mktemp -d)
+  CLEANUP_TMP=true
   git clone --depth 1 https://github.com/salmandev/everything-gemini.git "$TMP_DIR/everything-gemini" 2>/dev/null || {
     echo "Failed to clone repository. Please ensure git is installed."
     exit 1
@@ -50,3 +58,9 @@ if [ -n "$TARGET_DIR" ]; then
 fi
 
 ./bin/everything-gemini $CLI_ARGS
+
+# Cleanup temp clone if created
+if [ "$CLEANUP_TMP" = true ] && [ -n "$TMP_DIR" ] && [ -d "$TMP_DIR" ]; then
+  cd "$ORIG_DIR"
+  node -e "try { require('fs').rmSync(process.argv[1], {recursive: true, force: true}); } catch(e){}" "$TMP_DIR" 2>/dev/null || true
+fi
