@@ -72,3 +72,33 @@ jobs:
       - name: Cleanup Temporary Test Directories
         run: |
           node -e "['./tmp-ci-agents', './tmp-action-agents'].forEach(d => { try { require('fs').rmSync(d, {recursive: true, force: true}); } catch(e){} })"
+
+  windows-test:
+    name: Validate Windows PowerShell & CLI
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Test PowerShell Installer (install.ps1)
+        shell: powershell
+        run: |
+          powershell -ExecutionPolicy Bypass -File scripts\install.ps1 -Profile developer -Workspace .\tmp-win-agents
+
+      - name: Test CLI on Windows
+        run: |
+          node bin\everything-gemini doctor
+          node bin\everything-gemini --version
+          node bin\everything-gemini test-all
+
+      - name: Cleanup Windows Test Workspace
+        shell: powershell
+        run: |
+          if (Test-Path .\tmp-win-agents) {
+            Remove-Item -Recurse -Force .\tmp-win-agents
+          }
