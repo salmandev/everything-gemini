@@ -78,9 +78,42 @@ plugins/<plugin-name>/
 
 ---
 
+### 5. Scoped Subagents Standards (`agents/<agent-name>.md`)
+Subagents are specialized workers with strict cognitive boundaries:
+* Store specifications in `agents/<agent-name>.md`.
+* Each specification must define:
+  1. **Core Role & Objectives**: Precise task responsibility (e.g. Code Reviewer, Browser QA).
+  2. **Execution Guardrails**: Boundaries prohibiting actions outside the subagent's scope.
+  3. **Delegation Protocol**: How the primary agent passes context to this subagent and how the subagent reports back.
+
+---
+
+## 🛠️ CLI Developer Tools & Scaffolding
+
+Everything Gemini provides built-in developer tools to streamline adding new components:
+
+```bash
+# Scaffold a new progressive disclosure skill with frontmatter, references & scripts
+./bin/everything-gemini new-skill my-awesome-skill
+
+# Scaffold a new scoped subagent specification
+./bin/everything-gemini new-agent my-custom-agent
+
+# Validate frontmatter and scripts for your new skill
+./bin/everything-gemini test-skill my-awesome-skill
+
+# Inspect runbook preview in the terminal
+./bin/everything-gemini info my-awesome-skill
+
+# Benchmark token savings and run self-tests across all 42 ecosystem components
+./bin/everything-gemini test-all
+```
+
+---
+
 ## 🧪 Validating Your Changes
 
-Before submitting a Pull Request, run the automated validation suite:
+Before submitting a Pull Request, run the automated 5-phase validation suite:
 
 ```bash
 # Run the validator script
@@ -88,12 +121,16 @@ bash scripts/validate.sh
 
 # Or via npm
 npm test
+
+# Run ecosystem benchmark
+npm run benchmark
 ```
 
 The validator checks:
-- [x] All `SKILL.md` files have proper YAML frontmatter with `name` and `description`.
-- [x] All JSON files (`package.json`, `plugin.json`, `hooks.json`, `mcp_config.json`) are syntactically valid JSON.
-- [x] All hook scripts are executable (`chmod +x`).
+- [x] All `SKILL.md` files have proper YAML frontmatter with `name` and third-person `description`.
+- [x] All Scoped Subagent specifications (`agents/*.md`) exist and are non-empty.
+- [x] All JSON files (`package.json`, `plugin.json`, `hooks.json`, `mcp_config.json`, `.vscode/`) are syntactically valid JSON.
+- [x] All hook and validation scripts are executable (`chmod +x`).
 - [x] No broken relative links within skills and documentation.
 
 ---
