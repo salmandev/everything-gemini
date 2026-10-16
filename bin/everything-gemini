@@ -794,11 +794,15 @@ function printCompletion() {
   const script = `
 # Everything Gemini Bash/Zsh completion
 _everything_gemini() {
-  local cur prev commands
+  local cur prev commands skills agents hooks plugins
   COMPREPLY=()
   cur="\${COMP_WORDS[COMP_CWORD]}"
   prev="\${COMP_WORDS[COMP_CWORD-1]}"
   commands="doctor list init install new-skill new-agent add remove test-skill test-all benchmark info show completion validate version help"
+  skills="agent-evals ai-first-engineering api-craftsman architecture-designer browser-qa-tester cloudflare-workers context-caching continuous-learning database-architect devops-pipeline docker-compose-orchestrator fullstack-nextjs gemini-function-calling gemini-grounding gemini-multimodal git-craftsman github-ops graphql-architect kubernetes-operator performance-profiler rag-architect repo-onboarding root-cause-debugger security-audit stripe-integration subagent-handoff supabase-architect tdd-workflow antigravity-sdk-orchestrator responsive-design"
+  agents="architect browser-qa build-repair code-reviewer planner security-auditor"
+  hooks="auto-lint-formatter ephemeral-context gemini-shield goal-verifier learned-instincts safety-shield"
+  plugins="core python-ai security-shield web-fullstack"
 
   case "\${prev}" in
     everything-gemini|eagy|egemini)
@@ -807,6 +811,26 @@ _everything_gemini() {
       ;;
     add|remove)
       COMPREPLY=( $(compgen -W "skill agent hook plugin" -- "\${cur}") )
+      return 0
+      ;;
+    skill|test-skill)
+      COMPREPLY=( $(compgen -W "\${skills}" -- "\${cur}") )
+      return 0
+      ;;
+    agent)
+      COMPREPLY=( $(compgen -W "\${agents}" -- "\${cur}") )
+      return 0
+      ;;
+    hook)
+      COMPREPLY=( $(compgen -W "\${hooks}" -- "\${cur}") )
+      return 0
+      ;;
+    plugin)
+      COMPREPLY=( $(compgen -W "\${plugins}" -- "\${cur}") )
+      return 0
+      ;;
+    info|show)
+      COMPREPLY=( $(compgen -W "\${skills} \${agents} \${hooks} \${plugins}" -- "\${cur}") )
       return 0
       ;;
     --profile)
