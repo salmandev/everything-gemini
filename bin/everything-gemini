@@ -535,14 +535,17 @@ Return structured report to parent agent:
   console.log(`  📄 ${targetFile}\n`);
 }
 
-function addComponent(type, name) {
+function addComponent(type, name, isGlobal = false, customTarget = null) {
   if (!type || !name) {
-    console.error(`${RED}Usage: everything-gemini add <skill|agent|hook|plugin> <name>${RESET}`);
+    console.error(`${RED}Usage: everything-gemini add <skill|agent|hook|plugin> <name> [--workspace <path>] [--global]${RESET}`);
     process.exit(1);
   }
 
   const cleanName = name.trim().toLowerCase();
-  const targetWorkspace = path.join(WORKSPACE_DIR, '.agents');
+  const targetWorkspace = customTarget 
+    ? path.resolve(customTarget)
+    : (isGlobal ? GLOBAL_CONFIG_DIR : path.join(WORKSPACE_DIR, '.agents'));
+
   if (!fs.existsSync(targetWorkspace)) {
     fs.mkdirSync(targetWorkspace, { recursive: true });
   }
@@ -596,14 +599,16 @@ function addComponent(type, name) {
   }
 }
 
-function removeComponent(type, name) {
+function removeComponent(type, name, isGlobal = false, customTarget = null) {
   if (!type || !name) {
-    console.error(`${RED}Usage: everything-gemini remove <skill|agent|hook|plugin> <name>${RESET}`);
+    console.error(`${RED}Usage: everything-gemini remove <skill|agent|hook|plugin> <name> [--workspace <path>] [--global]${RESET}`);
     process.exit(1);
   }
 
   const cleanName = name.trim().toLowerCase();
-  const targetWorkspace = path.join(WORKSPACE_DIR, '.agents');
+  const targetWorkspace = customTarget 
+    ? path.resolve(customTarget)
+    : (isGlobal ? GLOBAL_CONFIG_DIR : path.join(WORKSPACE_DIR, '.agents'));
 
   if (type === 'skill') {
     const dest = path.join(targetWorkspace, 'skills', cleanName);
@@ -612,7 +617,7 @@ function removeComponent(type, name) {
       return;
     }
     fs.rmSync(dest, { recursive: true, force: true });
-    console.log(`${GREEN}✔ Removed skill '${cleanName}' from workspace.${RESET}`);
+    console.log(`${GREEN}✔ Removed skill '${cleanName}' from ${dest}.${RESET}`);
   } else if (type === 'agent') {
     const dest = path.join(targetWorkspace, 'agents', `${cleanName}.md`);
     if (!fs.existsSync(dest)) {
@@ -620,7 +625,7 @@ function removeComponent(type, name) {
       return;
     }
     fs.unlinkSync(dest);
-    console.log(`${GREEN}✔ Removed agent '${cleanName}' from workspace.${RESET}`);
+    console.log(`${GREEN}✔ Removed agent '${cleanName}' from ${dest}.${RESET}`);
   } else if (type === 'hook') {
     const dest = path.join(targetWorkspace, 'hooks', cleanName);
     if (!fs.existsSync(dest)) {
@@ -628,7 +633,7 @@ function removeComponent(type, name) {
       return;
     }
     fs.rmSync(dest, { recursive: true, force: true });
-    console.log(`${GREEN}✔ Removed hook '${cleanName}' from workspace.${RESET}`);
+    console.log(`${GREEN}✔ Removed hook '${cleanName}' from ${dest}.${RESET}`);
   } else if (type === 'plugin') {
     const dest = path.join(targetWorkspace, 'plugins', cleanName);
     if (!fs.existsSync(dest)) {
@@ -636,7 +641,7 @@ function removeComponent(type, name) {
       return;
     }
     fs.rmSync(dest, { recursive: true, force: true });
-    console.log(`${GREEN}✔ Removed plugin '${cleanName}' from workspace.${RESET}`);
+    console.log(`${GREEN}✔ Removed plugin '${cleanName}' from ${dest}.${RESET}`);
   } else {
     console.error(`${RED}Unknown type '${type}'. Use: skill, agent, hook, or plugin.${RESET}`);
     process.exit(1);
@@ -978,12 +983,26 @@ switch (command) {
   case 'new-agent':
     scaffoldAgent(args[1]);
     break;
-  case 'add':
-    addComponent(args[1], args[2]);
+  case 'add': {
+    let customTarget = null;
+    let isGlobal = false;
+    for (let i = 3; i < args.length; i++) {
+      if (args[i] === '--global') isGlobal = true;
+      else if (args[i] === '--workspace' && args[i + 1]) customTarget = args[++i];
+    }
+    addComponent(args[1], args[2], isGlobal, customTarget);
     break;
-  case 'remove':
-    removeComponent(args[1], args[2]);
+  }
+  case 'remove': {
+    let customTarget = null;
+    let isGlobal = false;
+    for (let i = 3; i < args.length; i++) {
+      if (args[i] === '--global') isGlobal = true;
+      else if (args[i] === '--workspace' && args[i + 1]) customTarget = args[++i];
+    }
+    removeComponent(args[1], args[2], isGlobal, customTarget);
     break;
+  }
   case 'test-skill':
     testSkill(args[1]);
     break;
