@@ -33,6 +33,14 @@
     "redis": {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-redis", "redis://localhost:6379"]
+    },
+    "docker": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-docker"]
+    },
+    "clickhouse": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-clickhouse", "http://default:@localhost:8123/default"]
     }
   }
 }

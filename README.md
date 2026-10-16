@@ -37,7 +37,7 @@ Out of the box, Antigravity is a formidable pair programmer. But without structu
 2. 🧠 **Progressive Disclosure Skills (`skills/`)**: On-demand procedural playbooks that load *only* when needed, saving up to **85% in token overhead**.
 3. 📏 **Hierarchical Rules (`GEMINI.md` / `AGENTS.md`)**: Context-aware coding standards, zero-hallucination protocols, and clean-architecture rules.
 4. 🔌 **Plug-and-Play Plugins (`plugins/`)**: Domain bundles for Fullstack Web, Python AI, DevOps, and Security.
-5. 🌐 **Curated MCP Servers (`mcp/`)**: Production blueprints for Persistent Semantic Memory (`@modelcontextprotocol/server-memory`), High-Performance Cache (`@modelcontextprotocol/server-redis`), Web Fetch (`server-fetch`), GitHub, PostgreSQL, and SQLite.
+5. 🌐 **Curated MCP Servers (`mcp/`)**: Production blueprints for Persistent Semantic Memory (`@modelcontextprotocol/server-memory`), High-Performance Cache (`@modelcontextprotocol/server-redis`), Container Engine (`@modelcontextprotocol/server-docker`), Real-Time OLAP (`@modelcontextprotocol/server-clickhouse`), Web Fetch (`server-fetch`), GitHub, PostgreSQL, and SQLite.
 6. 🤖 **Subagent & Browser Automation**: Specialized recipes for autonomous browser subagents with automated WebP recording.
 
 ---
@@ -79,8 +79,8 @@ cd everything-gemini
 | Profile | Target Audience | What Gets Installed |
 | :--- | :--- | :--- |
 | **`core`** | Minimalists & Speed | Safety-shield hook, TDD skill, repo-onboarding skill, baseline `GEMINI.md`. |
-| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 6 Scoped Subagents (`agents/`), Frontier Skills (Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
-| **`full`** | Lead Engineers & Archs | Everything: all 33 progressive skills, 6 scoped subagents, full lifecycle hooks suite (6 hooks), all plugins, MCP configs, and templates. |
+| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 8 Scoped Subagents (`agents/`), Frontier Skills (Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
+| **`full`** | Lead Engineers & Archs | Everything: all 37 progressive skills, 8 scoped subagents, full lifecycle hooks suite (7 hooks), all plugins, MCP configs, and templates. |
 
 ### 5. In CI / GitHub Actions Workflows
 
@@ -144,7 +144,7 @@ flowchart TB
 | **Context Window & Caching** | 200k tokens, ephemeral | **1M-2M+ tokens with Native Prefix Context Caching (~75% cost savings)** |
 | **Memory System** | Flat markdown files | **Knowledge Items (KI)** + **Adaptive Learned Instincts** |
 | **UI & Visual Multimodality** | Standard text output | **Native `browser_subagent` + WebP Screen Video Recording + Vision** |
-| **Subagents Fleet** | Manual sub-prompts | **6 Scoped Subagents (`agents/`) with Formal Handoff Protocol** |
+| **Subagents Fleet** | Manual sub-prompts | **8 Scoped Subagents (`agents/`) with Formal Handoff Protocol** |
 | **Lifecycle Hooks** | Shell scripts | Typed protojson contracts (`PreToolUse`, `PostToolUse`, `PreInvocation`, `PostInvocation`, `Stop`) |
 | **Tool Integration** | Claude tool use | **MCP standard (Stdio & SSE)** with auto-discovery & namespacing |
 
@@ -156,10 +156,10 @@ flowchart TB
 everything-gemini/
 ├── .github/                      # CI/CD workflows & issue templates
 ├── bin/                          # Zero-dependency harness & scaffolding CLI
-├── agents/                       # Scoped subagent fleet (Planner, Reviewer, Architect, etc.)
+├── agents/                       # Scoped subagent fleet (Planner, Reviewer, Database Migrator, etc.)
 ├── scripts/                      # Automated installers and harness validators
 ├── plugins/                      # Reusable modular plugins (web-fullstack, python-ai, security)
-├── skills/                       # 33 Progressive disclosure skills (31 core + 2 plugins)
+├── skills/                       # 37 Progressive disclosure skills (35 core + 2 plugins)
 ├── rules/                        # Contextual guidelines & standards
 ├── hooks/                        # Event-driven lifecycle hooks (GeminiShield, Auto-lint)
 ├── mcp/                          # Production-ready MCP server blueprints
@@ -183,6 +183,8 @@ Everything Gemini provides specialized subagent specifications designed for Anti
 | **[`browser-qa`](agents/browser-qa.md)** | Automated Visual QA | Native browser testing with automated WebP recording into artifacts. |
 | **[`security-auditor`](agents/security-auditor.md)** | Security Auditor | Credential scanning, OWASP Top 10, dependency audit, permission gates. |
 | **[`architect`](agents/architect.md)** | Systems Architect | C4 Mermaid blueprints, sequence diagrams, and formal ADR records. |
+| **[`database-migrator`](agents/database-migrator.md)** | Database Schema Specialist | Zero-downtime expand/contract SQL migrations, lock analysis, and rollbacks. |
+| **[`performance-tuner`](agents/performance-tuner.md)** | Latency & Profiling Expert | CPU/memory flamegraphs, database execution plans, and N+1 waterfalls. |
 
 ### 1. Skills (`skills/`)
 Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`name` and `description`) is placed into the system prompt. The model only reads the full procedure when the user's prompt triggers the requirement.
@@ -198,6 +200,10 @@ Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`na
 - **[`subagent-handoff`](skills/subagent-handoff/SKILL.md)**: Multi-agent task delegation protocol, scoped contexts, and report synthesis.
 - **[`api-craftsman`](skills/api-craftsman/SKILL.md)**: REST, OpenAPI 3.1 specifications, gRPC protos, and RFC 7807 error envelopes.
 - **[`database-architect`](skills/database-architect/SKILL.md)**: Zero-downtime migrations, concurrent indexing, and ACID schema modeling.
+- **[`clickhouse-analytics`](skills/clickhouse-analytics/SKILL.md)**: High-throughput OLAP schemas, MergeTree engines, Kafka ingestion, and vector search.
+- **[`temporal-workflows`](skills/temporal-workflows/SKILL.md)**: Resilient distributed workflows, retry policies, async activities, and saga compensations.
+- **[`trpc-react-query`](skills/trpc-react-query/SKILL.md)**: End-to-end type safety, tRPC v11 routers, and TanStack React Query v5 optimistic UI.
+- **[`wasm-rust-optimizer`](skills/wasm-rust-optimizer/SKILL.md)**: High-throughput WebAssembly modules compiled from Rust with zero-copy memory buffers.
 - **[`fastapi-production`](skills/fastapi-production/SKILL.md)**: Production async FastAPI architecture, Pydantic v2 schemas, lifespan handlers, and health probes.
 - **[`redis-cache-patterns`](skills/redis-cache-patterns/SKILL.md)**: Enterprise Redis caching strategies, distributed locking with atomic Lua, and sliding-window rate limiting.
 - **[`svelte-kit-architect`](skills/svelte-kit-architect/SKILL.md)**: Modern SvelteKit apps with Svelte 5 runes ($state, $derived, $effect), SSR/prerender, and form actions.
@@ -226,6 +232,7 @@ Hooks run shell scripts at critical lifecycle events with typed JSON contracts o
 
 - **[`gemini-shield`](hooks/gemini-shield/hooks.json) (`PreToolUse`)**: Deterministic safety firewall intercepting `run_command` and denying catastrophic operations like `rm -rf /`, `mkfs`, or `git push --force origin main`.
 - **[`safety-shield`](hooks/safety-shield/hooks.json) (`PreToolUse`)**: Intercepts `run_command` and inspects `CommandLine` against strict security guidelines before shell execution.
+- **[`secret-scrubber`](hooks/secret-scrubber/hooks.json) (`PreToolUse`)**: Intercepts file write operations to block hardcoded API keys and private credentials before they reach disk.
 - **[`auto-lint-formatter`](hooks/auto-lint-formatter/hooks.json) (`PostToolUse`)**: Triggered after file modifications. Runs your project's linter/formatter (`prettier`, `black`, `ruff`, `gofmt`) automatically so code is always clean.
 - **[`goal-verifier`](hooks/goal-verifier/hooks.json) (`Stop`)**: Intercepts the agent's attempt to finish. If test suites are failing or background tasks are unfinished, it returns `{"decision": "continue", "reason": "Tests are still failing. Fix them before stopping."}`.
 - **[`ephemeral-context`](hooks/ephemeral-context/hooks.json) (`PreInvocation`)**: Injects transient warnings or guidelines before each model reasoning step without cluttering persistent conversation history.
@@ -318,6 +325,13 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 ./bin/everything-gemini status --global
 ./bin/everything-gemini status --json
 
+# Compare installed workspace components against master catalog
+./bin/everything-gemini diff
+
+# Export installed configuration bundle into a portable JSON profile
+./bin/everything-gemini export
+./bin/everything-gemini export --output my-profile.json
+
 # Update installed ecosystem components in-place to latest catalog versions
 ./bin/everything-gemini update
 ./bin/everything-gemini update --global
@@ -354,7 +368,7 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 # Test and validate a specific skill's frontmatter and scripts
 ./bin/everything-gemini test-skill gemini-multimodal
 
-# Benchmark and validate all 33 skills, subagents, and hooks (human or JSON)
+# Benchmark and validate all 37 skills, subagents, and hooks (human or JSON)
 ./bin/everything-gemini test-all
 ./bin/everything-gemini benchmark --json
 

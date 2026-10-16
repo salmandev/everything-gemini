@@ -90,12 +90,12 @@ it('should benchmark ecosystem components and output valid JSON with --json', ()
   const res = runCli('benchmark --json');
   assert.strictEqual(res.status, 0);
   const data = JSON.parse(res.stdout);
-  assert.strictEqual(data.totalComponents, 45);
-  assert.strictEqual(data.progressiveSkillsCount, 33);
-  assert.strictEqual(data.scopedAgentsCount, 6);
-  assert.strictEqual(data.lifecycleHooksCount, 6);
-  assert(data.totalRunbookTokens > 10000, 'Expected >10,000 runbook tokens');
-  assert(data.estimatedTokensSavedPerTurn > 5000, 'Expected significant token savings');
+  assert.strictEqual(data.totalComponents, 52);
+  assert.strictEqual(data.progressiveSkillsCount, 37);
+  assert.strictEqual(data.scopedAgentsCount, 8);
+  assert.strictEqual(data.lifecycleHooksCount, 7);
+  assert(data.totalRunbookTokens > 15000, 'Expected >15,000 runbook tokens');
+  assert(data.estimatedTokensSavedPerTurn > 8000, 'Expected significant token savings');
 });
 
 // 5. Completion
@@ -193,6 +193,37 @@ try {
     const res = runCli(`update --workspace "${tempWorkspace}"`);
     assert.strictEqual(res.status, 0);
     assert.match(res.stdout, /Update complete/);
+  });
+
+  // Diff Command
+  it('should run diff against workspace', () => {
+    const res = runCli(`diff --workspace "${tempWorkspace}"`);
+    assert.strictEqual(res.status, 0);
+    assert.match(res.stdout, /Comparing Workspace vs\. Master Everything Gemini Catalog/);
+    assert.match(res.stdout, /Progressive Skills Comparison/);
+  });
+
+  // Export Command
+  it('should export workspace configuration bundle to JSON', () => {
+    const exportFile = path.join(tempWorkspace, 'exported-profile.json');
+    const res = runCli(`export --workspace "${tempWorkspace}" --output "${exportFile}"`);
+    assert.strictEqual(res.status, 0);
+    assert.match(res.stdout, /Exporting Agent Configuration Bundle/);
+    assert.strictEqual(fs.existsSync(exportFile), true, 'Export file should exist');
+    const data = JSON.parse(fs.readFileSync(exportFile, 'utf8'));
+    assert.strictEqual(data.generator, 'everything-gemini');
+    assert(data.skills.length > 0, 'Exported bundle should contain skills');
+  });
+
+  // Info for newly added subagents and skills
+  it('should display info for database-migrator subagent and clickhouse-analytics skill', () => {
+    const res1 = runCli('info database-migrator');
+    assert.strictEqual(res1.status, 0);
+    assert.match(res1.stdout, /Database Migrator/);
+
+    const res2 = runCli('info clickhouse-analytics');
+    assert.strictEqual(res2.status, 0);
+    assert.match(res2.stdout, /ClickHouse Analytics/);
   });
 
 } finally {

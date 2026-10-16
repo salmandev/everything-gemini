@@ -142,13 +142,15 @@ Looking for inspiration on what to contribute? The community has requested the f
 ### 🌟 High-Demand Skills Wishlist
 | Skill Identifier | Category | Purpose | Status |
 | :--- | :--- | :--- | :--- |
+| **`clickhouse-analytics`** | Database | High-throughput OLAP schemas, MergeTree engines, and vector search | ✅ *Shipped in v1.4.0* |
+| **`temporal-workflows`** | Orchestration | Resilient distributed workflows, retry policies, and saga patterns | ✅ *Shipped in v1.4.0* |
+| **`trpc-react-query`** | Fullstack | End-to-end type safety, tRPC v11 routers, and TanStack Query v5 | ✅ *Shipped in v1.4.0* |
+| **`wasm-rust-optimizer`** | Performance | WebAssembly compilation with `wasm-pack`, zero-copy Uint8Array | ✅ *Shipped in v1.4.0* |
 | **`fastapi-production`** | Python AI | Pydantic v2, lifespan handlers, JWT auth, and K8s probes | ✅ *Shipped in v1.3.0* |
 | **`redis-cache-patterns`** | Backend | Distributed locks (Redlock), sliding-window rate limits, and streams | ✅ *Shipped in v1.3.0* |
-| **`svelte-kit-architect`** | Frontend | Svelte 5 runes, SvelteKit form actions, server load functions | ✅ *Shipped in v1.3.0* |
-| **`clickhouse-analytics`** | Database | High-throughput OLAP schemas, MergeTree engines, and material views | 🚀 *Open for PR* |
-| **`wasm-rust-optimizer`** | Performance | WebAssembly compilation with `wasm-pack`, memory buffers, SIMD | 🚀 *Open for PR* |
-| **`temporal-workflows`** | Orchestration | Resilient distributed workflows, retry policies, and child activities | 🚀 *Open for PR* |
-| **`trpc-react-query`** | Fullstack | End-to-end type safety, tRPC v11 routers, and TanStack Query v5 | 🚀 *Open for PR* |
+| **`duckdb-local-olap`** | Database | Embedded in-process OLAP, Parquet querying, and MotherDuck sync | 🚀 *Open for PR* |
+| **`nats-jetstream`** | Messaging | Ultra-low latency event streaming, consumer acks, and pub/sub | 🚀 *Open for PR* |
+| **`axum-web-service`** | Rust | Tokio async, tower middlewares, type-safe state, and SQLx | 🚀 *Open for PR* |
 
 ### How to Build a Wishlist Item:
 1. Open an issue using the [Skill Proposal template](.github/ISSUE_TEMPLATE/skill_proposal.md).

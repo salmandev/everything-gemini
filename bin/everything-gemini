@@ -46,6 +46,8 @@ function printHelp() {
   console.log(`  ${GREEN}install${RESET} [options]           Install everything-gemini profiles into workspace or globally`);
   console.log(`  ${GREEN}init${RESET} [options]              Initialize everything-gemini in current workspace`);
   console.log(`  ${GREEN}status, check${RESET}               Show active skills, subagents, and hooks in workspace`);
+  console.log(`  ${GREEN}diff${RESET}                        Compare installed workspace components against master catalog`);
+  console.log(`  ${GREEN}export${RESET} [options]             Export installed configuration into a portable bundle`);
   console.log(`  ${GREEN}update${RESET}                      Sync installed skills, agents, and hooks with latest catalog`);
   console.log(`  ${GREEN}list${RESET}                        Show all available skills, rules, hooks, and plugins`);
   console.log(`  ${GREEN}new-skill${RESET} <name>            Scaffold a new progressive-disclosure skill`);
@@ -379,10 +381,17 @@ function installProfile(profile = 'developer', isGlobal = false, customTarget = 
       console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} goal-verifier hook`);
     }
 
+    // Secret-scrubber hook
+    const scrubberHook = path.join(hooksSrc, 'secret-scrubber');
+    if (fs.existsSync(scrubberHook)) {
+      if (!isDryRun) copyRecursiveSync(scrubberHook, path.join(targetDir, 'hooks', 'secret-scrubber'));
+      console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} secret-scrubber hook`);
+    }
+
     // Scoped Subagents (agents/)
     if (fs.existsSync(agentsSrc)) {
       if (!isDryRun) copyRecursiveSync(agentsSrc, targetAgents);
-      console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} 6 scoped subagents (agents/)`);
+      console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} 8 scoped subagents (agents/)`);
     }
 
     // Developer Plugins
@@ -399,7 +408,7 @@ function installProfile(profile = 'developer', isGlobal = false, customTarget = 
   // 3. Full Power Profile
   if (profile === 'full') {
     if (!isDryRun) copyRecursiveSync(skillsSrc, targetSkills);
-    console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} entire skills library (33 progressive skills)`);
+    console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} entire skills library (37 progressive skills)`);
 
     if (!isDryRun) copyRecursiveSync(rulesSrc, targetRules);
     console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} entire rules library`);
@@ -408,11 +417,11 @@ function installProfile(profile = 'developer', isGlobal = false, customTarget = 
     console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} all modular plugins`);
 
     if (!isDryRun) copyRecursiveSync(hooksSrc, path.join(targetDir, 'hooks'));
-    console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} full lifecycle hooks suite (6 hooks)`);
+    console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} full lifecycle hooks suite (7 hooks)`);
 
     if (fs.existsSync(agentsSrc)) {
       if (!isDryRun) copyRecursiveSync(agentsSrc, targetAgents);
-      console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} scoped subagents (agents/)`);
+      console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} 8 scoped subagents (agents/)`);
     }
 
     // MCP Config Example
@@ -654,6 +663,121 @@ function runUpdate(isGlobal = false, customTarget = null, isDryRun = false) {
     console.log(`  ${GREEN}✔${RESET} Refreshed base GEMINI.md & AGENTS.md rules\n`);
     console.log(`${GREEN}${BOLD}✨ Update complete! Everything Gemini is up to date.${RESET}\n`);
   }
+}
+
+function runDiff(isGlobal = false, customTarget = null) {
+  printBanner();
+  const targetDir = customTarget ? path.resolve(customTarget) : (isGlobal ? GLOBAL_CONFIG_DIR : AGENTS_DIR);
+  console.log(`${BOLD}🔍 Comparing Workspace vs. Master Everything Gemini Catalog...${RESET}`);
+  console.log(`Target: ${CYAN}${targetDir}${RESET}\n`);
+
+  if (!fs.existsSync(targetDir)) {
+    console.log(`${YELLOW}No active configuration found at ${targetDir}.${RESET}\n`);
+    return;
+  }
+
+  // Compare skills
+  const wsSkillsDir = path.join(targetDir, 'skills');
+  const catalogSkillsDir = path.join(REPO_ROOT, 'skills');
+  const wsSkills = fs.existsSync(wsSkillsDir) ? fs.readdirSync(wsSkillsDir).filter(s => {
+    try { return fs.statSync(path.join(wsSkillsDir, s)).isDirectory(); } catch (_) { return false; }
+  }) : [];
+
+  console.log(`${BOLD}⚡ Progressive Skills Comparison:${RESET}`);
+  let modifiedCount = 0;
+  for (const s of wsSkills) {
+    const wsFile = path.join(wsSkillsDir, s, 'SKILL.md');
+    const catFile = path.join(catalogSkillsDir, s, 'SKILL.md');
+    if (!fs.existsSync(catFile)) {
+      console.log(`  ${CYAN}+ [CUSTOM/LOCAL]${RESET} ${s}`);
+    } else {
+      const wsContent = fs.existsSync(wsFile) ? fs.readFileSync(wsFile, 'utf8') : '';
+      const catContent = fs.readFileSync(catFile, 'utf8');
+      if (wsContent !== catContent) {
+        console.log(`  ${YELLOW}* [MODIFIED]${RESET} ${s} (differs from catalog)`);
+        modifiedCount++;
+      } else {
+        console.log(`  ${GREEN}✔ [IN-SYNC]${RESET} ${s}`);
+      }
+    }
+  }
+
+  // Compare agents
+  const wsAgentsDir = path.join(targetDir, 'agents');
+  const catAgentsDir = path.join(REPO_ROOT, 'agents');
+  const wsAgents = fs.existsSync(wsAgentsDir) ? fs.readdirSync(wsAgentsDir).filter(a => a.endsWith('.md')) : [];
+  console.log(`\n${BOLD}🤖 Scoped Subagents Comparison:${RESET}`);
+  for (const a of wsAgents) {
+    const wsFile = path.join(wsAgentsDir, a);
+    const catFile = path.join(catAgentsDir, a);
+    if (!fs.existsSync(catFile)) {
+      console.log(`  ${CYAN}+ [CUSTOM/LOCAL]${RESET} ${a}`);
+    } else {
+      const wsContent = fs.readFileSync(wsFile, 'utf8');
+      const catContent = fs.readFileSync(catFile, 'utf8');
+      if (wsContent !== catContent) {
+        console.log(`  ${YELLOW}* [MODIFIED]${RESET} ${a} (differs from catalog)`);
+        modifiedCount++;
+      } else {
+        console.log(`  ${GREEN}✔ [IN-SYNC]${RESET} ${a}`);
+      }
+    }
+  }
+
+  console.log(`\n${BOLD}Diff Summary:${RESET} ${wsSkills.length} skills, ${wsAgents.length} subagents checked. ${modifiedCount === 0 ? GREEN + 'All matching components are in sync with master catalog!' + RESET : YELLOW + `${modifiedCount} modified component(s) detected.` + RESET}\n`);
+}
+
+function runExport(isGlobal = false, customTarget = null, outputPath = null) {
+  printBanner();
+  const targetDir = customTarget ? path.resolve(customTarget) : (isGlobal ? GLOBAL_CONFIG_DIR : AGENTS_DIR);
+  console.log(`${BOLD}📦 Exporting Agent Configuration Bundle...${RESET}`);
+  console.log(`Source: ${CYAN}${targetDir}${RESET}\n`);
+
+  if (!fs.existsSync(targetDir)) {
+    console.error(`${RED}Error: Source directory does not exist: ${targetDir}${RESET}\n`);
+    process.exit(1);
+  }
+
+  const exportData = {
+    generator: "everything-gemini",
+    version: VERSION,
+    exportedAt: new Date().toISOString(),
+    source: targetDir,
+    skills: [],
+    agents: [],
+    hooksConfig: null
+  };
+
+  const skillsDir = path.join(targetDir, 'skills');
+  if (fs.existsSync(skillsDir)) {
+    for (const s of fs.readdirSync(skillsDir)) {
+      const skillPath = path.join(skillsDir, s, 'SKILL.md');
+      if (fs.existsSync(skillPath)) {
+        exportData.skills.push({ name: s, content: fs.readFileSync(skillPath, 'utf8') });
+      }
+    }
+  }
+
+  const agentsDir = path.join(targetDir, 'agents');
+  if (fs.existsSync(agentsDir)) {
+    for (const a of fs.readdirSync(agentsDir)) {
+      if (a.endsWith('.md')) {
+        exportData.agents.push({ name: a, content: fs.readFileSync(path.join(agentsDir, a), 'utf8') });
+      }
+    }
+  }
+
+  const hooksFile = path.join(targetDir, 'hooks.json');
+  if (fs.existsSync(hooksFile)) {
+    try {
+      exportData.hooksConfig = JSON.parse(fs.readFileSync(hooksFile, 'utf8'));
+    } catch (_) {}
+  }
+
+  const outDest = outputPath ? path.resolve(outputPath) : path.join(process.cwd(), 'everything-gemini-profile.json');
+  fs.writeFileSync(outDest, JSON.stringify(exportData, null, 2), 'utf8');
+  console.log(`  ${GREEN}✔${RESET} Successfully exported ${exportData.skills.length} skills, ${exportData.agents.length} subagents to:`);
+  console.log(`    ${BOLD}${outDest}${RESET}\n`);
 }
 
 function runValidate() {
@@ -1075,10 +1199,10 @@ _everything_gemini() {
   COMPREPLY=()
   cur="\${COMP_WORDS[COMP_CWORD]}"
   prev="\${COMP_WORDS[COMP_CWORD-1]}"
-  commands="doctor list init install status check update new-skill new-agent add remove test-skill test-all benchmark info show completion validate version help"
-  skills="agent-evals ai-first-engineering api-craftsman architecture-designer browser-qa-tester cloudflare-workers context-caching continuous-learning database-architect devops-pipeline docker-compose-orchestrator fastapi-production fullstack-nextjs gemini-function-calling gemini-grounding gemini-multimodal git-craftsman github-ops graphql-architect kubernetes-operator performance-profiler rag-architect redis-cache-patterns repo-onboarding root-cause-debugger security-audit stripe-integration subagent-handoff supabase-architect svelte-kit-architect tdd-workflow antigravity-sdk-orchestrator responsive-design"
-  agents="architect browser-qa build-repair code-reviewer planner security-auditor"
-  hooks="auto-lint-formatter ephemeral-context gemini-shield goal-verifier learned-instincts safety-shield"
+  commands="doctor list init install status check update new-skill new-agent add remove test-skill test-all benchmark info show completion validate version help diff export"
+  skills="agent-evals ai-first-engineering api-craftsman architecture-designer browser-qa-tester clickhouse-analytics cloudflare-workers context-caching continuous-learning database-architect devops-pipeline docker-compose-orchestrator fastapi-production fullstack-nextjs gemini-function-calling gemini-grounding gemini-multimodal git-craftsman github-ops graphql-architect kubernetes-operator performance-profiler rag-architect redis-cache-patterns repo-onboarding root-cause-debugger security-audit stripe-integration subagent-handoff supabase-architect svelte-kit-architect temporal-workflows trpc-react-query wasm-rust-optimizer tdd-workflow antigravity-sdk-orchestrator responsive-design"
+  agents="architect browser-qa build-repair code-reviewer database-migrator performance-tuner planner security-auditor"
+  hooks="auto-lint-formatter ephemeral-context gemini-shield goal-verifier learned-instincts safety-shield secret-scrubber"
   plugins="core python-ai security-shield web-fullstack"
 
   case "\${prev}" in
@@ -1343,6 +1467,28 @@ switch (command) {
       else if (args[i] === '--workspace' && args[i + 1]) customTarget = args[++i];
     }
     runStatus(isGlobal, customTarget, asJson);
+    break;
+  }
+  case 'diff': {
+    let isGlobal = false;
+    let customTarget = null;
+    for (let i = 1; i < args.length; i++) {
+      if (args[i] === '--global') isGlobal = true;
+      else if (args[i] === '--workspace' && args[i + 1]) customTarget = args[++i];
+    }
+    runDiff(isGlobal, customTarget);
+    break;
+  }
+  case 'export': {
+    let isGlobal = false;
+    let customTarget = null;
+    let outputPath = null;
+    for (let i = 1; i < args.length; i++) {
+      if (args[i] === '--global') isGlobal = true;
+      else if (args[i] === '--workspace' && args[i + 1]) customTarget = args[++i];
+      else if ((args[i] === '--output' || args[i] === '-o') && args[i + 1]) outputPath = args[++i];
+    }
+    runExport(isGlobal, customTarget, outputPath);
     break;
   }
   case 'update': {

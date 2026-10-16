@@ -46,6 +46,8 @@ Everything Gemini bundles ready-to-use blueprints in `mcp/mcp_config.example.jso
 | **`memory`** | `@modelcontextprotocol/server-memory` | Persistent knowledge graph semantic memory across agent sessions | Stdio |
 | **`fetch`** | `@modelcontextprotocol/server-fetch` | Efficient HTTP scraping and web documentation extraction | Stdio |
 | **`redis`** | `@modelcontextprotocol/server-redis` | High-speed key-value caching, Pub/Sub, and distributed locks | Stdio |
+| **`docker`** | `@modelcontextprotocol/server-docker` | Container lifecycle inspection, logs, and containerized testing | Stdio |
+| **`clickhouse`** | `@modelcontextprotocol/server-clickhouse` | High-throughput OLAP analytics and vector similarity search | Stdio |
 | **`github`** | `@modelcontextprotocol/server-github` | Pull requests, issues, repo search, and commit inspection | Stdio |
 | **`postgres`** | `@modelcontextprotocol/server-postgres` | PostgreSQL relational schema inspection and SQL queries | Stdio |
 | **`sqlite`** | `@modelcontextprotocol/server-sqlite` | Local SQLite database querying and table inspection | Stdio |

@@ -22,6 +22,14 @@
     "redis": {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-redis", "${REDIS_URL}"]
+    },
+    "docker": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-docker"]
+    },
+    "clickhouse": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-clickhouse", "${CLICKHOUSE_URL}"]
     }
   }
 }

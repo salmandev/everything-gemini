@@ -39,5 +39,19 @@
         ]
       }
     ]
+  },
+  "secret-scrubber": {
+    "PreToolUse": [
+      {
+        "matcher": "write_to_file|replace_file_content|multi_replace_file_content",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ./hooks/secret-scrubber/scripts/scrub-secrets.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
   }
 }

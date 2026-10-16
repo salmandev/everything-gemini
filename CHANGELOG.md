@@ -4,6 +4,27 @@ All notable changes to **Everything Gemini (`everything-gemini`)** will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-10-17
+
+### Added
+- **37 Progressive Disclosure Skills & 52-Component Milestone**:
+  - **`clickhouse-analytics`**: High-throughput OLAP schemas, MergeTree engines, Kafka streaming ingestion, and vector similarity search.
+  - **`temporal-workflows`**: Fault-tolerant distributed workflow orchestration, retry policies, async activities, and saga compensations.
+  - **`trpc-react-query`**: End-to-end type safety with tRPC v11 routers, TanStack React Query v5 cache management, and optimistic UI mutations.
+  - **`wasm-rust-optimizer`**: High-performance WebAssembly compilation from Rust using `wasm-pack`, zero-copy memory buffers (`Uint8Array`), and SIMD.
+- **8 Scoped Subagents Fleet**:
+  - **`database-migrator`**: Dedicated database schema evolution specialist designing zero-downtime expand/contract SQL migrations and rollback safety.
+  - **`performance-tuner`**: Systems performance specialist diagnosing flamegraphs, memory leaks, slow database query plans, and N+1 waterfalls.
+- **7th Lifecycle Safety Gate (`secret-scrubber`)**:
+  - PreToolUse security gate intercepting file write operations (`write_to_file`, `replace_file_content`, `multi_replace_file_content`) to block accidental raw credential leaks (AWS, OpenAI, Gemini, GitHub PAT, Stripe, and private keys).
+- **New CLI Commands (`diff` and `export`)**:
+  - `everything-gemini diff`: Compares installed workspace components against master catalog to inspect local modifications vs upstream updates.
+  - `everything-gemini export`: Exports installed skills, subagents, and hook configurations into portable JSON bundles (`everything-gemini-profile.json`).
+- **Expanded Curated MCP Blueprints**:
+  - Added `@modelcontextprotocol/server-docker` (container inspection) and `@modelcontextprotocol/server-clickhouse` (real-time OLAP).
+- **18-Assertion Automated E2E Test Suite**:
+  - Expanded `tests/cli.test.js` validating `diff`, `export`, and new subagent/skill inspections across all platforms.
+
 ## [1.3.0] - 2026-10-16
 
 ### Added
