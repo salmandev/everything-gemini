@@ -4,6 +4,22 @@ All notable changes to **Everything Gemini (`everything-gemini`)** will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-10-17
+
+### Added
+- **40 Progressive Disclosure Skills & 55-Component Milestone**:
+  - **`duckdb-local-olap`**: Embedded in-process analytical SQL (OLAP), direct zero-copy Apache Arrow querying, S3 Parquet integration, and MotherDuck hybrid cloud synchronization.
+  - **`nats-jetstream`**: Production event-driven messaging, at-least-once & exactly-once semantics, consumer deduplication windows, KV distributed buckets, and ephemeral push/pull consumers.
+  - **`axum-web-service`**: Ergonomic, high-performance Rust web service architecture with Tokio async runtime, Tower middleware chains, compile-time SQLx queries, and RFC 7807 error envelopes.
+- **Agent Profile Import Command (`everything-gemini import`)**:
+  - Full CLI roundtrip management: import exported agent profiles (`everything-gemini-profile.json`) into workspace (`.agents/`) or global (`~/.gemini/config/`) targets with `--dry-run` simulation safety.
+- **Autonomous Multi-Agent Pipeline Harness (`examples/python-sdk/multi_agent_pipeline.py`)**:
+  - End-to-end 4-stage pipeline orchestrating Planner -> Database Migrator -> Performance Tuner -> Code Reviewer using the official `google-antigravity` Python SDK with automated syntax verification.
+- **19-Assertion Automated E2E Test Suite**:
+  - Expanded `tests/cli.test.js` validating the new `import` command across dry-run simulations, file-path sources, and target locations, alongside updated 55-component benchmark checks.
+- **Showcase Web App 55-Component Expansion**:
+  - Catalog and metrics on [https://salmandev.github.io/everything-gemini/](https://salmandev.github.io/everything-gemini/) updated to 40 progressive skills and `v1.5.0` badge.
+
 ## [1.4.0] - 2026-10-17
 
 ### Added

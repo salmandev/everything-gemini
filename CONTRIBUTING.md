@@ -105,7 +105,7 @@ Everything Gemini provides built-in developer tools to streamline adding new com
 # Inspect runbook preview in the terminal
 ./bin/everything-gemini info my-awesome-skill
 
-# Benchmark token savings and run self-tests across all 42 ecosystem components
+# Benchmark token savings and run self-tests across all 55 ecosystem components
 ./bin/everything-gemini test-all
 ```
 
@@ -148,9 +148,13 @@ Looking for inspiration on what to contribute? The community has requested the f
 | **`wasm-rust-optimizer`** | Performance | WebAssembly compilation with `wasm-pack`, zero-copy Uint8Array | ✅ *Shipped in v1.4.0* |
 | **`fastapi-production`** | Python AI | Pydantic v2, lifespan handlers, JWT auth, and K8s probes | ✅ *Shipped in v1.3.0* |
 | **`redis-cache-patterns`** | Backend | Distributed locks (Redlock), sliding-window rate limits, and streams | ✅ *Shipped in v1.3.0* |
-| **`duckdb-local-olap`** | Database | Embedded in-process OLAP, Parquet querying, and MotherDuck sync | 🚀 *Open for PR* |
-| **`nats-jetstream`** | Messaging | Ultra-low latency event streaming, consumer acks, and pub/sub | 🚀 *Open for PR* |
-| **`axum-web-service`** | Rust | Tokio async, tower middlewares, type-safe state, and SQLx | 🚀 *Open for PR* |
+| **`duckdb-local-olap`** | Database | Embedded in-process OLAP, Parquet querying, and MotherDuck sync | ✅ *Shipped in v1.5.0* |
+| **`nats-jetstream`** | Messaging | Ultra-low latency event streaming, consumer acks, and pub/sub | ✅ *Shipped in v1.5.0* |
+| **`axum-web-service`** | Rust | Tokio async, tower middlewares, type-safe state, and SQLx | ✅ *Shipped in v1.5.0* |
+| **`turborepo-monorepo`** | Tooling | High-performance monorepo build caching, task pipelines, and workspace boundaries | 🚀 *Open for PR* |
+| **`dbt-transformation`** | Data Eng | Modular SQL transformations, Jinja macros, and automated data testing | 🚀 *Open for PR* |
+| **`apache-kafka-streams`** | Streaming | Exactly-once event streaming, stateful window aggregations, and consumer groups | 🚀 *Open for PR* |
+| **`grpc-connect-rpc`** | API | Lightweight, browser-compatible gRPC and Protocol Buffers with Connect-ES / Connect-Go | 🚀 *Open for PR* |
 
 ### How to Build a Wishlist Item:
 1. Open an issue using the [Skill Proposal template](.github/ISSUE_TEMPLATE/skill_proposal.md).

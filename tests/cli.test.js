@@ -90,8 +90,8 @@ it('should benchmark ecosystem components and output valid JSON with --json', ()
   const res = runCli('benchmark --json');
   assert.strictEqual(res.status, 0);
   const data = JSON.parse(res.stdout);
-  assert.strictEqual(data.totalComponents, 52);
-  assert.strictEqual(data.progressiveSkillsCount, 37);
+  assert.strictEqual(data.totalComponents, 55);
+  assert.strictEqual(data.progressiveSkillsCount, 40);
   assert.strictEqual(data.scopedAgentsCount, 8);
   assert.strictEqual(data.lifecycleHooksCount, 7);
   assert(data.totalRunbookTokens > 15000, 'Expected >15,000 runbook tokens');
@@ -224,6 +224,29 @@ try {
     const res2 = runCli('info clickhouse-analytics');
     assert.strictEqual(res2.status, 0);
     assert.match(res2.stdout, /ClickHouse Analytics/);
+
+    const res3 = runCli('info duckdb-local-olap');
+    assert.strictEqual(res3.status, 0);
+    assert.match(res3.stdout, /DuckDB Local OLAP/);
+  });
+
+  // Import Command
+  it('should import agent configuration bundle cleanly', () => {
+    const exportFile = path.join(tempWorkspace, 'exported-profile.json');
+    const importWorkspace = path.join(tempWorkspace, 'imported-workspace');
+
+    // Dry run
+    const dryRes = runCli(`import "${exportFile}" --workspace "${importWorkspace}" --dry-run`);
+    assert.strictEqual(dryRes.status, 0);
+    assert.match(dryRes.stdout, /DRY RUN MODE ACTIVATED/);
+    assert.match(dryRes.stdout, /Would import/);
+
+    // Live import
+    const liveRes = runCli(`import "${exportFile}" --workspace "${importWorkspace}"`);
+    assert.strictEqual(liveRes.status, 0);
+    assert.match(liveRes.stdout, /Import complete/);
+    assert.strictEqual(fs.existsSync(path.join(importWorkspace, 'skills')), true);
+    assert.strictEqual(fs.existsSync(path.join(importWorkspace, 'hooks.json')), true);
   });
 
 } finally {

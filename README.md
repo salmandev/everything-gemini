@@ -80,7 +80,7 @@ cd everything-gemini
 | :--- | :--- | :--- |
 | **`core`** | Minimalists & Speed | Safety-shield hook, TDD skill, repo-onboarding skill, baseline `GEMINI.md`. |
 | **`developer`** *(Recommended)* | Daily Software Engineers | Core + 8 Scoped Subagents (`agents/`), Frontier Skills (Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
-| **`full`** | Lead Engineers & Archs | Everything: all 37 progressive skills, 8 scoped subagents, full lifecycle hooks suite (7 hooks), all plugins, MCP configs, and templates. |
+| **`full`** | Lead Engineers & Archs | Everything: all 40 progressive skills, 8 scoped subagents, full lifecycle hooks suite (7 hooks), all plugins, MCP configs, and templates. |
 
 ### 5. In CI / GitHub Actions Workflows
 
@@ -159,7 +159,7 @@ everything-gemini/
 ├── agents/                       # Scoped subagent fleet (Planner, Reviewer, Database Migrator, etc.)
 ├── scripts/                      # Automated installers and harness validators
 ├── plugins/                      # Reusable modular plugins (web-fullstack, python-ai, security)
-├── skills/                       # 37 Progressive disclosure skills (35 core + 2 plugins)
+├── skills/                       # 40 Progressive disclosure skills (38 core + 2 plugins)
 ├── rules/                        # Contextual guidelines & standards
 ├── hooks/                        # Event-driven lifecycle hooks (GeminiShield, Auto-lint)
 ├── mcp/                          # Production-ready MCP server blueprints
@@ -200,6 +200,9 @@ Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`na
 - **[`subagent-handoff`](skills/subagent-handoff/SKILL.md)**: Multi-agent task delegation protocol, scoped contexts, and report synthesis.
 - **[`api-craftsman`](skills/api-craftsman/SKILL.md)**: REST, OpenAPI 3.1 specifications, gRPC protos, and RFC 7807 error envelopes.
 - **[`database-architect`](skills/database-architect/SKILL.md)**: Zero-downtime migrations, concurrent indexing, and ACID schema modeling.
+- **[`duckdb-local-olap`](skills/duckdb-local-olap/SKILL.md)**: Embedded in-process SQL analytics, direct S3/Parquet querying, and zero-copy Arrow integration.
+- **[`nats-jetstream`](skills/nats-jetstream/SKILL.md)**: Ultra-low latency event streaming, message deduplication, durable consumer groups, and KV buckets.
+- **[`axum-web-service`](skills/axum-web-service/SKILL.md)**: Production Rust web APIs using Axum, Tokio async runtime, Tower middlewares, and SQLx connection pools.
 - **[`clickhouse-analytics`](skills/clickhouse-analytics/SKILL.md)**: High-throughput OLAP schemas, MergeTree engines, Kafka ingestion, and vector search.
 - **[`temporal-workflows`](skills/temporal-workflows/SKILL.md)**: Resilient distributed workflows, retry policies, async activities, and saga compensations.
 - **[`trpc-react-query`](skills/trpc-react-query/SKILL.md)**: End-to-end type safety, tRPC v11 routers, and TanStack React Query v5 optimistic UI.
@@ -332,6 +335,11 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 ./bin/everything-gemini export
 ./bin/everything-gemini export --output my-profile.json
 
+# Import portable configuration bundle into workspace
+./bin/everything-gemini import my-profile.json
+./bin/everything-gemini import my-profile.json --dry-run
+./bin/everything-gemini import my-profile.json --workspace ./my-project
+
 # Update installed ecosystem components in-place to latest catalog versions
 ./bin/everything-gemini update
 ./bin/everything-gemini update --global
@@ -368,7 +376,7 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 # Test and validate a specific skill's frontmatter and scripts
 ./bin/everything-gemini test-skill gemini-multimodal
 
-# Benchmark and validate all 37 skills, subagents, and hooks (human or JSON)
+# Benchmark and validate all 40 skills, subagents, and hooks (human or JSON)
 ./bin/everything-gemini test-all
 ./bin/everything-gemini benchmark --json
 
