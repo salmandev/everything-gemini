@@ -56,8 +56,9 @@ function printHelp() {
   console.log(`  ${GREEN}add${RESET} <type> <name>           Add a specific skill, agent, hook, or plugin to workspace`);
   console.log(`  ${GREEN}remove${RESET} <type> <name>        Remove a specific skill, agent, hook, or plugin from workspace`);
   console.log(`  ${GREEN}search, find${RESET} <query>         Search skills, agents, hooks, and MCP blueprints`);
+  console.log(`  ${GREEN}audit${RESET} [path]                 Comprehensive audit of frontmatter, contracts, hooks & links`);
   console.log(`  ${GREEN}test-skill${RESET} <name>           Validate a specific skill frontmatter & scripts`);
-  console.log(`  ${GREEN}test-all${RESET}                    Benchmark & validate all 44 skills, 9 subagents & 7 hooks`);
+  console.log(`  ${GREEN}test-all${RESET}                    Benchmark & validate all 48 skills, 10 subagents & 7 hooks`);
   console.log(`  ${GREEN}info${RESET} <name>                  Display overview & runbook for a skill, agent, or hook`);
   console.log(`  ${GREEN}completion${RESET} [--install]        Generate or install shell autocompletion script (bash/zsh)`);
   console.log(`  ${GREEN}validate${RESET}                    Run self-test on frontmatter, JSON schemas & hooks`);
@@ -410,7 +411,7 @@ function installProfile(profile = 'developer', isGlobal = false, customTarget = 
   // 3. Full Power Profile
   if (profile === 'full') {
     if (!isDryRun) copyRecursiveSync(skillsSrc, targetSkills);
-    console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} entire skills library (44 progressive skills)`);
+    console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} entire skills library (48 progressive skills)`);
 
     if (!isDryRun) copyRecursiveSync(rulesSrc, targetRules);
     console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} entire rules library`);
@@ -423,7 +424,7 @@ function installProfile(profile = 'developer', isGlobal = false, customTarget = 
 
     if (fs.existsSync(agentsSrc)) {
       if (!isDryRun) copyRecursiveSync(agentsSrc, targetAgents);
-      console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} 9 scoped subagents (agents/)`);
+      console.log(`  ${GREEN}✔${RESET} ${isDryRun ? '[DRY RUN] Would install' : 'Installed'} 10 scoped subagents (agents/)`);
     }
 
     // MCP Config Example
@@ -508,12 +509,12 @@ function runStatus(isGlobal = false, customTarget = null, asJson = false) {
       },
       skills: {
         installedCount: installedSkills.length,
-        totalCatalogCount: 44,
+        totalCatalogCount: 48,
         installed: installedSkills
       },
       subagents: {
         installedCount: installedAgents.length,
-        totalCatalogCount: 9,
+        totalCatalogCount: 10,
         installed: installedAgents
       },
       hooks: {
@@ -539,7 +540,7 @@ function runStatus(isGlobal = false, customTarget = null, asJson = false) {
   console.log(`  ${hasGemini ? GREEN + '✔' : GRAY + '○'}${RESET} GEMINI.md ${hasGemini ? '(active)' : '(not installed)'}`);
   console.log(`  ${hasAgents ? GREEN + '✔' : GRAY + '○'}${RESET} AGENTS.md ${hasAgents ? '(active)' : '(not installed)'}`);
 
-  console.log(`\n${CYAN}${BOLD}⚡ Installed Skills (${installedSkills.length}/44):${RESET}`);
+  console.log(`\n${CYAN}${BOLD}⚡ Installed Skills (${installedSkills.length}/48):${RESET}`);
   if (installedSkills.length === 0) {
     console.log(`  ${GRAY}(no skills installed)${RESET}`);
   } else {
@@ -548,7 +549,7 @@ function runStatus(isGlobal = false, customTarget = null, asJson = false) {
     }
   }
 
-  console.log(`\n${CYAN}${BOLD}🤖 Scoped Subagents (${installedAgents.length}/9):${RESET}`);
+  console.log(`\n${CYAN}${BOLD}🤖 Scoped Subagents (${installedAgents.length}/10):${RESET}`);
   if (installedAgents.length === 0) {
     console.log(`  ${GRAY}(no subagents installed)${RESET}`);
   } else {
@@ -1288,7 +1289,7 @@ function searchComponents(query, asJson = false) {
 
   if (totalMatches === 0) {
     console.log(`  ${YELLOW}○ No matching components found.${RESET}`);
-    console.log(`    Run ${GREEN}everything-gemini list${RESET} to browse all 44 skills, 9 subagents, and 7 hooks.\n`);
+    console.log(`    Run ${GREEN}everything-gemini list${RESET} to browse all 48 skills, 10 subagents, and 7 hooks.\n`);
     return;
   }
 
@@ -1325,6 +1326,154 @@ function searchComponents(query, asJson = false) {
       console.log(`  • ${BOLD}${m.name.padEnd(28)}${RESET} ${GRAY}${m.description}${RESET}`);
     }
     console.log('');
+  }
+}
+
+function runAudit(targetPath = null, isGlobal = false, asJson = false) {
+  const targetDir = isGlobal
+    ? path.join(os.homedir(), '.gemini', 'config')
+    : (targetPath ? path.resolve(targetPath) : (fs.existsSync(path.join(process.cwd(), '.agents')) ? path.join(process.cwd(), '.agents') : REPO_ROOT));
+
+  const isRepoAudit = (targetDir === REPO_ROOT);
+  const auditReport = {
+    target: targetDir,
+    timestamp: new Date().toISOString(),
+    isRepoCatalog: isRepoAudit,
+    checks: [],
+    passedCount: 0,
+    warningCount: 0,
+    errorCount: 0,
+    valid: true,
+  };
+
+  function addCheck(category, item, status, message, details = null) {
+    if (status === 'error') auditReport.errorCount++;
+    else if (status === 'warn') auditReport.warningCount++;
+    else auditReport.passedCount++;
+    auditReport.checks.push({ category, item, status, message, details });
+  }
+
+  // 1. Audit Skills
+  const skillsBase = isRepoAudit ? path.join(REPO_ROOT, 'skills') : path.join(targetDir, 'skills');
+  if (fs.existsSync(skillsBase)) {
+    const skillEntries = fs.readdirSync(skillsBase, { withFileTypes: true }).filter(d => d.isDirectory());
+    for (const ent of skillEntries) {
+      const skillFile = path.join(skillsBase, ent.name, 'SKILL.md');
+      if (!fs.existsSync(skillFile)) {
+        addCheck('skills', ent.name, 'error', 'Missing SKILL.md in directory');
+        continue;
+      }
+      const raw = fs.readFileSync(skillFile, 'utf8');
+      const lines = raw.split('\n');
+      const parts = raw.split('---');
+      if (parts.length < 3) {
+        addCheck('skills', ent.name, 'error', 'Invalid or missing YAML frontmatter delimiters (---)');
+        continue;
+      }
+      const frontmatter = parts[1];
+      const nameMatch = frontmatter.match(/name:\s*([a-zA-Z0-9_-]+)/);
+      const descMatch = frontmatter.match(/description:\s*>?-?\s*([^\n\r]+)/);
+
+      if (!nameMatch) {
+        addCheck('skills', ent.name, 'error', "Missing 'name' field in YAML frontmatter");
+      } else if (nameMatch[1].trim() !== ent.name) {
+        addCheck('skills', ent.name, 'warn', `Frontmatter name '${nameMatch[1].trim()}' does not match directory '${ent.name}'`);
+      }
+
+      if (!descMatch || !descMatch[1].trim()) {
+        addCheck('skills', ent.name, 'error', "Missing 'description' trigger in YAML frontmatter");
+      }
+
+      if (lines.length > 260) {
+        addCheck('skills', ent.name, 'warn', `Runbook length exceeds 250 lines (${lines.length} lines); consider progressive disclosure sub-references`);
+      } else {
+        addCheck('skills', ent.name, 'pass', `Valid YAML frontmatter and runbook compliance (${lines.length} lines)`);
+      }
+    }
+  }
+
+  // 2. Audit Scoped Subagents
+  const agentsBase = isRepoAudit ? path.join(REPO_ROOT, 'agents') : path.join(targetDir, 'agents');
+  if (fs.existsSync(agentsBase)) {
+    const agentFiles = fs.readdirSync(agentsBase).filter(f => f.endsWith('.md'));
+    for (const f of agentFiles) {
+      const agentPath = path.join(agentsBase, f);
+      const content = fs.readFileSync(agentPath, 'utf8');
+      const hasRole = /#+\s*(Core Role|Role & Mission)/i.test(content);
+      const hasGuardrails = /#+\s*(Execution Guardrails|Tool Permissions)/i.test(content);
+      const hasProtocol = /#+\s*(Delegation Protocol|Protocol|Handoff)/i.test(content);
+
+      if (hasRole && hasGuardrails && hasProtocol) {
+        addCheck('subagents', f, 'pass', 'Complies with Subagent Specification Contract (Role, Guardrails, Handoff)');
+      } else {
+        const missing = [];
+        if (!hasRole) missing.push('Role & Mission');
+        if (!hasGuardrails) missing.push('Guardrails / Tool Permissions');
+        if (!hasProtocol) missing.push('Handoff / Protocol');
+        addCheck('subagents', f, 'error', `Missing required specification sections: ${missing.join(', ')}`);
+      }
+    }
+  }
+
+  // 3. Audit Lifecycle Hooks
+  const hooksBase = isRepoAudit ? path.join(REPO_ROOT, 'hooks') : path.join(targetDir, 'hooks');
+  if (fs.existsSync(hooksBase)) {
+    const hookDirs = fs.readdirSync(hooksBase, { withFileTypes: true }).filter(d => d.isDirectory());
+    for (const hd of hookDirs) {
+      const scriptsDir = path.join(hooksBase, hd.name, 'scripts');
+      if (fs.existsSync(scriptsDir)) {
+        const scripts = fs.readdirSync(scriptsDir).filter(s => s.endsWith('.sh'));
+        for (const s of scripts) {
+          const sPath = path.join(scriptsDir, s);
+          try {
+            fs.accessSync(sPath, fs.constants.X_OK);
+            addCheck('hooks', `${hd.name}/${s}`, 'pass', 'Hook script is executable (+x)');
+          } catch {
+            addCheck('hooks', `${hd.name}/${s}`, 'error', 'Hook script lacks executable permissions (chmod +x)');
+          }
+        }
+      }
+    }
+  }
+
+  auditReport.valid = (auditReport.errorCount === 0);
+
+  if (asJson) {
+    console.log(JSON.stringify(auditReport, null, 2));
+    if (!auditReport.valid) process.exit(1);
+    return;
+  }
+
+  printBanner();
+  console.log(`${BOLD}🛡️ Everything Gemini Ecosystem Audit Report${RESET}`);
+  console.log(`Target: ${CYAN}${targetDir}${RESET} ${isRepoAudit ? `${YELLOW}(Master Repository Catalog)${RESET}` : ''}\n`);
+
+  const categories = ['skills', 'subagents', 'hooks'];
+  for (const cat of categories) {
+    const items = auditReport.checks.filter(c => c.category === cat);
+    if (items.length === 0) continue;
+
+    const catTitle = cat === 'skills' ? '⚡ Progressive Skills' :
+                     cat === 'subagents' ? '🤖 Scoped Subagents' : '🛡️ Lifecycle Hooks';
+    console.log(`${BOLD}${catTitle} (${items.length}):${RESET}`);
+    for (const it of items) {
+      const icon = it.status === 'pass' ? `${GREEN}✔${RESET}` :
+                   it.status === 'warn' ? `${YELLOW}▲${RESET}` : `${RED}✘${RESET}`;
+      console.log(`  ${icon} ${it.item.padEnd(32)} ${it.message}`);
+    }
+    console.log('');
+  }
+
+  console.log(`${BOLD}✨ Audit Summary:${RESET}`);
+  console.log(`  Passed Checks:   ${GREEN}${auditReport.passedCount}${RESET}`);
+  console.log(`  Warnings:        ${auditReport.warningCount > 0 ? YELLOW : GREEN}${auditReport.warningCount}${RESET}`);
+  console.log(`  Errors:          ${auditReport.errorCount > 0 ? RED : GREEN}${auditReport.errorCount}${RESET}\n`);
+
+  if (auditReport.valid) {
+    console.log(`  ${GREEN}${BOLD}✔ ALL CHECKS PASSED: Target is 100% compliant with Antigravity Progressive Disclosure standards!${RESET}\n`);
+  } else {
+    console.log(`  ${RED}${BOLD}✘ AUDIT FAILED: ${auditReport.errorCount} blocking errors found.${RESET}\n`);
+    process.exit(1);
   }
 }
 
@@ -1452,9 +1601,9 @@ _everything_gemini() {
   COMPREPLY=()
   cur="\${COMP_WORDS[COMP_CWORD]}"
   prev="\${COMP_WORDS[COMP_CWORD-1]}"
-  commands="doctor list init install status check update new-skill new-agent add remove test-skill test-all benchmark info show completion validate version help diff export import search find"
-  skills="agent-evals ai-first-engineering apache-kafka-streams api-craftsman architecture-designer axum-web-service browser-qa-tester clickhouse-analytics cloudflare-workers context-caching continuous-learning database-architect dbt-transformation devops-pipeline docker-compose-orchestrator duckdb-local-olap fastapi-production fullstack-nextjs gemini-function-calling gemini-grounding gemini-multimodal git-craftsman github-ops graphql-architect grpc-connect-rpc kubernetes-operator nats-jetstream performance-profiler rag-architect redis-cache-patterns repo-onboarding root-cause-debugger security-audit stripe-integration subagent-handoff supabase-architect svelte-kit-architect tdd-workflow temporal-workflows trpc-react-query turborepo-monorepo wasm-rust-optimizer antigravity-sdk-orchestrator responsive-design"
-  agents="architect browser-qa build-repair code-reviewer database-migrator documentation-writer performance-tuner planner security-auditor"
+  commands="doctor list init install status check update new-skill new-agent add remove test-skill test-all benchmark info show completion validate version help diff export import search find audit"
+  skills="agent-evals ai-first-engineering apache-kafka-streams api-craftsman architecture-designer argo-workflows axum-web-service browser-qa-tester clickhouse-analytics cloudflare-workers context-caching continuous-learning database-architect dbt-transformation devops-pipeline docker-compose-orchestrator duckdb-local-olap fastapi-production fullstack-nextjs gemini-function-calling gemini-grounding gemini-multimodal git-craftsman github-ops graphql-architect grpc-connect-rpc kubernetes-operator langgraph-orchestrator nats-jetstream open-telemetry-tracing performance-profiler playwright-visual-regression rag-architect redis-cache-patterns repo-onboarding root-cause-debugger security-audit stripe-integration subagent-handoff supabase-architect svelte-kit-architect tdd-workflow temporal-workflows trpc-react-query turborepo-monorepo wasm-rust-optimizer antigravity-sdk-orchestrator responsive-design"
+  agents="architect browser-qa build-repair code-reviewer database-migrator documentation-writer performance-tuner planner release-engineer security-auditor"
   hooks="auto-lint-formatter ephemeral-context gemini-shield goal-verifier learned-instincts safety-shield secret-scrubber"
   plugins="core python-ai security-shield web-fullstack"
 
@@ -1483,7 +1632,7 @@ _everything_gemini() {
       COMPREPLY=( $(compgen -W "\${plugins}" -- "\${cur}") )
       return 0
       ;;
-    info|show|search|find)
+    info|show|search|find|audit)
       COMPREPLY=( $(compgen -W "\${skills} \${agents} \${hooks} \${plugins}" -- "\${cur}") )
       return 0
       ;;
@@ -1792,6 +1941,19 @@ switch (command) {
     const asJson = args.includes('--json');
     const queryTerms = args.slice(1).filter(a => !a.startsWith('-')).join(' ');
     searchComponents(queryTerms, asJson);
+    break;
+  }
+  case 'audit': {
+    let isGlobal = false;
+    let customTarget = null;
+    let asJson = false;
+    for (let i = 1; i < args.length; i++) {
+      if (args[i] === '--global') isGlobal = true;
+      else if (args[i] === '--json') asJson = true;
+      else if (args[i] === '--workspace' && args[i + 1]) customTarget = args[++i];
+      else if (!args[i].startsWith('-') && !customTarget) customTarget = args[i];
+    }
+    runAudit(customTarget, isGlobal, asJson);
     break;
   }
   case 'version':

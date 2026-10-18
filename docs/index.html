@@ -17,7 +17,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://salmandev.github.io/everything-gemini/">
   <meta name="twitter:title" content="Everything Gemini — Agent Harness for Google Antigravity">
-  <meta name="twitter:description" content="44 Progressive Disclosure Skills, 9 Scoped Subagents, and 7 Lifecycle Safety Gates for Gemini 3.8 & Google Antigravity.">
+  <meta name="twitter:description" content="48 Progressive Disclosure Skills, 10 Scoped Subagents, and 7 Lifecycle Safety Gates for Gemini 3.8 & Google Antigravity.">
   <meta name="twitter:image" content="https://raw.githubusercontent.com/salmandev/everything-gemini/main/assets/banner.jpg">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -538,13 +538,13 @@
     <div class="container nav-inner">
       <a href="#" class="brand">
         🪐 Everything Gemini
-        <span class="brand-badge">v1.6.0</span>
+        <span class="brand-badge">v1.7.0</span>
       </a>
       <div class="nav-links">
         <a href="https://github.com/salmandev/everything-gemini" class="nav-link">GitHub</a>
         <a href="https://www.npmjs.com/package/everything-gemini" class="nav-link">NPM</a>
         <a href="https://github.com/salmandev/everything-gemini/blob/main/CONTRIBUTING.md" class="nav-link" style="color: var(--accent-emerald); font-weight: 600;">✨ Contribute</a>
-        <a href="https://twitter.com/intent/tweet?text=%F0%9F%AA%90%20Everything%20Gemini%20v1.6.0%20is%20live%21%20The%20open-source%20multi-agent%20harness%20for%20Google%20Antigravity%20%26%20Gemini%203.8%20with%2044%20progressive%20skills%2C%209%20subagents%2C%20and%207%20safety%20gates.%0A%0A%F0%9F%91%89%20https%3A%2F%2Fsalmandev.github.io%2Feverything-gemini%2F" target="_blank" class="nav-link" style="color: var(--accent-cyan); font-weight: 600;">🐦 Share on X</a>
+        <a href="https://twitter.com/intent/tweet?text=%F0%9F%AA%90%20Everything%20Gemini%20v1.7.0%20is%20live%21%20The%20open-source%20multi-agent%20harness%20for%20Google%20Antigravity%20%26%20Gemini%203.8%20with%2048%20progressive%20skills%2C%2010%20subagents%2C%20and%207%20safety%20gates.%0A%0A%F0%9F%91%89%20https%3A%2F%2Fsalmandev.github.io%2Feverything-gemini%2F" target="_blank" class="nav-link" style="color: var(--accent-cyan); font-weight: 600;">🐦 Share on X</a>
         <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fsalmandev.github.io%2Feverything-gemini%2F" target="_blank" class="nav-link" style="color: #00a0dc; font-weight: 600;">💼 Share on LinkedIn</a>
         <a href="https://github.com/salmandev/everything-gemini" target="_blank" class="btn-github">
           ⭐ Star on GitHub
@@ -590,11 +590,11 @@
       <!-- Metrics -->
       <div class="metrics">
         <div class="metric-card">
-          <div class="metric-value">44</div>
+          <div class="metric-value">48</div>
           <div class="metric-label">Progressive Skills</div>
         </div>
         <div class="metric-card">
-          <div class="metric-value">9</div>
+          <div class="metric-value">10</div>
           <div class="metric-label">Scoped Subagents</div>
         </div>
         <div class="metric-card">
@@ -673,9 +673,10 @@
       { name: "continuous-learning", type: "skill", cat: "frontier", desc: "Adaptive Learned Instincts and Knowledge Item memory capturing developer corrections across sessions." },
       { name: "repo-onboarding", type: "skill", cat: "frontier", desc: "Rapid codebase indexing, directory mapping, pattern extraction, and permanent Knowledge Item generation." },
 
-      // Scoped Subagents & Orchestration (11)
+      // Scoped Subagents & Orchestration (13)
       { name: "subagent-handoff", type: "skill", cat: "subagent", desc: "Delegation protocol for multi-agent workflows with scoped context isolation and deterministic structured report synthesis." },
       { name: "architecture-designer", type: "skill", cat: "subagent", desc: "Comprehensive system design architectures, Mermaid diagrams, API contracts, and Architecture Decision Records (ADRs)." },
+      { name: "langgraph-orchestrator", type: "skill", cat: "subagent", desc: "Stateful multi-agent systems, cyclic graphs, persistent checkpoints, human-in-the-loop pauses, and streaming orchestration." },
       { name: "antigravity-sdk-orchestrator", type: "skill", cat: "subagent", desc: "Programmatic multi-agent pipelines with the official google-antigravity Python SDK and token streaming." },
       { name: "agents/planner", type: "subagent", cat: "subagent", desc: "Strategic architect that breaks complex tasks into phased roadmaps with dependency mapping and risk radius assessment." },
       { name: "agents/code-reviewer", type: "subagent", cat: "subagent", desc: "Uncompromising reviewer enforcing minimal diffs, zero regression, strict typing, and defensive edge-case handling." },
@@ -686,8 +687,11 @@
       { name: "agents/database-migrator", type: "subagent", cat: "subagent", desc: "Dedicated database schema evolution specialist designing zero-downtime expand/contract SQL migrations and rollback safety." },
       { name: "agents/performance-tuner", type: "subagent", cat: "subagent", desc: "Systems performance specialist diagnosing flamegraphs, memory leaks, slow database query plans, and N+1 waterfalls." },
       { name: "agents/documentation-writer", type: "subagent", cat: "subagent", desc: "Specialist authoring developer docs, API references, ADRs, changelogs, and verifying clickable file:// links." },
+      { name: "agents/release-engineer", type: "subagent", cat: "subagent", desc: "Release gatekeeper managing Semantic Versioning, automated changelogs, build checksums, git tagging, and canary rollouts." },
 
-      // Backend & Cloud Skills (21)
+      // Backend & Cloud Skills (23)
+      { name: "open-telemetry-tracing", type: "skill", cat: "backend", desc: "Distributed tracing, OTLP exporters, W3C traceparent propagation, custom span attributes, and metric correlations." },
+      { name: "argo-workflows", type: "skill", cat: "backend", desc: "Kubernetes-native DAG workflows, artifact passing, container steps, retry strategies, and CronWorkflows." },
       { name: "dbt-transformation", type: "skill", cat: "backend", desc: "Modular SQL transformations, Jinja macros, semantic layer models, automated schema tests, and documentation generation." },
       { name: "apache-kafka-streams", type: "skill", cat: "backend", desc: "Exactly-once event streaming, stateful window aggregations, consumer group rebalancing, and Schema Registry serialization." },
       { name: "grpc-connect-rpc", type: "skill", cat: "backend", desc: "Lightweight, browser-compatible gRPC and Protocol Buffers with Connect-ES / Connect-Go and HTTP/2-3 streaming." },
@@ -710,7 +714,8 @@
       { name: "graphql-architect", type: "skill", cat: "backend", desc: "Schema-first GraphQL APIs, DataLoader N+1 query batching, and Relay cursor-based pagination." },
       { name: "responsive-design", type: "skill", cat: "backend", desc: "Fluid typography, mobile-first flex/grid layouts, media queries, and cross-browser accessibility." },
 
-      // DevOps & Quality Skills (10)
+      // DevOps & Quality Skills (11)
+      { name: "playwright-visual-regression", type: "skill", cat: "devops", desc: "Automated visual regression testing, pixelmatch snapshot diffing, cross-browser viewport matrices, and Docker baseline stability." },
       { name: "turborepo-monorepo", type: "skill", cat: "devops", desc: "High-performance monorepo build caching, task pipelines, package boundaries, and Docker pruning." },
       { name: "github-ops", type: "skill", cat: "devops", desc: "End-to-end GitHub PR generation, automated diff review, semantic release drafting, and issue triage with gh CLI & GitHub MCP." },
       { name: "docker-compose-orchestrator", type: "skill", cat: "devops", desc: "Multi-container local environments, database services (Postgres, pgvector, Redis), and healthcheck wiring." },

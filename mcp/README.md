@@ -53,6 +53,7 @@ Everything Gemini bundles ready-to-use blueprints in `mcp/mcp_config.example.jso
 | **`postgres`** | `@modelcontextprotocol/server-postgres` | PostgreSQL relational schema inspection and SQL queries | Stdio |
 | **`sqlite`** | `@modelcontextprotocol/server-sqlite` | Local SQLite database querying and table inspection | Stdio |
 | **`filesystem`** | `@modelcontextprotocol/server-filesystem` | Direct multi-directory filesystem inspection | Stdio |
+| **`sentry`** | `@modelcontextprotocol/server-sentry` | Real-time production error tracking, issue triage, and stacktrace analysis | Stdio |
 
 ## Tool Auto-Discovery & Execution
 Once connected, tools declared by MCP servers are automatically injected into the agent's system prompt and executed through Antigravity's Language Server. Inspect active MCP servers in the Antigravity UI via **Additional Options (...) > MCP Servers**.

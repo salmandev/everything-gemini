@@ -24,6 +24,10 @@ pip install google-antigravity
   ```bash
   python3 documentation_audit_pipeline.py
   ```
+- **4-Stage Release Readiness Audit Pipeline** (Planner -> Reviewer -> Security Auditor -> Release Engineer):
+  ```bash
+  python3 release_readiness_audit.py
+  ```
 
 ---
 

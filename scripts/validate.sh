@@ -37,7 +37,7 @@ done
 
 # 2. Validate Scoped Subagents
 echo "  [2/6] Checking Subagents specifications..."
-REQUIRED_AGENTS=("planner.md" "code-reviewer.md" "browser-qa.md" "build-repair.md" "security-auditor.md" "architect.md" "database-migrator.md" "performance-tuner.md" "documentation-writer.md")
+REQUIRED_AGENTS=("planner.md" "code-reviewer.md" "browser-qa.md" "build-repair.md" "security-auditor.md" "architect.md" "database-migrator.md" "performance-tuner.md" "documentation-writer.md" "release-engineer.md")
 for ag in "${REQUIRED_AGENTS[@]}"; do
   if [ ! -f "$REPO_ROOT/agents/$ag" ]; then
     echo "    ❌ ERROR: Required subagent specification 'agents/$ag' is missing!"

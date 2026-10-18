@@ -4,6 +4,28 @@ All notable changes to **Everything Gemini (`everything-gemini`)** will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-10-18
+
+### Added
+- **48 Progressive Disclosure Skills & 65-Component Ecosystem Milestone**:
+  - **`langgraph-orchestrator`**: Production multi-agent StateGraphs, cyclic branching, persistent checkpointers (`MemorySaver` / `AsyncPostgresSaver`), and human-in-the-loop validation (`interrupt_before`).
+  - **`playwright-visual-regression`**: Automated pixelmatch screenshot diffing, cross-browser viewport matrices, dynamic element masking, and containerized Docker stability.
+  - **`open-telemetry-tracing`**: End-to-end distributed tracing, OTLP HTTP/gRPC exporters, W3C `traceparent` propagation, custom span attributes, and metric correlations.
+  - **`argo-workflows`**: Kubernetes-native DAG workflows, artifact passing (S3/GCS/MinIO), container steps, exponential retry strategies, and CronWorkflows.
+- **10th Scoped Subagent Fleet Expansion**:
+  - **`release-engineer`** ([`agents/release-engineer.md`](file:///Users/salmanshaikh/development/github/everything-gemini/agents/release-engineer.md)): Dedicated release gatekeeper enforcing Semantic Versioning (`semver`), automated changelog compilation, build artifact checksumming, git release tagging, and canary rollouts.
+- **CLI Ecosystem Audit Command (`everything-gemini audit [path]`)**:
+  - Comprehensive static quality inspection across skills (YAML frontmatter schema and token budgets), subagents (role, permissions, handoff contracts), lifecycle hooks (`chmod +x` executability), and secret hygiene. Supports both human-readable terminal output and `--json` format for automated CI integration.
+  - Expanded shell completion scripts (`bin/everything-gemini completion`) for Bash and Zsh to autocomplete `audit`, all 48 skills, and 10 subagents.
+- **Curated MCP Sentry Blueprint**:
+  - Added `@modelcontextprotocol/server-sentry` to [`mcp/mcp_config.example.json`](file:///Users/salmanshaikh/development/github/everything-gemini/mcp/mcp_config.example.json), [`templates/full-power/mcp_config.json`](file:///Users/salmanshaikh/development/github/everything-gemini/templates/full-power/mcp_config.json), and [`mcp/README.md`](file:///Users/salmanshaikh/development/github/everything-gemini/mcp/README.md) for real-time error tracking and issue triage.
+- **Automated Release Readiness Pipeline (`examples/python-sdk/release_readiness_audit.py`)**:
+  - 4-stage multi-agent qualification loop orchestrating Planner -> Code Reviewer -> Security Auditor -> Release Engineer before release candidate tagging.
+- **24-Assertion Automated E2E Test Suite & Benchmark**:
+  - Expanded `tests/cli.test.js` validating the new `audit` command (terminal reports and `--json`), component inspections for new skills/subagents, and updated 65-component benchmark invariants.
+- **Showcase Web App 65-Component Expansion**:
+  - Catalog and live metrics on [https://salmandev.github.io/everything-gemini/](https://salmandev.github.io/everything-gemini/) updated to 48 progressive skills, 10 subagents, 7 hooks, and `v1.7.0` release badge.
+
 ## [1.6.0] - 2026-10-18
 
 ### Added

@@ -79,8 +79,8 @@ cd everything-gemini
 | Profile | Target Audience | What Gets Installed |
 | :--- | :--- | :--- |
 | **`core`** | Minimalists & Speed | Safety-shield hook, TDD skill, repo-onboarding skill, baseline `GEMINI.md`. |
-| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 9 Scoped Subagents (`agents/`), Frontier Skills (Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
-| **`full`** | Lead Engineers & Archs | Everything: all 44 progressive skills, 9 scoped subagents, full lifecycle hooks suite (7 hooks), all plugins, MCP configs, and templates. |
+| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 10 Scoped Subagents (`agents/`), Frontier Skills (Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
+| **`full`** | Lead Engineers & Archs | Everything: all 48 progressive skills, 10 scoped subagents, full lifecycle hooks suite (7 hooks), all plugins, MCP configs, and templates. |
 
 ### 5. In CI / GitHub Actions Workflows
 
@@ -144,7 +144,7 @@ flowchart TB
 | **Context Window & Caching** | 200k tokens, ephemeral | **1M-2M+ tokens with Native Prefix Context Caching (~75% cost savings)** |
 | **Memory System** | Flat markdown files | **Knowledge Items (KI)** + **Adaptive Learned Instincts** |
 | **UI & Visual Multimodality** | Standard text output | **Native `browser_subagent` + WebP Screen Video Recording + Vision** |
-| **Subagents Fleet** | Manual sub-prompts | **8 Scoped Subagents (`agents/`) with Formal Handoff Protocol** |
+| **Subagents Fleet** | Manual sub-prompts | **10 Scoped Subagents (`agents/`) with Formal Handoff Protocol** |
 | **Lifecycle Hooks** | Shell scripts | Typed protojson contracts (`PreToolUse`, `PostToolUse`, `PreInvocation`, `PostInvocation`, `Stop`) |
 | **Tool Integration** | Claude tool use | **MCP standard (Stdio & SSE)** with auto-discovery & namespacing |
 
@@ -156,10 +156,10 @@ flowchart TB
 everything-gemini/
 ├── .github/                      # CI/CD workflows & issue templates
 ├── bin/                          # Zero-dependency harness & scaffolding CLI
-├── agents/                       # Scoped subagent fleet (Planner, Reviewer, Database Migrator, etc.)
+├── agents/                       # Scoped subagent fleet (Planner, Reviewer, Release Engineer, etc.)
 ├── scripts/                      # Automated installers and harness validators
 ├── plugins/                      # Reusable modular plugins (web-fullstack, python-ai, security)
-├── skills/                       # 44 Progressive disclosure skills (42 core + 2 plugins)
+├── skills/                       # 48 Progressive disclosure skills (46 core + 2 plugins)
 ├── rules/                        # Contextual guidelines & standards
 ├── hooks/                        # Event-driven lifecycle hooks (GeminiShield, Auto-lint)
 ├── mcp/                          # Production-ready MCP server blueprints
@@ -186,10 +186,15 @@ Everything Gemini provides specialized subagent specifications designed for Anti
 | **[`database-migrator`](agents/database-migrator.md)** | Database Schema Specialist | Zero-downtime expand/contract SQL migrations, lock analysis, and rollbacks. |
 | **[`performance-tuner`](agents/performance-tuner.md)** | Latency & Profiling Expert | CPU/memory flamegraphs, database execution plans, and N+1 waterfalls. |
 | **[`documentation-writer`](agents/documentation-writer.md)** | Technical Documentation Specialist | API specifications, ADR governance, changelogs, and clickable file:// link fidelity. |
+| **[`release-engineer`](agents/release-engineer.md)** | Release Automation Gatekeeper | Semantic Versioning, build artifact checksums, git release tagging, and canary rollouts. |
 
 ### 1. Skills (`skills/`)
 Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`name` and `description`) is placed into the system prompt. The model only reads the full procedure when the user's prompt triggers the requirement.
 
+- **[`langgraph-orchestrator`](skills/langgraph-orchestrator/SKILL.md)**: Stateful multi-agent graphs, cyclic execution loops, persistent checkpointers, and human-in-the-loop pauses.
+- **[`playwright-visual-regression`](skills/playwright-visual-regression/SKILL.md)**: Automated visual regression testing, pixelmatch snapshot diffing, cross-browser viewports, and containerized stability.
+- **[`open-telemetry-tracing`](skills/open-telemetry-tracing/SKILL.md)**: Distributed tracing, OTLP exporters, W3C traceparent context propagation, and metric correlation.
+- **[`argo-workflows`](skills/argo-workflows/SKILL.md)**: Kubernetes-native DAG workflows, artifact passing, container steps, retry strategies, and CronWorkflows.
 - **[`gemini-multimodal`](skills/gemini-multimodal/SKILL.md)**: Native visual reasoning over mockups, diagrams, and automated WebP browser recordings.
 - **[`context-caching`](skills/context-caching/SKILL.md)**: 1M-2M token context optimization, static prefix caching, and repository indexing.
 - **[`gemini-grounding`](skills/gemini-grounding/SKILL.md)**: Real-time Google Search grounding, live documentation retrieval, and fact-checking.
@@ -313,7 +318,7 @@ Skill Body: Loaded on-demand ONLY when invoked = ~1,500 Tokens (one-time)
 Savings: > 85% Token Reduction & 3x Faster First-Token Latency!
 ```
 
-Run the built-in diagnostic benchmark across all 42 ecosystem components:
+Run the built-in diagnostic benchmark across all 65 ecosystem components:
 ```bash
 ./bin/everything-gemini test-all
 ```
@@ -378,10 +383,15 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 # Add a specific plugin
 ./bin/everything-gemini add plugin web-fullstack
 
-# Test and validate a specific skill's frontmatter and scripts
-./bin/everything-gemini test-skill gemini-multimodal
+# Search components across skills, subagents, hooks, and MCP blueprints
+./bin/everything-gemini search kafka
+./bin/everything-gemini search dbt --json
 
-# Benchmark and validate all 40 skills, subagents, and hooks (human or JSON)
+# Run comprehensive ecosystem audit across frontmatter, contracts, hooks, and links
+./bin/everything-gemini audit
+./bin/everything-gemini audit --json
+
+# Benchmark and validate all 48 skills, 10 subagents, and 7 hooks (human or JSON)
 ./bin/everything-gemini test-all
 ./bin/everything-gemini benchmark --json
 

@@ -105,7 +105,7 @@ Everything Gemini provides built-in developer tools to streamline adding new com
 # Inspect runbook preview in the terminal
 ./bin/everything-gemini info my-awesome-skill
 
-# Benchmark token savings and run self-tests across all 60 ecosystem components
+# Benchmark token savings and run self-tests across all 65 ecosystem components
 ./bin/everything-gemini test-all
 ```
 
@@ -155,10 +155,14 @@ Looking for inspiration on what to contribute? The community has requested the f
 | **`dbt-transformation`** | Data Eng | Modular SQL transformations, Jinja macros, and automated data testing | ✅ *Shipped in v1.6.0* |
 | **`apache-kafka-streams`** | Streaming | Exactly-once event streaming, stateful window aggregations, and consumer groups | ✅ *Shipped in v1.6.0* |
 | **`grpc-connect-rpc`** | API | Lightweight, browser-compatible gRPC and Protocol Buffers with Connect-ES / Connect-Go | ✅ *Shipped in v1.6.0* |
-| **`langgraph-orchestrator`** | AI Agents | Multi-agent stategraphs, cyclic branching, and human-in-the-loop validation | 🚀 *Open for PR* |
-| **`playwright-visual-regression`** | Testing | Pixelmatch diffs, trace recording, and headless container snapshots | 🚀 *Open for PR* |
-| **`open-telemetry-tracing`** | Observability | Distributed tracing with OTLP exporters, span contexts, and metrics | 🚀 *Open for PR* |
-| **`argo-workflows`** | Cloud Native | Kubernetes CRD workflows, DAG step execution, and artifact passing | 🚀 *Open for PR* |
+| **`langgraph-orchestrator`** | AI Agents | Multi-agent stategraphs, cyclic branching, and human-in-the-loop validation | ✅ *Shipped in v1.7.0* |
+| **`playwright-visual-regression`** | Testing | Pixelmatch diffs, trace recording, and headless container snapshots | ✅ *Shipped in v1.7.0* |
+| **`open-telemetry-tracing`** | Observability | Distributed tracing with OTLP exporters, span contexts, and metrics | ✅ *Shipped in v1.7.0* |
+| **`argo-workflows`** | Cloud Native | Kubernetes CRD workflows, DAG step execution, and artifact passing | ✅ *Shipped in v1.7.0* |
+| **`vllm-inference`** | AI Serving | PagedAttention KV cache, continuous batching, and tensor parallelism | 🚀 *Open for PR* |
+| **`debezium-cdc`** | Data Eng | Change Data Capture (CDC) streaming from PostgreSQL / MySQL to Kafka / PubSub | 🚀 *Open for PR* |
+| **`cilium-ebpf-networking`** | Cloud Native | eBPF-based service mesh, L7 security policies, and transparent encryption | 🚀 *Open for PR* |
+| **`litellm-proxy-gateway`** | AI Gateway | Unified OpenAI-compatible multi-provider routing, fallback budgets, and load balancing | 🚀 *Open for PR* |
 
 ### How to Build a Wishlist Item:
 1. Open an issue using the [Skill Proposal template](.github/ISSUE_TEMPLATE/skill_proposal.md).

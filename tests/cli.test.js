@@ -90,9 +90,9 @@ it('should benchmark ecosystem components and output valid JSON with --json', ()
   const res = runCli('benchmark --json');
   assert.strictEqual(res.status, 0);
   const data = JSON.parse(res.stdout);
-  assert.strictEqual(data.totalComponents, 60);
-  assert.strictEqual(data.progressiveSkillsCount, 44);
-  assert.strictEqual(data.scopedAgentsCount, 9);
+  assert.strictEqual(data.totalComponents, 65);
+  assert.strictEqual(data.progressiveSkillsCount, 48);
+  assert.strictEqual(data.scopedAgentsCount, 10);
   assert.strictEqual(data.lifecycleHooksCount, 7);
   assert(data.totalRunbookTokens > 15000, 'Expected >15,000 runbook tokens');
   assert(data.estimatedTokensSavedPerTurn > 8000, 'Expected significant token savings');
@@ -263,6 +263,21 @@ try {
     assert(data.results.skills.some(s => s.name === 'dbt-transformation'));
   });
 
+  // Audit Command
+  it('should audit workspace and catalog with human and JSON output', () => {
+    const humanRes = runCli('audit .');
+    assert.strictEqual(humanRes.status, 0);
+    assert.match(humanRes.stdout, /Everything Gemini Ecosystem Audit Report/);
+    assert.match(humanRes.stdout, /ALL CHECKS PASSED/);
+
+    const jsonRes = runCli('audit . --json');
+    assert.strictEqual(jsonRes.status, 0);
+    const data = JSON.parse(jsonRes.stdout);
+    assert.strictEqual(data.valid, true);
+    assert.strictEqual(data.errorCount, 0);
+    assert(data.passedCount > 50, 'Audit should run at least 50 checks');
+  });
+
   // Info for documentation-writer and v1.6.0 skills
   it('should display info for documentation-writer subagent and v1.6.0 skills', () => {
     const resDoc = runCli('info documentation-writer');
@@ -278,14 +293,29 @@ try {
     assert.match(resRpc.stdout, /Connect-RPC/);
   });
 
+  // Info for release-engineer and v1.7.0 skills
+  it('should display info for release-engineer subagent and v1.7.0 skills', () => {
+    const resRel = runCli('info release-engineer');
+    assert.strictEqual(resRel.status, 0);
+    assert.match(resRel.stdout, /Release Engineer/);
+
+    const resLang = runCli('info langgraph-orchestrator');
+    assert.strictEqual(resLang.status, 0);
+    assert.match(resLang.stdout, /LangGraph/);
+
+    const resOtel = runCli('info open-telemetry-tracing');
+    assert.strictEqual(resOtel.status, 0);
+    assert.match(resOtel.stdout, /OpenTelemetry/);
+  });
+
   // Benchmark Components Verification
-  it('should report 60 components, 44 skills, and 9 subagents in benchmark --json', () => {
+  it('should report 65 components, 48 skills, and 10 subagents in benchmark --json', () => {
     const res = runCli('benchmark --json');
     assert.strictEqual(res.status, 0);
     const data = JSON.parse(res.stdout);
-    assert.strictEqual(data.totalComponents, 60, 'Total components should be 60');
-    assert.strictEqual(data.progressiveSkillsCount, 44, 'Progressive skills should be 44');
-    assert.strictEqual(data.scopedAgentsCount, 9, 'Scoped agents should be 9');
+    assert.strictEqual(data.totalComponents, 65, 'Total components should be 65');
+    assert.strictEqual(data.progressiveSkillsCount, 48, 'Progressive skills should be 48');
+    assert.strictEqual(data.scopedAgentsCount, 10, 'Scoped agents should be 10');
     assert.strictEqual(data.lifecycleHooksCount, 7, 'Lifecycle hooks should be 7');
   });
 
