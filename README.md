@@ -79,8 +79,8 @@ cd everything-gemini
 | Profile | Target Audience | What Gets Installed |
 | :--- | :--- | :--- |
 | **`core`** | Minimalists & Speed | Safety-shield hook, TDD skill, repo-onboarding skill, baseline `GEMINI.md`. |
-| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 8 Scoped Subagents (`agents/`), Frontier Skills (Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
-| **`full`** | Lead Engineers & Archs | Everything: all 40 progressive skills, 8 scoped subagents, full lifecycle hooks suite (7 hooks), all plugins, MCP configs, and templates. |
+| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 9 Scoped Subagents (`agents/`), Frontier Skills (Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
+| **`full`** | Lead Engineers & Archs | Everything: all 44 progressive skills, 9 scoped subagents, full lifecycle hooks suite (7 hooks), all plugins, MCP configs, and templates. |
 
 ### 5. In CI / GitHub Actions Workflows
 
@@ -159,7 +159,7 @@ everything-gemini/
 ├── agents/                       # Scoped subagent fleet (Planner, Reviewer, Database Migrator, etc.)
 ├── scripts/                      # Automated installers and harness validators
 ├── plugins/                      # Reusable modular plugins (web-fullstack, python-ai, security)
-├── skills/                       # 40 Progressive disclosure skills (38 core + 2 plugins)
+├── skills/                       # 44 Progressive disclosure skills (42 core + 2 plugins)
 ├── rules/                        # Contextual guidelines & standards
 ├── hooks/                        # Event-driven lifecycle hooks (GeminiShield, Auto-lint)
 ├── mcp/                          # Production-ready MCP server blueprints
@@ -185,6 +185,7 @@ Everything Gemini provides specialized subagent specifications designed for Anti
 | **[`architect`](agents/architect.md)** | Systems Architect | C4 Mermaid blueprints, sequence diagrams, and formal ADR records. |
 | **[`database-migrator`](agents/database-migrator.md)** | Database Schema Specialist | Zero-downtime expand/contract SQL migrations, lock analysis, and rollbacks. |
 | **[`performance-tuner`](agents/performance-tuner.md)** | Latency & Profiling Expert | CPU/memory flamegraphs, database execution plans, and N+1 waterfalls. |
+| **[`documentation-writer`](agents/documentation-writer.md)** | Technical Documentation Specialist | API specifications, ADR governance, changelogs, and clickable file:// link fidelity. |
 
 ### 1. Skills (`skills/`)
 Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`name` and `description`) is placed into the system prompt. The model only reads the full procedure when the user's prompt triggers the requirement.
@@ -200,6 +201,10 @@ Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`na
 - **[`subagent-handoff`](skills/subagent-handoff/SKILL.md)**: Multi-agent task delegation protocol, scoped contexts, and report synthesis.
 - **[`api-craftsman`](skills/api-craftsman/SKILL.md)**: REST, OpenAPI 3.1 specifications, gRPC protos, and RFC 7807 error envelopes.
 - **[`database-architect`](skills/database-architect/SKILL.md)**: Zero-downtime migrations, concurrent indexing, and ACID schema modeling.
+- **[`turborepo-monorepo`](skills/turborepo-monorepo/SKILL.md)**: High-performance monorepo build caching, task pipelines, package boundaries, and Docker pruning.
+- **[`dbt-transformation`](skills/dbt-transformation/SKILL.md)**: Modular SQL transformations, Jinja macros, semantic layer models, schema tests, and docs.
+- **[`apache-kafka-streams`](skills/apache-kafka-streams/SKILL.md)**: Exactly-once event streaming, stateful window aggregations, consumer group rebalancing, and Schema Registry.
+- **[`grpc-connect-rpc`](skills/grpc-connect-rpc/SKILL.md)**: Lightweight, browser-compatible gRPC and Protocol Buffers with Connect-ES / Connect-Go and HTTP/2-3 streaming.
 - **[`duckdb-local-olap`](skills/duckdb-local-olap/SKILL.md)**: Embedded in-process SQL analytics, direct S3/Parquet querying, and zero-copy Arrow integration.
 - **[`nats-jetstream`](skills/nats-jetstream/SKILL.md)**: Ultra-low latency event streaming, message deduplication, durable consumer groups, and KV buckets.
 - **[`axum-web-service`](skills/axum-web-service/SKILL.md)**: Production Rust web APIs using Axum, Tokio async runtime, Tower middlewares, and SQLx connection pools.

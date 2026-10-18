@@ -48,6 +48,7 @@ Everything Gemini bundles ready-to-use blueprints in `mcp/mcp_config.example.jso
 | **`redis`** | `@modelcontextprotocol/server-redis` | High-speed key-value caching, Pub/Sub, and distributed locks | Stdio |
 | **`docker`** | `@modelcontextprotocol/server-docker` | Container lifecycle inspection, logs, and containerized testing | Stdio |
 | **`clickhouse`** | `@modelcontextprotocol/server-clickhouse` | High-throughput OLAP analytics and vector similarity search | Stdio |
+| **`sequential-thinking`** | `@modelcontextprotocol/server-sequential-thinking` | Dynamic multi-step reasoning, hypothesis testing & decomposition | Stdio |
 | **`github`** | `@modelcontextprotocol/server-github` | Pull requests, issues, repo search, and commit inspection | Stdio |
 | **`postgres`** | `@modelcontextprotocol/server-postgres` | PostgreSQL relational schema inspection and SQL queries | Stdio |
 | **`sqlite`** | `@modelcontextprotocol/server-sqlite` | Local SQLite database querying and table inspection | Stdio |

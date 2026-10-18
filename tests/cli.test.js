@@ -90,9 +90,9 @@ it('should benchmark ecosystem components and output valid JSON with --json', ()
   const res = runCli('benchmark --json');
   assert.strictEqual(res.status, 0);
   const data = JSON.parse(res.stdout);
-  assert.strictEqual(data.totalComponents, 55);
-  assert.strictEqual(data.progressiveSkillsCount, 40);
-  assert.strictEqual(data.scopedAgentsCount, 8);
+  assert.strictEqual(data.totalComponents, 60);
+  assert.strictEqual(data.progressiveSkillsCount, 44);
+  assert.strictEqual(data.scopedAgentsCount, 9);
   assert.strictEqual(data.lifecycleHooksCount, 7);
   assert(data.totalRunbookTokens > 15000, 'Expected >15,000 runbook tokens');
   assert(data.estimatedTokensSavedPerTurn > 8000, 'Expected significant token savings');
@@ -247,6 +247,46 @@ try {
     assert.match(liveRes.stdout, /Import complete/);
     assert.strictEqual(fs.existsSync(path.join(importWorkspace, 'skills')), true);
     assert.strictEqual(fs.existsSync(path.join(importWorkspace, 'hooks.json')), true);
+  });
+
+  // Search Command
+  it('should search components with human and JSON output', () => {
+    const humanRes = runCli('search kafka');
+    assert.strictEqual(humanRes.status, 0);
+    assert.match(humanRes.stdout, /apache-kafka-streams/);
+    assert.match(humanRes.stdout, /Search Results for/);
+
+    const jsonRes = runCli('search dbt --json');
+    assert.strictEqual(jsonRes.status, 0);
+    const data = JSON.parse(jsonRes.stdout);
+    assert.strictEqual(data.query, 'dbt');
+    assert(data.results.skills.some(s => s.name === 'dbt-transformation'));
+  });
+
+  // Info for documentation-writer and v1.6.0 skills
+  it('should display info for documentation-writer subagent and v1.6.0 skills', () => {
+    const resDoc = runCli('info documentation-writer');
+    assert.strictEqual(resDoc.status, 0);
+    assert.match(resDoc.stdout, /Documentation Writer/);
+
+    const resTurbo = runCli('info turborepo-monorepo');
+    assert.strictEqual(resTurbo.status, 0);
+    assert.match(resTurbo.stdout, /Turborepo/);
+
+    const resRpc = runCli('info grpc-connect-rpc');
+    assert.strictEqual(resRpc.status, 0);
+    assert.match(resRpc.stdout, /Connect-RPC/);
+  });
+
+  // Benchmark Components Verification
+  it('should report 60 components, 44 skills, and 9 subagents in benchmark --json', () => {
+    const res = runCli('benchmark --json');
+    assert.strictEqual(res.status, 0);
+    const data = JSON.parse(res.stdout);
+    assert.strictEqual(data.totalComponents, 60, 'Total components should be 60');
+    assert.strictEqual(data.progressiveSkillsCount, 44, 'Progressive skills should be 44');
+    assert.strictEqual(data.scopedAgentsCount, 9, 'Scoped agents should be 9');
+    assert.strictEqual(data.lifecycleHooksCount, 7, 'Lifecycle hooks should be 7');
   });
 
 } finally {

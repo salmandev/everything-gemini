@@ -11,10 +11,19 @@ This example demonstrates how to build programmatic agent pipelines using the of
 pip install google-antigravity
 ```
 
-### 2. Run the Multi-Agent Pipeline
-```bash
-python3 orchestrate_subagents.py
-```
+### 2. Available Pipelines
+- **Basic Subagent Orchestration**:
+  ```bash
+  python3 orchestrate_subagents.py
+  ```
+- **4-Stage Feature Delivery Pipeline** (Planner -> Migrator -> Tuner -> Reviewer):
+  ```bash
+  python3 multi_agent_pipeline.py
+  ```
+- **3-Stage Documentation Audit Pipeline** (Architect -> Reviewer -> Doc Writer):
+  ```bash
+  python3 documentation_audit_pipeline.py
+  ```
 
 ---
 
@@ -30,7 +39,13 @@ python3 orchestrate_subagents.py
 ┌─────────────────────────┐
 │ 2. Code Reviewer        │
 │    (Edge Cases & Risks) │
+└────────────┬────────────┘
+             │ (Verified Implementation)
+             ▼
+┌─────────────────────────┐
+│ 3. Documentation Writer │
+│    (file:// Link Audit) │
 └─────────────────────────┘
 ```
 
-The pipeline leverages Antigravity's async context manager to guarantee clean sandbox lifecycle deallocation and streaming thought token deltas.
+The pipelines leverage Antigravity's async context manager to guarantee clean sandbox lifecycle deallocation and streaming thought token deltas.

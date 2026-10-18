@@ -30,6 +30,10 @@
     "clickhouse": {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-clickhouse", "${CLICKHOUSE_URL}"]
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
     }
   }
 }

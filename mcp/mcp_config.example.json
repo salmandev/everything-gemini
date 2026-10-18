@@ -41,6 +41,10 @@
     "clickhouse": {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-clickhouse", "http://default:@localhost:8123/default"]
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
     }
   }
 }

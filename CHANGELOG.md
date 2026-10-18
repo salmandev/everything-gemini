@@ -4,6 +4,28 @@ All notable changes to **Everything Gemini (`everything-gemini`)** will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-10-18
+
+### Added
+- **44 Progressive Disclosure Skills & 60-Component Ecosystem Milestone**:
+  - **`turborepo-monorepo`**: High-performance monorepo build orchestration, declarative task graphs (`turbo.json`), hash-based remote caching, micro-frontend package boundaries, and Docker deployment pruning (`turbo prune`).
+  - **`dbt-transformation`**: Production data engineering with dbt Core, modular DAG modeling (`stg_`, `int_`, `fct_`), Jinja macros, incremental idempotency, and automated schema testing (`dbt test`).
+  - **`apache-kafka-streams`**: Resilient event-driven streaming with KafkaJS, transactional exactly-once processing (EOS), cooperative sticky partition rebalancing, and stateful tumbling time-window aggregations.
+  - **`grpc-connect-rpc`**: Modern, browser-native RPC services using Connect-ES and Connect-Go, type-safe streaming without Envoy proxy bottlenecks, Buf schema registry workflows, and compact binary Protobuf serialization.
+- **9th Scoped Subagent Fleet Expansion**:
+  - **`documentation-writer`** ([`agents/documentation-writer.md`](file:///Users/salmanshaikh/development/github/everything-gemini/agents/documentation-writer.md)): Dedicated technical documentation and architectural runbook specialist enforcing Antigravity progressive disclosure principles, strict frontmatter conventions, and clickable `file://` hyperlink integrity.
+- **Curated MCP Sequential Thinking Blueprint**:
+  - Added `@modelcontextprotocol/server-sequential-thinking` to [`mcp/mcp_config.example.json`](file:///Users/salmanshaikh/development/github/everything-gemini/mcp/mcp_config.example.json), [`templates/full-power/mcp_config.json`](file:///Users/salmanshaikh/development/github/everything-gemini/templates/full-power/mcp_config.json), and [`mcp/README.md`](file:///Users/salmanshaikh/development/github/everything-gemini/mcp/README.md) for dynamic step-by-step problem decomposition and hypothesis revision.
+- **CLI Search & Discovery Command (`everything-gemini search <query>`)**:
+  - Integrated full ecosystem search across skills, subagents, lifecycle hooks, and MCP blueprints with colored terminal cards and `--json` format output for scripting and IDE integration.
+  - Expanded shell completion scripts (`bin/everything-gemini completion`) for Bash and Zsh to autocomplete `search`, `find`, all 44 skills, and 9 subagents.
+- **Automated Documentation Audit Pipeline (`examples/python-sdk/documentation_audit_pipeline.py`)**:
+  - Python SDK automation pipeline verifying documentation integrity, frontmatter schema adherence, broken link detection, and token budget enforcement.
+- **22-Assertion Automated E2E Test Suite & Benchmark**:
+  - Expanded `tests/cli.test.js` validating the new `search` command (terminal cards and `--json`), component inspection for new skills/subagents, and updated 60-component benchmark invariants.
+- **Showcase Web App 60-Component Expansion**:
+  - Catalog and live metrics on [https://salmandev.github.io/everything-gemini/](https://salmandev.github.io/everything-gemini/) updated to 44 progressive skills, 9 subagents, 7 hooks, and `v1.6.0` release badge.
+
 ## [1.5.0] - 2026-10-17
 
 ### Added
