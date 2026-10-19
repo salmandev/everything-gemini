@@ -79,8 +79,8 @@ cd everything-gemini
 | Profile | Target Audience | What Gets Installed |
 | :--- | :--- | :--- |
 | **`core`** | Minimalists & Speed | Safety-shield hook, TDD skill, repo-onboarding skill, baseline `GEMINI.md`. |
-| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 10 Scoped Subagents (`agents/`), Frontier Skills (Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
-| **`full`** | Lead Engineers & Archs | Everything: all 48 progressive skills, 10 scoped subagents, full lifecycle hooks suite (7 hooks), all plugins, MCP configs, and templates. |
+| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 11 Scoped Subagents (`agents/`), Frontier Skills (Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
+| **`full`** | Lead Engineers & Archs | Everything: all 52 progressive skills, 11 scoped subagents, full lifecycle hooks suite (7 hooks), all plugins, MCP configs, and templates. |
 
 ### 5. In CI / GitHub Actions Workflows
 
@@ -187,10 +187,15 @@ Everything Gemini provides specialized subagent specifications designed for Anti
 | **[`performance-tuner`](agents/performance-tuner.md)** | Latency & Profiling Expert | CPU/memory flamegraphs, database execution plans, and N+1 waterfalls. |
 | **[`documentation-writer`](agents/documentation-writer.md)** | Technical Documentation Specialist | API specifications, ADR governance, changelogs, and clickable file:// link fidelity. |
 | **[`release-engineer`](agents/release-engineer.md)** | Release Automation Gatekeeper | Semantic Versioning, build artifact checksums, git release tagging, and canary rollouts. |
+| **[`incident-responder`](agents/incident-responder.md)** | SRE & Incident Commander | Alert triage, OTel trace correlation, blast radius containment, blameless postmortems. |
 
 ### 1. Skills (`skills/`)
 Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`name` and `description`) is placed into the system prompt. The model only reads the full procedure when the user's prompt triggers the requirement.
 
+- **[`vllm-inference`](skills/vllm-inference/SKILL.md)**: High-throughput LLM serving, PagedAttention KV cache, continuous batching, and tensor parallelism.
+- **[`debezium-cdc`](skills/debezium-cdc/SKILL.md)**: Change Data Capture (CDC) streaming, PostgreSQL logical decoding, Kafka Connect, and outbox patterns.
+- **[`cilium-ebpf-networking`](skills/cilium-ebpf-networking/SKILL.md)**: Cloud-native eBPF networking, transparent mTLS, L7 CiliumNetworkPolicies, and Hubble observability.
+- **[`litellm-proxy-gateway`](skills/litellm-proxy-gateway/SKILL.md)**: Enterprise LLM proxy gateway, multi-provider routing (Gemini, Claude, OpenAI), budget controls, and fallback cascades.
 - **[`langgraph-orchestrator`](skills/langgraph-orchestrator/SKILL.md)**: Stateful multi-agent graphs, cyclic execution loops, persistent checkpointers, and human-in-the-loop pauses.
 - **[`playwright-visual-regression`](skills/playwright-visual-regression/SKILL.md)**: Automated visual regression testing, pixelmatch snapshot diffing, cross-browser viewports, and containerized stability.
 - **[`open-telemetry-tracing`](skills/open-telemetry-tracing/SKILL.md)**: Distributed tracing, OTLP exporters, W3C traceparent context propagation, and metric correlation.
@@ -318,7 +323,7 @@ Skill Body: Loaded on-demand ONLY when invoked = ~1,500 Tokens (one-time)
 Savings: > 85% Token Reduction & 3x Faster First-Token Latency!
 ```
 
-Run the built-in diagnostic benchmark across all 65 ecosystem components:
+Run the built-in diagnostic benchmark across all 70 ecosystem components:
 ```bash
 ./bin/everything-gemini test-all
 ```
@@ -349,6 +354,12 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 ./bin/everything-gemini import my-profile.json
 ./bin/everything-gemini import my-profile.json --dry-run
 ./bin/everything-gemini import my-profile.json --workspace ./my-project
+
+# Package offline distribution bundle for air-gapped environments or CI/CD
+./bin/everything-gemini bundle
+./bin/everything-gemini bundle --output ./offline-bundle
+./bin/everything-gemini bundle --dry-run
+./bin/everything-gemini bundle --json
 
 # Update installed ecosystem components in-place to latest catalog versions
 ./bin/everything-gemini update
@@ -391,7 +402,7 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 ./bin/everything-gemini audit
 ./bin/everything-gemini audit --json
 
-# Benchmark and validate all 48 skills, 10 subagents, and 7 hooks (human or JSON)
+# Benchmark and validate all 52 skills, 11 subagents, and 7 hooks (human or JSON)
 ./bin/everything-gemini test-all
 ./bin/everything-gemini benchmark --json
 

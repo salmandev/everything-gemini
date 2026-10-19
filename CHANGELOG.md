@@ -4,6 +4,28 @@ All notable changes to **Everything Gemini (`everything-gemini`)** will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2026-10-19
+
+### Added
+- **52 Progressive Disclosure Skills & 70-Component Ecosystem Milestone**:
+  - **`vllm-inference`**: High-throughput LLM serving, PagedAttention KV cache memory management, continuous iteration-level batching, multi-GPU tensor parallelism, and OpenAI-compatible API architecture.
+  - **`debezium-cdc`**: Change Data Capture (CDC) streaming architectures using Debezium, PostgreSQL logical decoding (`pgoutput`), Kafka Connect, strict partition ordering, and transactional outbox patterns.
+  - **`cilium-ebpf-networking`**: Cloud-native eBPF networking, Kubernetes CNI replacement, transparent mTLS/WireGuard encryption, L7 CiliumNetworkPolicies, and Hubble network observability.
+  - **`litellm-proxy-gateway`**: Enterprise LLM proxy gateway, multi-provider routing (Gemini, Claude, OpenAI, vLLM), virtual keys, budget tracking, fallback cascading, and rate-limiting.
+- **11th Scoped Subagent Fleet Expansion**:
+  - **`incident-responder`** ([`agents/incident-responder.md`](file:///Users/salmanshaikh/development/github/everything-gemini/agents/incident-responder.md)): Dedicated Site Reliability Engineering (SRE) and production triage specialist enforcing rapid incident triage (SEV-1/SEV-2), OpenTelemetry trace correlation, blast radius containment, canary rollback mitigation, and blameless postmortems.
+- **CLI Offline Distribution Bundle Command (`everything-gemini bundle [profile]`)**:
+  - Package self-contained, air-gapped distribution archives or directories with auto-generated `bundle-manifest.json` (SHA-256 integrity digests of all assets) and executable `offline-install.sh`. Supports `--dry-run` and `--json` for automated CI/CD gating.
+  - Expanded shell completion scripts (`bin/everything-gemini completion`) for Bash and Zsh to autocomplete `bundle`, `pack`, all 52 skills, and 11 subagents.
+- **Curated MCP Slack Blueprint**:
+  - Added `@modelcontextprotocol/server-slack` to [`mcp/mcp_config.example.json`](file:///Users/salmanshaikh/development/github/everything-gemini/mcp/mcp_config.example.json), [`templates/full-power/mcp_config.json`](file:///Users/salmanshaikh/development/github/everything-gemini/templates/full-power/mcp_config.json), and [`mcp/README.md`](file:///Users/salmanshaikh/development/github/everything-gemini/mcp/README.md) for automated incident room management and alert broadcasting.
+- **Automated Incident Triage Pipeline (`examples/python-sdk/incident_triage_pipeline.py`)**:
+  - 4-stage multi-agent SRE triage loop orchestrating Incident Responder -> Performance Tuner -> Release Engineer -> Postmortem Generator using the Python SDK.
+- **26-Assertion Automated E2E Test Suite & Benchmark**:
+  - Expanded `tests/cli.test.js` validating the new `bundle` command (dry-run and live modes), component inspections for new skills/subagents, and updated 70-component benchmark invariants.
+- **Showcase Web App 70-Component Expansion**:
+  - Catalog and live metrics on [https://salmandev.github.io/everything-gemini/](https://salmandev.github.io/everything-gemini/) updated to 52 progressive skills, 11 subagents, 7 hooks, offline bundle preset, and `v1.8.0` release badge.
+
 ## [1.7.0] - 2026-10-18
 
 ### Added

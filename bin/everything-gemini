@@ -49,6 +49,7 @@ function printHelp() {
   console.log(`  ${GREEN}diff${RESET}                        Compare installed workspace components against master catalog`);
   console.log(`  ${GREEN}export${RESET} [options]             Export installed configuration into a portable bundle`);
   console.log(`  ${GREEN}import${RESET} <file.json>          Import portable agent configuration bundle into workspace`);
+  console.log(`  ${GREEN}bundle, pack${RESET} [options]        Package offline distribution bundle with manifest & installer`);
   console.log(`  ${GREEN}update${RESET}                      Sync installed skills, agents, and hooks with latest catalog`);
   console.log(`  ${GREEN}list${RESET}                        Show all available skills, rules, hooks, and plugins`);
   console.log(`  ${GREEN}new-skill${RESET} <name>            Scaffold a new progressive-disclosure skill`);
@@ -58,7 +59,7 @@ function printHelp() {
   console.log(`  ${GREEN}search, find${RESET} <query>         Search skills, agents, hooks, and MCP blueprints`);
   console.log(`  ${GREEN}audit${RESET} [path]                 Comprehensive audit of frontmatter, contracts, hooks & links`);
   console.log(`  ${GREEN}test-skill${RESET} <name>           Validate a specific skill frontmatter & scripts`);
-  console.log(`  ${GREEN}test-all${RESET}                    Benchmark & validate all 48 skills, 10 subagents & 7 hooks`);
+  console.log(`  ${GREEN}test-all${RESET}                    Benchmark & validate all 52 skills, 11 subagents & 7 hooks`);
   console.log(`  ${GREEN}info${RESET} <name>                  Display overview & runbook for a skill, agent, or hook`);
   console.log(`  ${GREEN}completion${RESET} [--install]        Generate or install shell autocompletion script (bash/zsh)`);
   console.log(`  ${GREEN}validate${RESET}                    Run self-test on frontmatter, JSON schemas & hooks`);
@@ -509,12 +510,12 @@ function runStatus(isGlobal = false, customTarget = null, asJson = false) {
       },
       skills: {
         installedCount: installedSkills.length,
-        totalCatalogCount: 48,
+        totalCatalogCount: 52,
         installed: installedSkills
       },
       subagents: {
         installedCount: installedAgents.length,
-        totalCatalogCount: 10,
+        totalCatalogCount: 11,
         installed: installedAgents
       },
       hooks: {
@@ -540,7 +541,7 @@ function runStatus(isGlobal = false, customTarget = null, asJson = false) {
   console.log(`  ${hasGemini ? GREEN + '✔' : GRAY + '○'}${RESET} GEMINI.md ${hasGemini ? '(active)' : '(not installed)'}`);
   console.log(`  ${hasAgents ? GREEN + '✔' : GRAY + '○'}${RESET} AGENTS.md ${hasAgents ? '(active)' : '(not installed)'}`);
 
-  console.log(`\n${CYAN}${BOLD}⚡ Installed Skills (${installedSkills.length}/48):${RESET}`);
+  console.log(`\n${CYAN}${BOLD}⚡ Installed Skills (${installedSkills.length}/52):${RESET}`);
   if (installedSkills.length === 0) {
     console.log(`  ${GRAY}(no skills installed)${RESET}`);
   } else {
@@ -549,7 +550,7 @@ function runStatus(isGlobal = false, customTarget = null, asJson = false) {
     }
   }
 
-  console.log(`\n${CYAN}${BOLD}🤖 Scoped Subagents (${installedAgents.length}/10):${RESET}`);
+  console.log(`\n${CYAN}${BOLD}🤖 Scoped Subagents (${installedAgents.length}/11):${RESET}`);
   if (installedAgents.length === 0) {
     console.log(`  ${GRAY}(no subagents installed)${RESET}`);
   } else {
@@ -867,6 +868,187 @@ function runImport(inputFile, isGlobal = false, customTarget = null, isDryRun = 
     console.log(`  ${GREEN}✔${RESET} Successfully imported ${BOLD}${importedAgents}${RESET} scoped subagents\n`);
     console.log(`${GREEN}${BOLD}✨ Import complete! Configuration applied to ${targetDir}${RESET}\n`);
   }
+}
+
+function runBundle(profile = 'all', outputDir = null, isDryRun = false, asJson = false) {
+  const destDir = outputDir ? path.resolve(outputDir) : path.join(process.cwd(), 'everything-gemini-bundle');
+  const startTime = Date.now();
+  const crypto = require('crypto');
+
+  const skillsToBundle = [];
+  const agentsToBundle = [];
+  const hooksToBundle = [];
+
+  const catalogSkillsDir = path.join(REPO_ROOT, 'skills');
+  const catalogAgentsDir = path.join(REPO_ROOT, 'agents');
+  const catalogHooksDir = path.join(REPO_ROOT, 'hooks');
+
+  if (fs.existsSync(catalogSkillsDir)) {
+    const list = fs.readdirSync(catalogSkillsDir, { withFileTypes: true })
+      .filter(d => d.isDirectory())
+      .map(d => d.name)
+      .sort();
+    skillsToBundle.push(...list);
+  }
+
+  const pluginSkills = [
+    { name: 'antigravity-sdk-orchestrator', src: path.join(REPO_ROOT, 'plugins', 'python-ai', 'skills', 'antigravity-sdk-orchestrator') },
+    { name: 'responsive-design', src: path.join(REPO_ROOT, 'plugins', 'web-fullstack', 'skills', 'responsive-design') }
+  ];
+
+  if (fs.existsSync(catalogAgentsDir)) {
+    const list = fs.readdirSync(catalogAgentsDir)
+      .filter(f => f.endsWith('.md'))
+      .sort();
+    agentsToBundle.push(...list);
+  }
+
+  if (fs.existsSync(catalogHooksDir)) {
+    const list = fs.readdirSync(catalogHooksDir, { withFileTypes: true })
+      .filter(d => d.isDirectory())
+      .map(d => d.name)
+      .sort();
+    hooksToBundle.push(...list);
+  }
+
+  const manifest = {
+    generator: "everything-gemini",
+    version: VERSION,
+    profile,
+    createdAt: new Date().toISOString(),
+    components: {
+      skillsCount: skillsToBundle.length + pluginSkills.length,
+      subagentsCount: agentsToBundle.length,
+      hooksCount: hooksToBundle.length,
+      totalCount: skillsToBundle.length + pluginSkills.length + agentsToBundle.length + hooksToBundle.length
+    },
+    skills: [...skillsToBundle, ...pluginSkills.map(p => p.name)],
+    subagents: agentsToBundle,
+    hooks: hooksToBundle,
+    files: []
+  };
+
+  if (isDryRun) {
+    if (asJson) {
+      console.log(JSON.stringify({
+        dryRun: true,
+        targetDirectory: destDir,
+        manifest
+      }, null, 2));
+      return;
+    }
+    printBanner();
+    console.log(`${YELLOW}${BOLD}🔍 DRY RUN MODE ACTIVATED - Previewing bundle contents${RESET}`);
+    console.log(`Target: ${CYAN}${destDir}${RESET}\n`);
+    console.log(`  ${CYAN}⚡ Skills to bundle:${RESET} ${skillsToBundle.length + pluginSkills.length}`);
+    console.log(`  ${CYAN}🤖 Subagents to bundle:${RESET} ${agentsToBundle.length}`);
+    console.log(`  ${CYAN}🛡️ Hooks to bundle:${RESET} ${hooksToBundle.length}`);
+    console.log(`  ${CYAN}📦 Total Components:${RESET} ${manifest.components.totalCount}\n`);
+    console.log(`${GREEN}${BOLD}✨ Dry run preview complete! 0 files written to disk.${RESET}\n`);
+    return;
+  }
+
+  fs.mkdirSync(destDir, { recursive: true });
+  const bundleSkillsDir = path.join(destDir, 'skills');
+  const bundleAgentsDir = path.join(destDir, 'agents');
+  const bundleHooksDir = path.join(destDir, 'hooks');
+  const bundleRulesDir = path.join(destDir, 'rules');
+  fs.mkdirSync(bundleSkillsDir, { recursive: true });
+  fs.mkdirSync(bundleAgentsDir, { recursive: true });
+  fs.mkdirSync(bundleHooksDir, { recursive: true });
+  fs.mkdirSync(bundleRulesDir, { recursive: true });
+
+  for (const s of skillsToBundle) {
+    const src = path.join(catalogSkillsDir, s);
+    const dest = path.join(bundleSkillsDir, s);
+    copyRecursiveSync(src, dest);
+    const skillMd = path.join(dest, 'SKILL.md');
+    if (fs.existsSync(skillMd)) {
+      const hash = crypto.createHash('sha256').update(fs.readFileSync(skillMd)).digest('hex');
+      manifest.files.push({ path: `skills/${s}/SKILL.md`, sha256: hash });
+    }
+  }
+
+  for (const ps of pluginSkills) {
+    if (fs.existsSync(ps.src)) {
+      const dest = path.join(bundleSkillsDir, ps.name);
+      copyRecursiveSync(ps.src, dest);
+      const skillMd = path.join(dest, 'SKILL.md');
+      if (fs.existsSync(skillMd)) {
+        const hash = crypto.createHash('sha256').update(fs.readFileSync(skillMd)).digest('hex');
+        manifest.files.push({ path: `skills/${ps.name}/SKILL.md`, sha256: hash });
+      }
+    }
+  }
+
+  for (const a of agentsToBundle) {
+    const src = path.join(catalogAgentsDir, a);
+    const dest = path.join(bundleAgentsDir, a);
+    fs.copyFileSync(src, dest);
+    const hash = crypto.createHash('sha256').update(fs.readFileSync(dest)).digest('hex');
+    manifest.files.push({ path: `agents/${a}`, sha256: hash });
+  }
+
+  for (const h of hooksToBundle) {
+    const src = path.join(catalogHooksDir, h);
+    const dest = path.join(bundleHooksDir, h);
+    copyRecursiveSync(src, dest);
+    const hookJson = path.join(dest, 'hooks.json');
+    if (fs.existsSync(hookJson)) {
+      const hash = crypto.createHash('sha256').update(fs.readFileSync(hookJson)).digest('hex');
+      manifest.files.push({ path: `hooks/${h}/hooks.json`, sha256: hash });
+    }
+  }
+
+  const commonRules = path.join(REPO_ROOT, 'rules', 'common');
+  if (fs.existsSync(commonRules)) {
+    copyRecursiveSync(commonRules, bundleRulesDir);
+    if (fs.existsSync(path.join(bundleRulesDir, 'GEMINI.md'))) {
+      fs.copyFileSync(path.join(bundleRulesDir, 'GEMINI.md'), path.join(destDir, 'GEMINI.md'));
+    }
+    if (fs.existsSync(path.join(bundleRulesDir, 'AGENTS.md'))) {
+      fs.copyFileSync(path.join(bundleRulesDir, 'AGENTS.md'), path.join(destDir, 'AGENTS.md'));
+    }
+  }
+
+  const installerScript = `#!/usr/bin/env bash
+# Offline Installer for Everything Gemini Bundle
+set -e
+TARGET="\${1:-.agents}"
+mkdir -p "$TARGET/skills" "$TARGET/agents" "$TARGET/hooks"
+cp -R skills/* "$TARGET/skills/" 2>/dev/null || true
+cp -R agents/* "$TARGET/agents/" 2>/dev/null || true
+cp -R hooks/* "$TARGET/hooks/" 2>/dev/null || true
+[ -f GEMINI.md ] && cp GEMINI.md "$TARGET/GEMINI.md"
+[ -f AGENTS.md ] && cp AGENTS.md "$TARGET/AGENTS.md"
+find "$TARGET/hooks" -name "*.sh" -exec chmod +x {} + 2>/dev/null || true
+echo "✨ Offline Everything Gemini bundle installed cleanly into $TARGET"
+`.trim();
+  fs.writeFileSync(path.join(destDir, 'offline-install.sh'), installerScript, { mode: 0o755 });
+
+  fs.writeFileSync(path.join(destDir, 'bundle-manifest.json'), JSON.stringify(manifest, null, 2), 'utf8');
+
+  const duration = ((Date.now() - startTime) / 1000).toFixed(2);
+
+  if (asJson) {
+    console.log(JSON.stringify({
+      targetDirectory: destDir,
+      manifest,
+      durationSeconds: parseFloat(duration)
+    }, null, 2));
+    return;
+  }
+
+  printBanner();
+  console.log(`${BOLD}📦 Everything Gemini Offline Distribution Bundle Created${RESET}`);
+  console.log(`Target: ${CYAN}${destDir}${RESET}\n`);
+  console.log(`  ${GREEN}✔${RESET} Packaged ${BOLD}${manifest.components.skillsCount}${RESET} progressive disclosure skills`);
+  console.log(`  ${GREEN}✔${RESET} Packaged ${BOLD}${manifest.components.subagentsCount}${RESET} scoped subagents`);
+  console.log(`  ${GREEN}✔${RESET} Packaged ${BOLD}${manifest.components.hooksCount}${RESET} lifecycle safety hooks`);
+  console.log(`  ${GREEN}✔${RESET} Generated ${BOLD}bundle-manifest.json${RESET} with ${manifest.files.length} SHA-256 integrity digests`);
+  console.log(`  ${GREEN}✔${RESET} Generated executable ${BOLD}offline-install.sh${RESET}`);
+  console.log(`  ${GREEN}✔${RESET} Total bundle duration: ${duration}s\n`);
+  console.log(`${GREEN}${BOLD}✨ Bundle packaging complete! Ready for air-gapped and CI/CD deployment.${RESET}\n`);
 }
 
 function runValidate() {
@@ -1601,9 +1783,9 @@ _everything_gemini() {
   COMPREPLY=()
   cur="\${COMP_WORDS[COMP_CWORD]}"
   prev="\${COMP_WORDS[COMP_CWORD-1]}"
-  commands="doctor list init install status check update new-skill new-agent add remove test-skill test-all benchmark info show completion validate version help diff export import search find audit"
-  skills="agent-evals ai-first-engineering apache-kafka-streams api-craftsman architecture-designer argo-workflows axum-web-service browser-qa-tester clickhouse-analytics cloudflare-workers context-caching continuous-learning database-architect dbt-transformation devops-pipeline docker-compose-orchestrator duckdb-local-olap fastapi-production fullstack-nextjs gemini-function-calling gemini-grounding gemini-multimodal git-craftsman github-ops graphql-architect grpc-connect-rpc kubernetes-operator langgraph-orchestrator nats-jetstream open-telemetry-tracing performance-profiler playwright-visual-regression rag-architect redis-cache-patterns repo-onboarding root-cause-debugger security-audit stripe-integration subagent-handoff supabase-architect svelte-kit-architect tdd-workflow temporal-workflows trpc-react-query turborepo-monorepo wasm-rust-optimizer antigravity-sdk-orchestrator responsive-design"
-  agents="architect browser-qa build-repair code-reviewer database-migrator documentation-writer performance-tuner planner release-engineer security-auditor"
+  commands="doctor list init install status check update new-skill new-agent add remove test-skill test-all benchmark info show completion validate version help diff export import bundle pack search find audit"
+  skills="agent-evals ai-first-engineering apache-kafka-streams api-craftsman architecture-designer argo-workflows axum-web-service browser-qa-tester cilium-ebpf-networking clickhouse-analytics cloudflare-workers context-caching continuous-learning database-architect dbt-transformation debezium-cdc devops-pipeline docker-compose-orchestrator duckdb-local-olap fastapi-production fullstack-nextjs gemini-function-calling gemini-grounding gemini-multimodal git-craftsman github-ops graphql-architect grpc-connect-rpc kubernetes-operator langgraph-orchestrator litellm-proxy-gateway nats-jetstream open-telemetry-tracing performance-profiler playwright-visual-regression rag-architect redis-cache-patterns repo-onboarding root-cause-debugger security-audit stripe-integration subagent-handoff supabase-architect svelte-kit-architect tdd-workflow temporal-workflows trpc-react-query turborepo-monorepo vllm-inference wasm-rust-optimizer antigravity-sdk-orchestrator responsive-design"
+  agents="architect browser-qa build-repair code-reviewer database-migrator documentation-writer incident-responder performance-tuner planner release-engineer security-auditor"
   hooks="auto-lint-formatter ephemeral-context gemini-shield goal-verifier learned-instincts safety-shield secret-scrubber"
   plugins="core python-ai security-shield web-fullstack"
 
@@ -1904,6 +2086,22 @@ switch (command) {
       else if (args[i] === '--workspace' && args[i + 1]) customTarget = args[++i];
     }
     runImport(inputFile, isGlobal, customTarget, isDryRun);
+    break;
+  }
+  case 'bundle':
+  case 'pack': {
+    let profile = 'all';
+    let outputDir = null;
+    let isDryRun = false;
+    let asJson = false;
+    for (let i = 1; i < args.length; i++) {
+      if (args[i] === '--profile' && args[i + 1]) profile = args[++i];
+      else if ((args[i] === '--output' || args[i] === '-o') && args[i + 1]) outputDir = args[++i];
+      else if (args[i] === '--dry-run') isDryRun = true;
+      else if (args[i] === '--json') asJson = true;
+      else if (!args[i].startsWith('-') && !outputDir) outputDir = args[i];
+    }
+    runBundle(profile, outputDir, isDryRun, asJson);
     break;
   }
   case 'update': {

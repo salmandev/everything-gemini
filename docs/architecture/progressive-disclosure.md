@@ -21,10 +21,10 @@ Instead of injecting entire skill files (`SKILL.md`) into the system prompt:
 +------------------------------------+--------------------------+
 | Harness Strategy                   | Baseline Prompt Overhead |
 +------------------------------------+--------------------------+
-| Monolithic Prompts (e.g. naive)    | ~48,000 tokens / turn    |
-| Everything Gemini Progressive Disc. | ~3,200 tokens / turn     |
+| Monolithic Prompts (52+ skills)    | ~48,000+ tokens / turn   |
+| Everything Gemini Progressive Disc.| ~3,800 tokens / turn     |
 +------------------------------------+--------------------------+
-| Net Token Savings                  | 85% - 93%                |
+| Net Token Savings                  | 85% - 92% (>40,000 saved)|
 +------------------------------------+--------------------------+
 ```
 

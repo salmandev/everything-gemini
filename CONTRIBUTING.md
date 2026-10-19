@@ -105,7 +105,7 @@ Everything Gemini provides built-in developer tools to streamline adding new com
 # Inspect runbook preview in the terminal
 ./bin/everything-gemini info my-awesome-skill
 
-# Benchmark token savings and run self-tests across all 65 ecosystem components
+# Benchmark token savings and run self-tests across all 70 ecosystem components
 ./bin/everything-gemini test-all
 ```
 
@@ -159,10 +159,14 @@ Looking for inspiration on what to contribute? The community has requested the f
 | **`playwright-visual-regression`** | Testing | Pixelmatch diffs, trace recording, and headless container snapshots | ✅ *Shipped in v1.7.0* |
 | **`open-telemetry-tracing`** | Observability | Distributed tracing with OTLP exporters, span contexts, and metrics | ✅ *Shipped in v1.7.0* |
 | **`argo-workflows`** | Cloud Native | Kubernetes CRD workflows, DAG step execution, and artifact passing | ✅ *Shipped in v1.7.0* |
-| **`vllm-inference`** | AI Serving | PagedAttention KV cache, continuous batching, and tensor parallelism | 🚀 *Open for PR* |
-| **`debezium-cdc`** | Data Eng | Change Data Capture (CDC) streaming from PostgreSQL / MySQL to Kafka / PubSub | 🚀 *Open for PR* |
-| **`cilium-ebpf-networking`** | Cloud Native | eBPF-based service mesh, L7 security policies, and transparent encryption | 🚀 *Open for PR* |
-| **`litellm-proxy-gateway`** | AI Gateway | Unified OpenAI-compatible multi-provider routing, fallback budgets, and load balancing | 🚀 *Open for PR* |
+| **`vllm-inference`** | AI Serving | PagedAttention KV cache, continuous batching, and tensor parallelism | ✅ *Shipped in v1.8.0* |
+| **`debezium-cdc`** | Data Eng | Change Data Capture (CDC) streaming from PostgreSQL / MySQL to Kafka / PubSub | ✅ *Shipped in v1.8.0* |
+| **`cilium-ebpf-networking`** | Cloud Native | eBPF-based service mesh, L7 security policies, and transparent encryption | ✅ *Shipped in v1.8.0* |
+| **`litellm-proxy-gateway`** | AI Gateway | Unified OpenAI-compatible multi-provider routing, fallback budgets, and load balancing | ✅ *Shipped in v1.8.0* |
+| **`keda-autoscaling`** | Cloud Native | Event-driven Kubernetes workload autoscaling (Kafka, SQS, RabbitMQ, Redis) | 🚀 *Open for PR* |
+| **`chromadb-vector-store`** | AI Eng | Embedded and client/server vector embeddings, HNSW indexing, and collection filters | 🚀 *Open for PR* |
+| **`opa-gatekeeper`** | Policy | Open Policy Agent (OPA) admission control, Rego constraints, and pod security standards | 🚀 *Open for PR* |
+| **`fal-ai-media`** | Generative AI | Ultra-fast multimodal diffusion, video generation, and real-time inference endpoints | 🚀 *Open for PR* |
 
 ### How to Build a Wishlist Item:
 1. Open an issue using the [Skill Proposal template](.github/ISSUE_TEMPLATE/skill_proposal.md).

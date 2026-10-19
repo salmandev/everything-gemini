@@ -28,6 +28,10 @@ pip install google-antigravity
   ```bash
   python3 release_readiness_audit.py
   ```
+- **4-Stage Incident Triage & SRE Remediation Pipeline** (Incident Responder -> Performance Tuner -> Release Engineer -> Postmortem Generator):
+  ```bash
+  python3 incident_triage_pipeline.py
+  ```
 
 ---
 

@@ -90,9 +90,9 @@ it('should benchmark ecosystem components and output valid JSON with --json', ()
   const res = runCli('benchmark --json');
   assert.strictEqual(res.status, 0);
   const data = JSON.parse(res.stdout);
-  assert.strictEqual(data.totalComponents, 65);
-  assert.strictEqual(data.progressiveSkillsCount, 48);
-  assert.strictEqual(data.scopedAgentsCount, 10);
+  assert.strictEqual(data.totalComponents, 70);
+  assert.strictEqual(data.progressiveSkillsCount, 52);
+  assert.strictEqual(data.scopedAgentsCount, 11);
   assert.strictEqual(data.lifecycleHooksCount, 7);
   assert(data.totalRunbookTokens > 15000, 'Expected >15,000 runbook tokens');
   assert(data.estimatedTokensSavedPerTurn > 8000, 'Expected significant token savings');
@@ -308,14 +308,65 @@ try {
     assert.match(resOtel.stdout, /OpenTelemetry/);
   });
 
+  // Bundle Command
+  it('should package offline distribution bundle in dry-run and live modes', () => {
+    const bundleTarget = path.join(tempWorkspace, 'test-bundle');
+
+    // Dry-run mode
+    const dryRes = runCli(`bundle --output "${bundleTarget}" --dry-run`);
+    assert.strictEqual(dryRes.status, 0);
+    assert.match(dryRes.stdout, /DRY RUN MODE ACTIVATED/);
+    assert.match(dryRes.stdout, /Skills to bundle: 52/);
+    assert.strictEqual(fs.existsSync(bundleTarget), false, 'Dry run should not create destination directory');
+
+    // JSON Dry-run mode
+    const jsonRes = runCli(`bundle --output "${bundleTarget}" --dry-run --json`);
+    assert.strictEqual(jsonRes.status, 0);
+    const dryData = JSON.parse(jsonRes.stdout);
+    assert.strictEqual(dryData.dryRun, true);
+    assert.strictEqual(dryData.manifest.components.totalCount, 70);
+
+    // Live mode
+    const liveRes = runCli(`bundle --output "${bundleTarget}"`);
+    assert.strictEqual(liveRes.status, 0);
+    assert.match(liveRes.stdout, /Offline Distribution Bundle Created/);
+    assert.strictEqual(fs.existsSync(path.join(bundleTarget, 'bundle-manifest.json')), true);
+    assert.strictEqual(fs.existsSync(path.join(bundleTarget, 'offline-install.sh')), true);
+    assert.strictEqual(fs.existsSync(path.join(bundleTarget, 'skills', 'vllm-inference')), true);
+    assert.strictEqual(fs.existsSync(path.join(bundleTarget, 'agents', 'incident-responder.md')), true);
+  });
+
+  // Info for incident-responder and v1.8.0 skills
+  it('should display info for incident-responder subagent and v1.8.0 skills', () => {
+    const resInc = runCli('info incident-responder');
+    assert.strictEqual(resInc.status, 0);
+    assert.match(resInc.stdout, /Incident Responder/);
+
+    const resVllm = runCli('info vllm-inference');
+    assert.strictEqual(resVllm.status, 0);
+    assert.match(resVllm.stdout, /vLLM/);
+
+    const resCdc = runCli('info debezium-cdc');
+    assert.strictEqual(resCdc.status, 0);
+    assert.match(resCdc.stdout, /Debezium/);
+
+    const resCilium = runCli('info cilium-ebpf-networking');
+    assert.strictEqual(resCilium.status, 0);
+    assert.match(resCilium.stdout, /Cilium/);
+
+    const resLite = runCli('info litellm-proxy-gateway');
+    assert.strictEqual(resLite.status, 0);
+    assert.match(resLite.stdout, /LiteLLM/);
+  });
+
   // Benchmark Components Verification
-  it('should report 65 components, 48 skills, and 10 subagents in benchmark --json', () => {
+  it('should report 70 components, 52 skills, and 11 subagents in benchmark --json', () => {
     const res = runCli('benchmark --json');
     assert.strictEqual(res.status, 0);
     const data = JSON.parse(res.stdout);
-    assert.strictEqual(data.totalComponents, 65, 'Total components should be 65');
-    assert.strictEqual(data.progressiveSkillsCount, 48, 'Progressive skills should be 48');
-    assert.strictEqual(data.scopedAgentsCount, 10, 'Scoped agents should be 10');
+    assert.strictEqual(data.totalComponents, 70, 'Total components should be 70');
+    assert.strictEqual(data.progressiveSkillsCount, 52, 'Progressive skills should be 52');
+    assert.strictEqual(data.scopedAgentsCount, 11, 'Scoped agents should be 11');
     assert.strictEqual(data.lifecycleHooksCount, 7, 'Lifecycle hooks should be 7');
   });
 
