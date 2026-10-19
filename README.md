@@ -80,7 +80,7 @@ cd everything-gemini
 | :--- | :--- | :--- |
 | **`core`** | Minimalists & Speed | Safety-shield hook, TDD skill, repo-onboarding skill, baseline `GEMINI.md`. |
 | **`developer`** *(Recommended)* | Daily Software Engineers | Core + 13 Scoped Subagents (`agents/`), Frontier Skills (Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
-| **`full`** | Lead Engineers & Archs | Everything: all 63 progressive skills, 13 scoped subagents, full lifecycle hooks suite (7 hooks), 14 MCP blueprints, all plugins, configs, and templates. |
+| **`full`** | Lead Engineers & Archs | Everything: all 63 progressive skills, 13 scoped subagents, full lifecycle hooks suite (8 hooks), 14 MCP blueprints, all plugins, configs, and templates. |
 
 ### 5. In CI / GitHub Actions Workflows
 
@@ -268,6 +268,7 @@ Hooks run shell scripts at critical lifecycle events with typed JSON contracts o
 - **[`goal-verifier`](hooks/goal-verifier/hooks.json) (`Stop`)**: Intercepts the agent's attempt to finish. If test suites are failing or background tasks are unfinished, it returns `{"decision": "continue", "reason": "Tests are still failing. Fix them before stopping."}`.
 - **[`ephemeral-context`](hooks/ephemeral-context/hooks.json) (`PreInvocation`)**: Injects transient warnings or guidelines before each model reasoning step without cluttering persistent conversation history.
 - **[`learned-instincts`](hooks/learned-instincts/hooks.json)**: Session learning hook that records developer corrections and feedback into persistent instincts.
+- **[`budget-guard`](hooks/budget-guard/hooks.json) (`PreToolUse`)**: Intercepts tool execution to enforce hard USD spend caps (`MAX_USD_BUDGET`), tracking step-by-step token expenditure and denying execution when financial limits are met.
 
 ### 3. Rules Hierarchy (`rules/`)
 Antigravity automatically discovers rules by walking up from the current file's directory to the repository root:
@@ -336,7 +337,7 @@ Skill Body: Loaded on-demand ONLY when invoked = ~1,500 Tokens (one-time)
 Savings: > 85% Token Reduction & 3x Faster First-Token Latency!
 ```
 
-Run the built-in diagnostic benchmark across all 83 ecosystem components:
+Run the built-in diagnostic benchmark across all 84 ecosystem components:
 ```bash
 ./bin/everything-gemini test-all
 ```
@@ -415,7 +416,7 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 ./bin/everything-gemini audit
 ./bin/everything-gemini audit --json
 
-# Benchmark and validate all 63 skills, 13 subagents, and 7 hooks (human or JSON)
+# Benchmark and validate all 63 skills, 13 subagents, and 8 hooks (human or JSON)
 ./bin/everything-gemini test-all
 ./bin/everything-gemini benchmark --json
 
@@ -423,6 +424,14 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 ./bin/everything-gemini harness2
 ./bin/everything-gemini harness2 ./custom-harness --dry-run
 ./bin/everything-gemini export --format harness2 --output ./harness-export
+
+# Run recursive Harness² optimization over local tasks with hard spend limits & HITL
+./bin/everything-gemini harness2 run --dir ./tasks --bench local --max-usd 15.00 --hitl --snapshot
+./bin/everything-gemini harness2 run --dry-run
+./bin/everything-gemini harness2 run --json
+
+# Ingest production telemetry failure trace into automated regression probe
+./bin/everything-gemini harness2 ingest-trace failure-trace.json --dir ./tasks/regression
 
 # Visualize multi-agent interaction and dependency graph (terminal, Mermaid, or JSON)
 ./bin/everything-gemini graph

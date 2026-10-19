@@ -179,3 +179,62 @@ everything-gemini export --format harness2 --output ./harness2-export
 # Benchmark recursive adaptation efficiency
 everything-gemini benchmark --json | jq .
 ```
+
+---
+
+## 7. Enterprise Production Extensions (The 5 Missing Pillars)
+
+While Google Research Harness² (*arXiv:2610.14224*) introduces foundational recursive theory, production enterprise deployment requires the 5 architectural pillars implemented in `everything-gemini`:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                   Harness² Enterprise Production Architecture               │
+├───────────────────────────────────┬─────────────────────────────────────────┤
+│ 1. Hard Spend Limits & Guardrails │ PreToolUse budget-guard ($ cap per run) │
+├───────────────────────────────────┼─────────────────────────────────────────┤
+│ 2. Local Task Optimization Runner │ --dir ./tasks --bench local             │
+├───────────────────────────────────┼─────────────────────────────────────────┤
+│ 3. Opt-in Human-in-the-Loop (HITL)│ Interactive candidate approval gating   │
+├───────────────────────────────────┼─────────────────────────────────────────┤
+│ 4. Snapshot & Rollback Isolation  │ Ephemeral git patch rollback on failure │
+├───────────────────────────────────┼─────────────────────────────────────────┤
+│ 5. Production Trace Ingestion     │ Telemetry trace ──> Regression task     │
+└───────────────────────────────────┴─────────────────────────────────────────┘
+```
+
+1. **Spend Guardrails (`hooks/budget-guard`)**:
+   - Intercepts all tool execution turns via `PreToolUse`.
+   - Denies candidate mutations or runaway agent loops once cumulative token spend breaches `MAX_USD_BUDGET`.
+2. **Local Task Optimization Runner**:
+   - Replaces synthetic benchmarks with custom enterprise task folders (`--dir ./tasks --bench local`).
+   - Automatically maintains `tasks/EXPERIENCE.md` documenting converged harness mutations.
+3. **Opt-in Human-in-the-Loop (`--hitl`)**:
+   - Halts speculative candidate changes on high-impact surfaces (prompts, guardrails, guidance) for human signoff.
+4. **Tool State Snapshot & Rollback**:
+   - Wraps each probe with [`scripts/harness_snapshot.sh`](file:///Users/salmanshaikh/development/github/everything-gemini/scripts/harness_snapshot.sh) and [`scripts/harness_rollback.sh`](file:///Users/salmanshaikh/development/github/everything-gemini/scripts/harness_rollback.sh).
+   - Reverts file modifications immediately if a candidate fails the probe score threshold.
+5. **Production Trace Ingestion**:
+   - Converts production error traces (e.g. Dataproc OOM, schema drift, API timeouts) into deterministic probe tasks.
+
+---
+
+## 8. Enterprise CLI Runbook
+
+```bash
+# 1. Synthesize 8-surface Harness² workspace
+everything-gemini harness2 ./my-enterprise-harness
+
+# 2. Run recursive optimization over local tasks with $15 hard ceiling and snapshot sandboxing
+everything-gemini harness2 run --dir ./tasks --bench local --max-usd 15.00 --snapshot
+
+# 3. Enable interactive Human-in-the-Loop gating for candidate mutations
+everything-gemini harness2 run --dir ./tasks --bench local --hitl
+
+# 4. Ingest production telemetry failure trace into automated regression probe
+everything-gemini harness2 ingest-trace ./production-failure.json --dir ./tasks/regression
+
+# 5. Automated dry-run and JSON telemetry for CI/CD pipelines
+everything-gemini harness2 run --dir ./tasks --dry-run
+everything-gemini harness2 run --dir ./tasks --json
+```
+

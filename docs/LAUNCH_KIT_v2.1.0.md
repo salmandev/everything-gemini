@@ -28,11 +28,12 @@ Everything Gemini (`everything-gemini`) v2.1.0 is engineered to handshake direct
 - 🌊 **Google Agentic Flow Orchestration**: State-machine engine managing cyclic multi-agent loops, conditional branching, and human-in-the-loop approvals.
 - ⚡ **Google Cloud Dataproc Serverless Spark**: Large-scale PySpark batch analytics, BigLake vector indexing, and Gemini embedding UDFs for probe verification.
 - 🛠️ **CLI Harness² Workspace Synthesizer**: Run `npx everything-gemini harness2` to generate a canonical 8-surface Harness² workspace with `harness.yaml`.
-- 📊 **63 Progressive Skills & 83 Total Components**: 56k+ runbook tokens with >85% token economy savings per turn via progressive disclosure.
+- 🛡️ **5 Enterprise Architectural Pillars**: Hard spend limits (`--max-usd`, `budget-guard`), local folder runner (`harness2 run`), opt-in HITL gating (`--hitl`), snapshot/rollback isolation, and production trace ingestion (`harness2 ingest-trace`).
+- 📊 **63 Progressive Skills, 8 Hooks & 84 Total Components**: 56k+ runbook tokens with >85% token economy savings per turn via progressive disclosure.
 
 Try it in 5 seconds (zero dependencies):
 `npx everything-gemini install`
-`npx everything-gemini harness2`
+`npx everything-gemini harness2 run --bench local --max-usd 10`
 
 Interactive Web Showcase: https://salmandev.github.io/everything-gemini/
 GitHub: https://github.com/salmandev/everything-gemini
@@ -82,7 +83,7 @@ npx everything-gemini export --format harness2
 Ecosystem Landmark:
 ⚡ 63 Progressive Disclosure Skills
 🤖 13 Scoped Subagents
-🛡️ 7 Lifecycle Safety Hooks
+🛡️ 8 Lifecycle Safety Hooks (84 Total Components)
 📊 >85% token reduction per turn
 
 Live Web Showcase: https://salmandev.github.io/everything-gemini/

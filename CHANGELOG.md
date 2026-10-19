@@ -11,16 +11,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - **`harness2-recursive-optimization`** ([`skills/harness2-recursive-optimization/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/harness2-recursive-optimization/SKILL.md)): Implementation of Google Research's Harness² framework (*Harness²: Recursive Agent Harnessing for an Open World*, arXiv:2610.14224), test-time recursive agent optimization, Propose-Probe-Compose cycles, and the 8 file-based harness surfaces.
   - **`google-flow-orchestrator`** ([`skills/google-flow-orchestrator/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/google-flow-orchestrator/SKILL.md)): Google Agentic Flow state machine orchestration, cyclic multi-agent graph execution, conditional state transitions, human approval pauses, and error boundary checkpoints.
   - **`dataproc-spark-analytics`** ([`skills/dataproc-spark-analytics/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/dataproc-spark-analytics/SKILL.md)): Google Cloud Dataproc Serverless Spark, PySpark batch pipelines, Gemini embedding UDFs, BigLake vector indexing, and large-scale probe score verification.
-- **63 Progressive Disclosure Skills & 83-Component Ecosystem Landmark**:
-  - Expanded catalog to 63 progressive skills, 13 scoped subagents, and 7 lifecycle safety hooks totaling 83 enterprise components with >56,000 runbook tokens (>85% token economy savings per turn).
+- **5 Enterprise Architectural Pillars for Google Research Harness²**:
+  - **Spend Guardrails (`hooks/budget-guard/`)**: PreToolUse deterministic lifecycle hook enforcing hard USD spend caps (`MAX_USD_BUDGET`), tracking step-by-step token expenditure and denying execution when financial limits are met.
+  - **Local Task Optimization Runner (`everything-gemini harness2 run`)**: Native benchmark runner supporting local task directories (`--dir`, `--bench local`), spend limits (`--max-usd`), state rollbacks, and JSON reporting.
+  - **Opt-in Human-in-the-Loop Gating (`--hitl`)**: Interactive approval gating for candidate mutations across prompts, guardrails, and tool guidance before composition.
+  - **Multi-Modal & Tool State Persistence (`scripts/harness_snapshot.sh` & `scripts/harness_rollback.sh`)**: Snapshot and rollback isolation scripts guaranteeing workspace immunity during speculative probe execution.
+  - **Production Observability & Trace Ingestion (`everything-gemini harness2 ingest-trace <trace.json>`)**: Convert production telemetry error traces into automated regression probes for Harness² test-time optimization.
+- **63 Progressive Disclosure Skills, 8 Hooks & 84-Component Ecosystem Landmark**:
+  - Expanded catalog to 63 progressive skills, 13 scoped subagents, and 8 lifecycle safety hooks totaling 84 enterprise components with >56,000 runbook tokens (>85% token economy savings per turn).
 - **CLI Harness² Workspace Synthesizer (`everything-gemini harness2 [outDir]`)**:
   - Native command synthesizing the 8 canonical Harness² surfaces: `prompts/`, `guardrails/`, `memory/`, `guidance/`, `subagents/`, `skills/`, `scripts/`, `plugins/`, alongside `harness.yaml` and `harness.json` architecture manifests.
   - Added `--format harness2` flag to `everything-gemini export` for direct translation into the Google Research Harness² directory structure.
   - Added `--dry-run` and `--json` support for automated agent evaluation loops.
 - **Harness² Recursive Optimization Python SDK Showcase**:
   - Created [`examples/python-sdk/harness2_recursive_loop.py`](file:///Users/salmanshaikh/development/github/everything-gemini/examples/python-sdk/harness2_recursive_loop.py) demonstrating the 3-stage Propose-Probe-Compose test-time optimization loop with Pareto frontier selection.
-- **33-Assertion Automated E2E Test Suite**:
-  - Expanded `tests/cli.test.js` validating the `harness2` command in dry-run, live, and JSON modes, export formatting, and new skill info overviews.
+- **36-Assertion Automated E2E Test Suite**:
+  - Expanded `tests/cli.test.js` validating the `harness2` command in dry-run, live, and JSON modes, `harness2 run`, `harness2 ingest-trace`, `budget-guard` inspection, and updated 84-component benchmark invariants.
 
 ## [2.0.0] - 2026-10-19
 

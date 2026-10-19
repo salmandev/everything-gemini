@@ -90,10 +90,10 @@ it('should benchmark ecosystem components and output valid JSON with --json', ()
   const res = runCli('benchmark --json');
   assert.strictEqual(res.status, 0);
   const data = JSON.parse(res.stdout);
-  assert.strictEqual(data.totalComponents, 83);
+  assert.strictEqual(data.totalComponents, 84);
   assert.strictEqual(data.progressiveSkillsCount, 63);
   assert.strictEqual(data.scopedAgentsCount, 13);
-  assert.strictEqual(data.lifecycleHooksCount, 7);
+  assert.strictEqual(data.lifecycleHooksCount, 8);
   assert(data.totalRunbookTokens > 15000, 'Expected >15,000 runbook tokens');
   assert(data.estimatedTokensSavedPerTurn > 8000, 'Expected significant token savings');
 });
@@ -324,7 +324,7 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.components.totalCount, 83);
+    assert.strictEqual(dryData.manifest.components.totalCount, 84);
 
     // Live mode
     const liveRes = runCli(`bundle --output "${bundleTarget}"`);
@@ -479,7 +479,7 @@ try {
     assert.strictEqual(dryData.dryRun, true);
     assert.strictEqual(dryData.manifest.metrics.total_skills, 63);
     assert.strictEqual(dryData.manifest.metrics.total_subagents, 13);
-    assert.strictEqual(dryData.manifest.metrics.total_hooks, 7);
+    assert.strictEqual(dryData.manifest.metrics.total_hooks, 8);
 
     // Live mode
     const liveRes = runCli(`harness2 "${h2Target}"`);
@@ -493,6 +493,8 @@ try {
     assert.strictEqual(fs.existsSync(path.join(h2Target, 'subagents', 'planner.md')), true);
     assert.strictEqual(fs.existsSync(path.join(h2Target, 'skills', 'harness2-recursive-optimization', 'SKILL.md')), true);
     assert.strictEqual(fs.existsSync(path.join(h2Target, 'scripts', 'harness_probe.sh')), true);
+    assert.strictEqual(fs.existsSync(path.join(h2Target, 'scripts', 'harness_snapshot.sh')), true);
+    assert.strictEqual(fs.existsSync(path.join(h2Target, 'scripts', 'harness_rollback.sh')), true);
 
     // Export with --format harness2
     const h2ExportTarget = path.join(tempWorkspace, 'harness2-export-ws');
@@ -522,14 +524,63 @@ try {
   });
 
   // Benchmark Components Verification
-  it('should report 83 components, 63 skills, and 13 subagents in benchmark --json', () => {
+  it('should report 84 components, 63 skills, and 13 subagents in benchmark --json', () => {
     const res = runCli('benchmark --json');
     assert.strictEqual(res.status, 0);
     const data = JSON.parse(res.stdout);
-    assert.strictEqual(data.totalComponents, 83, 'Total components should be 83');
+    assert.strictEqual(data.totalComponents, 84, 'Total components should be 84');
     assert.strictEqual(data.progressiveSkillsCount, 63, 'Progressive skills should be 63');
     assert.strictEqual(data.scopedAgentsCount, 13, 'Scoped agents should be 13');
-    assert.strictEqual(data.lifecycleHooksCount, 7, 'Lifecycle hooks should be 7');
+    assert.strictEqual(data.lifecycleHooksCount, 8, 'Lifecycle hooks should be 8');
+  });
+
+  // Harness² Run & Ingest-Trace tests
+  it('should support harness2 run with local benchmark, hard spend limits, and dry-run/json modes', () => {
+    const testTasksDir = path.join(tempWorkspace, 'harness2-tasks');
+    // Dry-run mode
+    const dryRes = runCli(`harness2 run --dir "${testTasksDir}" --bench local --max-usd 15 --dry-run`);
+    assert.strictEqual(dryRes.status, 0);
+    assert.match(dryRes.stdout, /DRY RUN MODE ACTIVATED/);
+    assert.match(dryRes.stdout, /Spend Ceiling: \$15\.00 USD/);
+
+    // JSON export mode
+    const jsonRes = runCli(`harness2 run --dir "${testTasksDir}" --bench local --max-usd 25 --json`);
+    assert.strictEqual(jsonRes.status, 0);
+    const runData = JSON.parse(jsonRes.stdout);
+    assert.strictEqual(runData.engine, 'everything-gemini-harness2-runner');
+    assert.strictEqual(runData.benchmark, 'local');
+    assert.strictEqual(runData.spendGuardrail.maxSpendUsd, 25);
+    assert.strictEqual(runData.result.status, 'PASSED');
+  });
+
+  it('should support harness2 ingest-trace to generate automated regression probes', () => {
+    const sampleTracePath = path.join(tempWorkspace, 'production-failure.json');
+    fs.writeFileSync(sampleTracePath, JSON.stringify({
+      id: 'trace-spark-oom',
+      error: 'OutOfMemoryError: Container killed due to 16GB memory ceiling',
+      tool: 'dataproc-spark-analytics',
+      timestamp: '2026-10-19T18:00:00Z',
+      stack: 'Fatal: JVM worker heap exhausted at SparkExecutor.scala:42'
+    }, null, 2), 'utf8');
+
+    const traceOutDir = path.join(tempWorkspace, 'regression-tasks');
+    const ingestRes = runCli(`harness2 ingest-trace "${sampleTracePath}" --dir "${traceOutDir}"`);
+    assert.strictEqual(ingestRes.status, 0);
+    assert.match(ingestRes.stdout, /Production Trace Ingested into Harness² Regression Test/);
+
+    const generatedTask = path.join(traceOutDir, 'regression-trace-spark-oom.json');
+    assert.strictEqual(fs.existsSync(generatedTask), true);
+    const taskContent = JSON.parse(fs.readFileSync(generatedTask, 'utf8'));
+    assert.strictEqual(taskContent.id, 'regression-trace-spark-oom');
+    assert.strictEqual(taskContent.sourceTrace, 'production-failure.json');
+    assert.match(taskContent.errorCategory, /OutOfMemoryError/);
+  });
+
+  it('should display info for budget-guard lifecycle hook', () => {
+    const res = runCli('info budget-guard');
+    assert.strictEqual(res.status, 0);
+    assert.match(res.stdout, /budget-guard/);
+    assert.match(res.stdout, /PreToolUse/);
   });
 
 } finally {
