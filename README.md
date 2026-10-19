@@ -80,7 +80,7 @@ cd everything-gemini
 | :--- | :--- | :--- |
 | **`core`** | Minimalists & Speed | Safety-shield hook, TDD skill, repo-onboarding skill, baseline `GEMINI.md`. |
 | **`developer`** *(Recommended)* | Daily Software Engineers | Core + 13 Scoped Subagents (`agents/`), Frontier Skills (Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
-| **`full`** | Lead Engineers & Archs | Everything: all 60 progressive skills, 13 scoped subagents, full lifecycle hooks suite (7 hooks), 14 MCP blueprints, all plugins, configs, and templates. |
+| **`full`** | Lead Engineers & Archs | Everything: all 63 progressive skills, 13 scoped subagents, full lifecycle hooks suite (7 hooks), 14 MCP blueprints, all plugins, configs, and templates. |
 
 ### 5. In CI / GitHub Actions Workflows
 
@@ -159,7 +159,7 @@ everything-gemini/
 ├── agents/                       # Scoped subagent fleet (Planner, Reviewer, Release Engineer, etc.)
 ├── scripts/                      # Automated installers and harness validators
 ├── plugins/                      # Reusable modular plugins (web-fullstack, python-ai, security)
-├── skills/                       # 60 Progressive disclosure skills (58 core + 2 plugins)
+├── skills/                       # 63 Progressive disclosure skills (61 core + 2 plugins)
 ├── rules/                        # Contextual guidelines & standards
 ├── hooks/                        # Event-driven lifecycle hooks (GeminiShield, Auto-lint)
 ├── mcp/                          # Production-ready MCP server blueprints
@@ -194,6 +194,9 @@ Everything Gemini provides specialized subagent specifications designed for Anti
 ### 1. Skills (`skills/`)
 Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`name` and `description`) is placed into the system prompt. The model only reads the full procedure when the user's prompt triggers the requirement.
 
+- **[`harness2-recursive-optimization`](skills/harness2-recursive-optimization/SKILL.md)**: Google Research Harness² framework (*Harness²: Recursive Agent Harnessing for an Open World*, arXiv:2610.14224), 8-surface architecture, test-time Propose-Probe-Compose recursive loops, and continual harness learning.
+- **[`google-flow-orchestrator`](skills/google-flow-orchestrator/SKILL.md)**: Google Agentic Flow state machine orchestration, cyclic multi-agent graph execution, conditional state routing, and human-in-the-loop pauses.
+- **[`dataproc-spark-analytics`](skills/dataproc-spark-analytics/SKILL.md)**: Google Cloud Dataproc Serverless Spark, PySpark batch pipelines, Gemini embedding UDFs, BigLake vector indexing, and large-scale probe score verification.
 - **[`keda-event-autoscaling`](skills/keda-event-autoscaling/SKILL.md)**: Kubernetes Event-driven Autoscaling (KEDA), ScaledObjects/Jobs, Kafka/Redis/Prometheus triggers, scale-to-zero.
 - **[`chromadb-vector-store`](skills/chromadb-vector-store/SKILL.md)**: Persistent vector storage, Gemini embeddings, collection partitioning, metadata filtering, and semantic similarity search.
 - **[`opa-gatekeeper-policy`](skills/opa-gatekeeper-policy/SKILL.md)**: Open Policy Agent (OPA) Gatekeeper ConstraintTemplates and Rego admission policies for Kubernetes governance.
@@ -333,7 +336,7 @@ Skill Body: Loaded on-demand ONLY when invoked = ~1,500 Tokens (one-time)
 Savings: > 85% Token Reduction & 3x Faster First-Token Latency!
 ```
 
-Run the built-in diagnostic benchmark across all 70 ecosystem components:
+Run the built-in diagnostic benchmark across all 83 ecosystem components:
 ```bash
 ./bin/everything-gemini test-all
 ```
@@ -412,9 +415,14 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 ./bin/everything-gemini audit
 ./bin/everything-gemini audit --json
 
-# Benchmark and validate all 60 skills, 13 subagents, and 7 hooks (human or JSON)
+# Benchmark and validate all 63 skills, 13 subagents, and 7 hooks (human or JSON)
 ./bin/everything-gemini test-all
 ./bin/everything-gemini benchmark --json
+
+# Synthesize 8-surface Google Research Harness² workspace (prompts, guardrails, memory, etc.)
+./bin/everything-gemini harness2
+./bin/everything-gemini harness2 ./custom-harness --dry-run
+./bin/everything-gemini export --format harness2 --output ./harness-export
 
 # Visualize multi-agent interaction and dependency graph (terminal, Mermaid, or JSON)
 ./bin/everything-gemini graph

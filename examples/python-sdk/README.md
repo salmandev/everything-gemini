@@ -40,6 +40,10 @@ pip install google-antigravity
   ```bash
   python3 autonomous_mlops_rag_pipeline.py
   ```
+- **Harness² Recursive Optimization & Google Family Handshake** (arXiv:2610.14224 Propose-Probe-Compose test-time optimization):
+  ```bash
+  python3 harness2_recursive_loop.py
+  ```
 
 ---
 

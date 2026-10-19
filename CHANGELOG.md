@@ -4,6 +4,24 @@ All notable changes to **Everything Gemini (`everything-gemini`)** will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-10-19
+
+### Added
+- **Google Research Harness² (`google-research/harness2`) Integration & Google Family Handshake**:
+  - **`harness2-recursive-optimization`** ([`skills/harness2-recursive-optimization/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/harness2-recursive-optimization/SKILL.md)): Implementation of Google Research's Harness² framework (*Harness²: Recursive Agent Harnessing for an Open World*, arXiv:2610.14224), test-time recursive agent optimization, Propose-Probe-Compose cycles, and the 8 file-based harness surfaces.
+  - **`google-flow-orchestrator`** ([`skills/google-flow-orchestrator/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/google-flow-orchestrator/SKILL.md)): Google Agentic Flow state machine orchestration, cyclic multi-agent graph execution, conditional state transitions, human approval pauses, and error boundary checkpoints.
+  - **`dataproc-spark-analytics`** ([`skills/dataproc-spark-analytics/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/dataproc-spark-analytics/SKILL.md)): Google Cloud Dataproc Serverless Spark, PySpark batch pipelines, Gemini embedding UDFs, BigLake vector indexing, and large-scale probe score verification.
+- **63 Progressive Disclosure Skills & 83-Component Ecosystem Landmark**:
+  - Expanded catalog to 63 progressive skills, 13 scoped subagents, and 7 lifecycle safety hooks totaling 83 enterprise components with >56,000 runbook tokens (>85% token economy savings per turn).
+- **CLI Harness² Workspace Synthesizer (`everything-gemini harness2 [outDir]`)**:
+  - Native command synthesizing the 8 canonical Harness² surfaces: `prompts/`, `guardrails/`, `memory/`, `guidance/`, `subagents/`, `skills/`, `scripts/`, `plugins/`, alongside `harness.yaml` and `harness.json` architecture manifests.
+  - Added `--format harness2` flag to `everything-gemini export` for direct translation into the Google Research Harness² directory structure.
+  - Added `--dry-run` and `--json` support for automated agent evaluation loops.
+- **Harness² Recursive Optimization Python SDK Showcase**:
+  - Created [`examples/python-sdk/harness2_recursive_loop.py`](file:///Users/salmanshaikh/development/github/everything-gemini/examples/python-sdk/harness2_recursive_loop.py) demonstrating the 3-stage Propose-Probe-Compose test-time optimization loop with Pareto frontier selection.
+- **33-Assertion Automated E2E Test Suite**:
+  - Expanded `tests/cli.test.js` validating the `harness2` command in dry-run, live, and JSON modes, export formatting, and new skill info overviews.
+
 ## [2.0.0] - 2026-10-19
 
 ### Added

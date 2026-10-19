@@ -49,6 +49,7 @@ function printHelp() {
   console.log(`  ${GREEN}status, check${RESET}               Show active skills, subagents, and hooks in workspace`);
   console.log(`  ${GREEN}diff${RESET}                        Compare installed workspace components against master catalog`);
   console.log(`  ${GREEN}export${RESET} [options]             Export installed configuration into a portable bundle`);
+  console.log(`  ${GREEN}harness2, harness${RESET} [outDir]    Synthesize 8-surface Google Research Harness² workspace`);
   console.log(`  ${GREEN}import${RESET} <file.json>          Import portable agent configuration bundle into workspace`);
   console.log(`  ${GREEN}bundle, pack${RESET} [options]        Package offline distribution bundle with manifest & installer`);
   console.log(`  ${GREEN}sync${RESET} [options]                Synchronize workspace with upstream catalog & verify integrity`);
@@ -62,7 +63,7 @@ function printHelp() {
   console.log(`  ${GREEN}search, find${RESET} <query>         Search skills, agents, hooks, and MCP blueprints`);
   console.log(`  ${GREEN}audit${RESET} [path]                 Comprehensive audit of frontmatter, contracts, hooks & links`);
   console.log(`  ${GREEN}test-skill${RESET} <name>           Validate a specific skill frontmatter & scripts`);
-  console.log(`  ${GREEN}test-all${RESET}                    Benchmark & validate all 60 skills, 13 subagents & 7 hooks`);
+  console.log(`  ${GREEN}test-all${RESET}                    Benchmark & validate all 63 skills, 13 subagents & 7 hooks`);
   console.log(`  ${GREEN}info${RESET} <name>                  Display overview & runbook for a skill, agent, or hook`);
   console.log(`  ${GREEN}graph${RESET} [--mermaid|--json]    Visualize multi-agent interaction & dependency topology graph`);
   console.log(`  ${GREEN}completion${RESET} [--install]        Generate or install shell autocompletion script (bash/zsh)`);
@@ -73,6 +74,7 @@ function printHelp() {
   console.log(`  ${CYAN}--profile <core|developer|full>${RESET}   Installation preset profile (default: developer)`);
   console.log(`  ${CYAN}--global${RESET}                          Target global config (~/.gemini/config/)`);
   console.log(`  ${CYAN}--workspace <path>${RESET}                Target custom workspace directory`);
+  console.log(`  ${CYAN}--format <json|harness2>${RESET}         Export format for agent configuration (default: json)`);
   console.log(`  ${CYAN}--dry-run${RESET}                         Preview actions without modifying files on disk`);
   console.log(`  ${CYAN}--json${RESET}                            Output machine-readable JSON (status, benchmark)`);
   console.log(`  ${CYAN}--force${RESET}                           Overwrite existing configuration files\n`);
@@ -1055,6 +1057,280 @@ echo "✨ Offline Everything Gemini bundle installed cleanly into $TARGET"
   console.log(`${GREEN}${BOLD}✨ Bundle packaging complete! Ready for air-gapped and CI/CD deployment.${RESET}\n`);
 }
 
+function runHarness2(targetOutput = null, isDryRun = false, asJson = false) {
+  const destDir = targetOutput ? path.resolve(targetOutput) : path.join(process.cwd(), 'harness2-workspace');
+  const startTime = Date.now();
+
+  const catalogSkillsDir = path.join(REPO_ROOT, 'skills');
+  const catalogAgentsDir = path.join(REPO_ROOT, 'agents');
+  const catalogHooksDir = path.join(REPO_ROOT, 'hooks');
+
+  // Collect skills
+  const skillsList = [];
+  if (fs.existsSync(catalogSkillsDir)) {
+    const coreSkills = fs.readdirSync(catalogSkillsDir, { withFileTypes: true })
+      .filter(d => d.isDirectory())
+      .map(d => ({ name: d.name, src: path.join(catalogSkillsDir, d.name) }));
+    skillsList.push(...coreSkills);
+  }
+  // Plugin skills
+  const pluginSkills = [
+    { name: 'antigravity-sdk-orchestrator', src: path.join(REPO_ROOT, 'plugins', 'python-ai', 'skills', 'antigravity-sdk-orchestrator') },
+    { name: 'responsive-design', src: path.join(REPO_ROOT, 'plugins', 'web-fullstack', 'skills', 'responsive-design') }
+  ];
+  skillsList.push(...pluginSkills);
+
+  // Collect subagents
+  const agentsList = [];
+  if (fs.existsSync(catalogAgentsDir)) {
+    agentsList.push(...fs.readdirSync(catalogAgentsDir).filter(f => f.endsWith('.md')).sort());
+  }
+
+  // Collect hooks
+  const hooksList = [];
+  if (fs.existsSync(catalogHooksDir)) {
+    hooksList.push(...fs.readdirSync(catalogHooksDir, { withFileTypes: true })
+      .filter(d => d.isDirectory())
+      .map(d => d.name)
+      .sort());
+  }
+
+  const manifest = {
+    harness_version: "2.0.0",
+    generator: "everything-gemini",
+    generator_version: VERSION,
+    agent_framework: "google-antigravity",
+    createdAt: new Date().toISOString(),
+    recursive_optimization: {
+      enabled: true,
+      loop: "propose-probe-compose",
+      max_depth: 3,
+      probe_timeout_seconds: 30
+    },
+    surfaces: {
+      prompts: "./prompts",
+      guardrails: "./guardrails",
+      memory: "./memory",
+      guidance: "./guidance",
+      subagents: "./subagents",
+      skills: "./skills",
+      scripts: "./scripts",
+      plugins: "./plugins"
+    },
+    metrics: {
+      total_skills: skillsList.length,
+      total_subagents: agentsList.length,
+      total_hooks: hooksList.length,
+      total_components: skillsList.length + agentsList.length + hooksList.length
+    }
+  };
+
+  if (isDryRun) {
+    if (asJson) {
+      console.log(JSON.stringify({
+        dryRun: true,
+        targetDirectory: destDir,
+        manifest
+      }, null, 2));
+      return;
+    }
+    printBanner();
+    console.log(`${YELLOW}${BOLD}🔍 DRY RUN MODE ACTIVATED - Previewing Google Research Harness² Surfaces${RESET}`);
+    console.log(`Target: ${CYAN}${destDir}${RESET}\n`);
+    console.log(`  ${CYAN}1. prompts/     ${RESET}: GEMINI.md, AGENTS.md, system_prompt.md`);
+    console.log(`  ${CYAN}2. guardrails/  ${RESET}: Safety shields, secret scrubber (${hooksList.length} hooks)`);
+    console.log(`  ${CYAN}3. memory/      ${RESET}: Knowledge Item schema, instincts.json, scratchpad_policy.md`);
+    console.log(`  ${CYAN}4. guidance/    ${RESET}: MCP tool guidance & routing directives`);
+    console.log(`  ${CYAN}5. subagents/   ${RESET}: ${agentsList.length} scoped subagent specifications`);
+    console.log(`  ${CYAN}6. skills/      ${RESET}: ${skillsList.length} progressive disclosure skills`);
+    console.log(`  ${CYAN}7. scripts/     ${RESET}: Validation and test-time probe execution gates`);
+    console.log(`  ${CYAN}8. plugins/     ${RESET}: Plugin registry and bundle metadata`);
+    console.log(`  ${CYAN}⚙ harness.yaml  ${RESET}: Canonical Google Research Harness² architecture manifest\n`);
+    console.log(`${GREEN}${BOLD}✨ Dry run preview complete! 0 files written to disk.${RESET}\n`);
+    return;
+  }
+
+  // Create surface directories
+  const surfaces = ['prompts', 'guardrails', 'memory', 'guidance', 'subagents', 'skills', 'scripts', 'plugins'];
+  for (const s of surfaces) {
+    fs.mkdirSync(path.join(destDir, s), { recursive: true });
+  }
+
+  // 1. Prompts
+  const promptsDir = path.join(destDir, 'prompts');
+  const commonRules = path.join(REPO_ROOT, 'rules', 'common');
+  if (fs.existsSync(path.join(commonRules, 'GEMINI.md'))) {
+    fs.copyFileSync(path.join(commonRules, 'GEMINI.md'), path.join(promptsDir, 'GEMINI.md'));
+  }
+  if (fs.existsSync(path.join(commonRules, 'AGENTS.md'))) {
+    fs.copyFileSync(path.join(commonRules, 'AGENTS.md'), path.join(promptsDir, 'AGENTS.md'));
+  }
+  const systemPromptContent = `# Google Antigravity & Harness² System Prompt
+# Framework: Everything Gemini v${VERSION}
+You are an autonomous AI software engineer and multi-agent harness operating within Google Antigravity.
+Adhere to progressive disclosure: do not preload skills until triggered.
+Support recursive optimization via the Propose-Probe-Compose test-time loop.
+`.trim();
+  fs.writeFileSync(path.join(promptsDir, 'system_prompt.md'), systemPromptContent, 'utf8');
+
+  // 2. Guardrails
+  const guardrailsDir = path.join(destDir, 'guardrails');
+  for (const h of hooksList) {
+    const hookScriptsDir = path.join(catalogHooksDir, h, 'scripts');
+    if (fs.existsSync(hookScriptsDir)) {
+      copyRecursiveSync(hookScriptsDir, path.join(guardrailsDir, h));
+    }
+  }
+  const guardrailsConfig = {
+    framework: "everything-gemini",
+    hooks: hooksList.map(h => ({
+      name: h,
+      config: path.join(catalogHooksDir, h, 'hooks.json')
+    }))
+  };
+  fs.writeFileSync(path.join(guardrailsDir, 'guardrails.json'), JSON.stringify(guardrailsConfig, null, 2), 'utf8');
+
+  // 3. Memory
+  const memoryDir = path.join(destDir, 'memory');
+  const memorySpec = {
+    framework: "Google Antigravity & Harness²",
+    knowledge_items: {
+      root: "<appDataDir>/knowledge",
+      schema: { metadata: "metadata.json", artifacts: "artifacts/" }
+    },
+    instincts: {
+      storage: "instincts.json",
+      continual_learning: true
+    },
+    scratchpad: {
+      root: "<appDataDir>/brain/<conversation-id>/scratch",
+      persistence: true
+    }
+  };
+  fs.writeFileSync(path.join(memoryDir, 'memory_spec.json'), JSON.stringify(memorySpec, null, 2), 'utf8');
+  fs.writeFileSync(path.join(memoryDir, 'instincts.json'), JSON.stringify({ version: "1.0", instincts: [] }, null, 2), 'utf8');
+  fs.writeFileSync(path.join(memoryDir, 'scratchpad_policy.md'), `# Scratchpad Policy
+Store temporary scripts and intermediate probe results in the scratchpad directory.
+Always clean up transient probe artifacts before final composition.
+`.trim(), 'utf8');
+
+  // 4. Guidance
+  const guidanceDir = path.join(destDir, 'guidance');
+  const mcpExample = path.join(REPO_ROOT, 'mcp', 'mcp_config.example.json');
+  if (fs.existsSync(mcpExample)) {
+    fs.copyFileSync(mcpExample, path.join(guidanceDir, 'mcp_guidance.json'));
+  }
+  const toolRules = `# Tool Guidance & Routing Directives
+- Prefer specialized scoped subagents for architecture, security audits, and database migrations.
+- Eagerly call native CLI and MCP tools with least-privilege scoping.
+- Intercept destructive tool execution using PreToolExecution guardrails.
+`.trim();
+  fs.writeFileSync(path.join(guidanceDir, 'tool_selection_rules.md'), toolRules, 'utf8');
+
+  // 5. Subagents
+  const subagentsDir = path.join(destDir, 'subagents');
+  for (const a of agentsList) {
+    fs.copyFileSync(path.join(catalogAgentsDir, a), path.join(subagentsDir, a));
+  }
+
+  // 6. Skills
+  const destSkillsDir = path.join(destDir, 'skills');
+  for (const s of skillsList) {
+    const targetSkillDir = path.join(destSkillsDir, s.name);
+    copyRecursiveSync(s.src, targetSkillDir);
+  }
+
+  // 7. Scripts
+  const scriptsDir = path.join(destDir, 'scripts');
+  const validateScript = path.join(REPO_ROOT, 'scripts', 'validate.sh');
+  const installScript = path.join(REPO_ROOT, 'scripts', 'install.sh');
+  if (fs.existsSync(validateScript)) {
+    fs.copyFileSync(validateScript, path.join(scriptsDir, 'validate.sh'));
+    fs.chmodSync(path.join(scriptsDir, 'validate.sh'), 0o755);
+  }
+  if (fs.existsSync(installScript)) {
+    fs.copyFileSync(installScript, path.join(scriptsDir, 'install.sh'));
+    fs.chmodSync(path.join(scriptsDir, 'install.sh'), 0o755);
+  }
+  const probeScript = `#!/usr/bin/env bash
+# Harness² Test-Time Probe Execution Gate
+set -e
+echo "🔬 Probing candidate agent mutation against Harness² verification gates..."
+if [ -f scripts/validate.sh ]; then
+  bash scripts/validate.sh
+fi
+echo "✔ Probe passed verification criteria."
+`.trim();
+  fs.writeFileSync(path.join(scriptsDir, 'harness_probe.sh'), probeScript, { mode: 0o755 });
+
+  // 8. Plugins
+  const pluginsDir = path.join(destDir, 'plugins');
+  const pluginRegistry = {
+    version: VERSION,
+    plugins: ['core', 'python-ai', 'security-shield', 'web-fullstack']
+  };
+  fs.writeFileSync(path.join(pluginsDir, 'plugins.json'), JSON.stringify(pluginRegistry, null, 2), 'utf8');
+
+  // Root manifests
+  const harnessYaml = `# Google Research Harness² Architecture Manifest
+# Synthesized by Everything Gemini v${VERSION}
+harness_version: "2.0.0"
+agent_framework: "google-antigravity"
+generator: "everything-gemini"
+created_at: "${manifest.createdAt}"
+
+recursive_optimization:
+  enabled: true
+  loop: "propose-probe-compose"
+  max_depth: 3
+  probe_timeout_seconds: 30
+
+surfaces:
+  prompts: "./prompts"
+  guardrails: "./guardrails"
+  memory: "./memory"
+  guidance: "./guidance"
+  subagents: "./subagents"
+  skills: "./skills"
+  scripts: "./scripts"
+  plugins: "./plugins"
+
+metrics:
+  total_skills: ${manifest.metrics.total_skills}
+  total_subagents: ${manifest.metrics.total_subagents}
+  total_hooks: ${manifest.metrics.total_hooks}
+  total_components: ${manifest.metrics.total_components}
+`;
+  fs.writeFileSync(path.join(destDir, 'harness.yaml'), harnessYaml, 'utf8');
+  fs.writeFileSync(path.join(destDir, 'harness.json'), JSON.stringify(manifest, null, 2), 'utf8');
+
+  const duration = ((Date.now() - startTime) / 1000).toFixed(2);
+
+  if (asJson) {
+    console.log(JSON.stringify({
+      targetDirectory: destDir,
+      manifest,
+      durationSeconds: parseFloat(duration)
+    }, null, 2));
+    return;
+  }
+
+  printBanner();
+  console.log(`${BOLD}🔬 Google Research Harness² Workspace Synthesized Successfully${RESET}`);
+  console.log(`Target: ${CYAN}${destDir}${RESET}\n`);
+  console.log(`  ${GREEN}✔${RESET} Surface 1 [${BOLD}prompts/${RESET}]    : GEMINI.md, AGENTS.md, system_prompt.md`);
+  console.log(`  ${GREEN}✔${RESET} Surface 2 [${BOLD}guardrails/${RESET}] : Safety shields, secret scrubber (${manifest.metrics.total_hooks} hooks)`);
+  console.log(`  ${GREEN}✔${RESET} Surface 3 [${BOLD}memory/${RESET}]     : Knowledge Item schema, instincts.json, scratchpad_policy.md`);
+  console.log(`  ${GREEN}✔${RESET} Surface 4 [${BOLD}guidance/${RESET}]   : Tool guidance & MCP routing`);
+  console.log(`  ${GREEN}✔${RESET} Surface 5 [${BOLD}subagents/${RESET}]  : ${manifest.metrics.total_subagents} scoped subagent manifests`);
+  console.log(`  ${GREEN}✔${RESET} Surface 6 [${BOLD}skills/${RESET}]     : ${manifest.metrics.total_skills} progressive disclosure skills`);
+  console.log(`  ${GREEN}✔${RESET} Surface 7 [${BOLD}scripts/${RESET}]    : Validation gates & executable harness_probe.sh`);
+  console.log(`  ${GREEN}✔${RESET} Surface 8 [${BOLD}plugins/${RESET}]    : Plugin registry metadata`);
+  console.log(`  ${GREEN}✔${RESET} Generated ${BOLD}harness.yaml${RESET} & ${BOLD}harness.json${RESET} manifests`);
+  console.log(`  ${GREEN}✔${RESET} Total synthesis duration: ${duration}s\n`);
+  console.log(`${GREEN}${BOLD}✨ Harness² workspace ready for recursive agent optimization and Propose-Probe-Compose loops!${RESET}\n`);
+}
+
 function runValidate() {
   printBanner();
   console.log(`${BOLD}🧪 Validating everything-gemini components...${RESET}\n`);
@@ -2006,8 +2282,8 @@ _everything_gemini() {
   COMPREPLY=()
   cur="\${COMP_WORDS[COMP_CWORD]}"
   prev="\${COMP_WORDS[COMP_CWORD-1]}"
-  commands="doctor list init install status check update sync scaffold new new-skill new-agent add remove test-skill test-all benchmark info show graph completion validate version help diff export import bundle pack search find audit"
-  skills="agent-evals ai-first-engineering apache-kafka-streams api-craftsman architecture-designer argo-workflows axum-web-service browser-qa-tester chromadb-vector-store cilium-ebpf-networking clickhouse-analytics cloudflare-r2-object-storage cloudflare-workers context-caching continuous-learning database-architect dbt-transformation debezium-cdc devops-pipeline distributed-rate-limiting docker-compose-orchestrator duckdb-local-olap fastapi-production fullstack-nextjs gemini-function-calling gemini-grounding gemini-multimodal git-craftsman github-ops graphql-architect grpc-connect-rpc keda-event-autoscaling kubernetes-operator langgraph-orchestrator litellm-proxy-gateway milvus-vector-clustering nats-jetstream opa-gatekeeper-policy open-telemetry-tracing performance-profiler playwright-visual-regression rag-architect redis-cache-patterns repo-onboarding root-cause-debugger security-audit stripe-integration subagent-handoff supabase-architect svelte-kit-architect tdd-workflow temporal-workflows triton-inference-server trpc-react-query turborepo-monorepo vault-secrets-management vllm-inference wasm-rust-optimizer antigravity-sdk-orchestrator responsive-design"
+  commands="doctor list init install status check update sync scaffold new new-skill new-agent add remove test-skill test-all benchmark info show graph completion validate version help diff export import bundle pack search find audit harness2 harness"
+  skills="agent-evals ai-first-engineering apache-kafka-streams api-craftsman architecture-designer argo-workflows axum-web-service browser-qa-tester chromadb-vector-store cilium-ebpf-networking clickhouse-analytics cloudflare-r2-object-storage cloudflare-workers context-caching continuous-learning database-architect dataproc-spark-analytics dbt-transformation debezium-cdc devops-pipeline distributed-rate-limiting docker-compose-orchestrator duckdb-local-olap fastapi-production fullstack-nextjs gemini-function-calling gemini-grounding gemini-multimodal git-craftsman github-ops google-flow-orchestrator graphql-architect grpc-connect-rpc harness2-recursive-optimization keda-event-autoscaling kubernetes-operator langgraph-orchestrator litellm-proxy-gateway milvus-vector-clustering nats-jetstream opa-gatekeeper-policy open-telemetry-tracing performance-profiler playwright-visual-regression rag-architect redis-cache-patterns repo-onboarding root-cause-debugger security-audit stripe-integration subagent-handoff supabase-architect svelte-kit-architect tdd-workflow temporal-workflows triton-inference-server trpc-react-query turborepo-monorepo vault-secrets-management vllm-inference wasm-rust-optimizer antigravity-sdk-orchestrator responsive-design"
   agents="architect browser-qa build-repair code-reviewer database-migrator documentation-writer incident-responder mlops-engineer performance-tuner planner platform-engineer release-engineer security-auditor"
   hooks="auto-lint-formatter ephemeral-context gemini-shield goal-verifier learned-instincts safety-shield secret-scrubber"
   plugins="core python-ai security-shield web-fullstack"
@@ -2205,7 +2481,7 @@ function showComponentInfo(query1, query2) {
 function runGraph(format = 'terminal') {
   const agents = [
     { name: 'architect', skills: ['architecture-designer', 'database-architect', 'rag-architect', 'graphql-architect', 'api-craftsman', 'grpc-connect-rpc'], mcps: ['sequential-thinking'] },
-    { name: 'mlops-engineer', skills: ['triton-inference-server', 'vllm-inference', 'chromadb-vector-store', 'milvus-vector-clustering', 'context-caching', 'keda-event-autoscaling', 'agent-evals'], mcps: ['memory', 'fetch', 'brave-search'] },
+    { name: 'mlops-engineer', skills: ['triton-inference-server', 'vllm-inference', 'chromadb-vector-store', 'milvus-vector-clustering', 'context-caching', 'keda-event-autoscaling', 'agent-evals', 'dataproc-spark-analytics'], mcps: ['memory', 'fetch', 'brave-search'] },
     { name: 'platform-engineer', skills: ['kubernetes-operator', 'keda-event-autoscaling', 'opa-gatekeeper-policy', 'vault-secrets-management', 'cilium-ebpf-networking', 'docker-compose-orchestrator', 'cloudflare-r2-object-storage'], mcps: ['docker'] },
     { name: 'security-auditor', skills: ['security-audit', 'opa-gatekeeper-policy', 'vault-secrets-management', 'distributed-rate-limiting'], mcps: ['sentry'] },
     { name: 'database-migrator', skills: ['clickhouse-analytics', 'debezium-cdc', 'supabase-architect', 'duckdb-local-olap', 'dbt-transformation', 'redis-cache-patterns'], mcps: ['postgres', 'sqlite', 'clickhouse', 'redis'] },
@@ -2215,7 +2491,7 @@ function runGraph(format = 'terminal') {
     { name: 'browser-qa', skills: ['browser-qa-tester', 'playwright-visual-regression'], mcps: ['puppeteer'] },
     { name: 'code-reviewer', skills: ['git-craftsman', 'tdd-workflow', 'repo-onboarding'], mcps: ['github'] },
     { name: 'build-repair', skills: ['root-cause-debugger', 'tdd-workflow'], mcps: [] },
-    { name: 'planner', skills: ['subagent-handoff', 'continuous-learning', 'ai-first-engineering'], mcps: ['sequential-thinking'] },
+    { name: 'planner', skills: ['subagent-handoff', 'continuous-learning', 'ai-first-engineering', 'harness2-recursive-optimization', 'google-flow-orchestrator'], mcps: ['sequential-thinking'] },
     { name: 'documentation-writer', skills: ['repo-onboarding', 'api-craftsman'], mcps: ['filesystem'] }
   ];
 
@@ -2284,7 +2560,7 @@ function runGraph(format = 'terminal') {
 
   printBanner();
   console.log(`${BOLD}🗺️ Everything Gemini Multi-Agent Topology & Dependency Graph${RESET}\n`);
-  console.log(`${GRAY}Showing 13 Scoped Subagents, 60 Progressive Skills, 14 MCP Blueprints, and 7 Lifecycle Hooks:${RESET}\n`);
+  console.log(`${GRAY}Showing 13 Scoped Subagents, 63 Progressive Skills, 14 MCP Blueprints, and 7 Lifecycle Hooks:${RESET}\n`);
 
   console.log(`${CYAN}${BOLD}🛡️ LIFECYCLE HOOKS (System Protection Boundary):${RESET}`);
   hooks.forEach(h => {
@@ -2306,7 +2582,7 @@ function runGraph(format = 'terminal') {
     });
     console.log(`  ${GREEN}│${RESET}`);
   });
-  console.log(`  ${GREEN}└──●${RESET} ${GRAY}All 60 Progressive Disclosure Skills indexed dynamically in catalog.${RESET}\n`);
+  console.log(`  ${GREEN}└──●${RESET} ${GRAY}All 63 Progressive Disclosure Skills indexed dynamically in catalog.${RESET}\n`);
   console.log(`${GRAY}Tip: Run ${CYAN}everything-gemini graph --mermaid${GRAY} for Mermaid diagram or ${CYAN}--json${GRAY} for raw graph data.${RESET}\n`);
 }
 
@@ -2435,16 +2711,36 @@ switch (command) {
     runDiff(isGlobal, customTarget);
     break;
   }
+  case 'harness2':
+  case 'harness': {
+    let outputDir = null;
+    let isDryRun = false;
+    let asJson = false;
+    for (let i = 1; i < args.length; i++) {
+      if (args[i] === '--dry-run') isDryRun = true;
+      else if (args[i] === '--json') asJson = true;
+      else if ((args[i] === '--output' || args[i] === '-o') && args[i + 1]) outputDir = args[++i];
+      else if (!args[i].startsWith('-') && !outputDir) outputDir = args[i];
+    }
+    runHarness2(outputDir, isDryRun, asJson);
+    break;
+  }
   case 'export': {
     let isGlobal = false;
     let customTarget = null;
     let outputPath = null;
+    let format = 'json';
     for (let i = 1; i < args.length; i++) {
       if (args[i] === '--global') isGlobal = true;
       else if (args[i] === '--workspace' && args[i + 1]) customTarget = args[++i];
       else if ((args[i] === '--output' || args[i] === '-o') && args[i + 1]) outputPath = args[++i];
+      else if (args[i] === '--format' && args[i + 1]) format = args[++i];
     }
-    runExport(isGlobal, customTarget, outputPath);
+    if (format === 'harness2' || format === 'harness') {
+      runHarness2(outputPath, false, false);
+    } else {
+      runExport(isGlobal, customTarget, outputPath);
+    }
     break;
   }
   case 'import': {

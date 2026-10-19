@@ -90,8 +90,8 @@ it('should benchmark ecosystem components and output valid JSON with --json', ()
   const res = runCli('benchmark --json');
   assert.strictEqual(res.status, 0);
   const data = JSON.parse(res.stdout);
-  assert.strictEqual(data.totalComponents, 80);
-  assert.strictEqual(data.progressiveSkillsCount, 60);
+  assert.strictEqual(data.totalComponents, 83);
+  assert.strictEqual(data.progressiveSkillsCount, 63);
   assert.strictEqual(data.scopedAgentsCount, 13);
   assert.strictEqual(data.lifecycleHooksCount, 7);
   assert(data.totalRunbookTokens > 15000, 'Expected >15,000 runbook tokens');
@@ -316,7 +316,7 @@ try {
     const dryRes = runCli(`bundle --output "${bundleTarget}" --dry-run`);
     assert.strictEqual(dryRes.status, 0);
     assert.match(dryRes.stdout, /DRY RUN MODE ACTIVATED/);
-    assert.match(dryRes.stdout, /Skills to bundle: 60/);
+    assert.match(dryRes.stdout, /Skills to bundle: 63/);
     assert.strictEqual(fs.existsSync(bundleTarget), false, 'Dry run should not create destination directory');
 
     // JSON Dry-run mode
@@ -324,7 +324,7 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.components.totalCount, 80);
+    assert.strictEqual(dryData.manifest.components.totalCount, 83);
 
     // Live mode
     const liveRes = runCli(`bundle --output "${bundleTarget}"`);
@@ -446,6 +446,61 @@ try {
     assert.match(resTriton.stdout, /Triton/);
   });
 
+  // Info for v2.1.0 Google Research Harness2 & Google Family skills
+  it('should display info for v2.1.0 Harness2, Google Flow, and Dataproc Spark skills', () => {
+    const resH2 = runCli('info harness2-recursive-optimization');
+    assert.strictEqual(resH2.status, 0);
+    assert.match(resH2.stdout, /Harness² Recursive Optimization/);
+
+    const resFlow = runCli('info google-flow-orchestrator');
+    assert.strictEqual(resFlow.status, 0);
+    assert.match(resFlow.stdout, /Google Flow Orchestrator/);
+
+    const resSpark = runCli('info dataproc-spark-analytics');
+    assert.strictEqual(resSpark.status, 0);
+    assert.match(resSpark.stdout, /Dataproc Spark Analytics/);
+  });
+
+  // Harness2 command and export format verification
+  it('should synthesize Google Research Harness2 workspace in dry-run, live, and JSON export modes', () => {
+    const h2Target = path.join(tempWorkspace, 'harness2-test-ws');
+
+    // Dry-run mode
+    const dryRes = runCli(`harness2 "${h2Target}" --dry-run`);
+    assert.strictEqual(dryRes.status, 0);
+    assert.match(dryRes.stdout, /DRY RUN MODE ACTIVATED/);
+    assert.match(dryRes.stdout, /Previewing Google Research Harness² Surfaces/);
+    assert.strictEqual(fs.existsSync(h2Target), false, 'Dry run should not create destination directory');
+
+    // JSON Dry-run mode
+    const jsonRes = runCli(`harness2 "${h2Target}" --dry-run --json`);
+    assert.strictEqual(jsonRes.status, 0);
+    const dryData = JSON.parse(jsonRes.stdout);
+    assert.strictEqual(dryData.dryRun, true);
+    assert.strictEqual(dryData.manifest.metrics.total_skills, 63);
+    assert.strictEqual(dryData.manifest.metrics.total_subagents, 13);
+    assert.strictEqual(dryData.manifest.metrics.total_hooks, 7);
+
+    // Live mode
+    const liveRes = runCli(`harness2 "${h2Target}"`);
+    assert.strictEqual(liveRes.status, 0);
+    assert.match(liveRes.stdout, /Google Research Harness² Workspace Synthesized Successfully/);
+    assert.strictEqual(fs.existsSync(path.join(h2Target, 'harness.yaml')), true);
+    assert.strictEqual(fs.existsSync(path.join(h2Target, 'harness.json')), true);
+    assert.strictEqual(fs.existsSync(path.join(h2Target, 'prompts', 'GEMINI.md')), true);
+    assert.strictEqual(fs.existsSync(path.join(h2Target, 'memory', 'memory_spec.json')), true);
+    assert.strictEqual(fs.existsSync(path.join(h2Target, 'guidance', 'tool_selection_rules.md')), true);
+    assert.strictEqual(fs.existsSync(path.join(h2Target, 'subagents', 'planner.md')), true);
+    assert.strictEqual(fs.existsSync(path.join(h2Target, 'skills', 'harness2-recursive-optimization', 'SKILL.md')), true);
+    assert.strictEqual(fs.existsSync(path.join(h2Target, 'scripts', 'harness_probe.sh')), true);
+
+    // Export with --format harness2
+    const h2ExportTarget = path.join(tempWorkspace, 'harness2-export-ws');
+    const exportRes = runCli(`export --format harness2 --output "${h2ExportTarget}"`);
+    assert.strictEqual(exportRes.status, 0);
+    assert.strictEqual(fs.existsSync(path.join(h2ExportTarget, 'harness.yaml')), true);
+  });
+
   // Graph command verification
   it('should render interaction graph in terminal, mermaid, and JSON formats', () => {
     const resTerm = runCli('graph');
@@ -467,12 +522,12 @@ try {
   });
 
   // Benchmark Components Verification
-  it('should report 80 components, 60 skills, and 13 subagents in benchmark --json', () => {
+  it('should report 83 components, 63 skills, and 13 subagents in benchmark --json', () => {
     const res = runCli('benchmark --json');
     assert.strictEqual(res.status, 0);
     const data = JSON.parse(res.stdout);
-    assert.strictEqual(data.totalComponents, 80, 'Total components should be 80');
-    assert.strictEqual(data.progressiveSkillsCount, 60, 'Progressive skills should be 60');
+    assert.strictEqual(data.totalComponents, 83, 'Total components should be 83');
+    assert.strictEqual(data.progressiveSkillsCount, 63, 'Progressive skills should be 63');
     assert.strictEqual(data.scopedAgentsCount, 13, 'Scoped agents should be 13');
     assert.strictEqual(data.lifecycleHooksCount, 7, 'Lifecycle hooks should be 7');
   });

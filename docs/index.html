@@ -538,13 +538,13 @@
     <div class="container nav-inner">
       <a href="#" class="brand">
         🪐 Everything Gemini
-        <span class="brand-badge">v2.0.0</span>
+        <span class="brand-badge">v2.1.0</span>
       </a>
       <div class="nav-links">
         <a href="https://github.com/salmandev/everything-gemini" class="nav-link">GitHub</a>
         <a href="https://www.npmjs.com/package/everything-gemini" class="nav-link">NPM</a>
         <a href="https://github.com/salmandev/everything-gemini/blob/main/CONTRIBUTING.md" class="nav-link" style="color: var(--accent-emerald); font-weight: 600;">✨ Contribute</a>
-        <a href="https://twitter.com/intent/tweet?text=%F0%9F%AA%90%20Everything%20Gemini%20v2.0.0%20is%20live%21%20The%20landmark%20multi-agent%20harness%20for%20Google%20Antigravity%20%26%20Gemini%203.8%20with%2060%20progressive%20skills%2C%2013%20subagents%2C%2014%20MCP%20blueprints%2C%20and%207%20safety%20gates.%0A%0A%F0%9F%91%89%20https%3A%2F%2Fsalmandev.github.io%2Feverything-gemini%2F" target="_blank" class="nav-link" style="color: var(--accent-cyan); font-weight: 600;">🐦 Share on X</a>
+        <a href="https://twitter.com/intent/tweet?text=%F0%9F%AA%90%20Everything%20Gemini%20v2.1.0%20is%20live%21%20The%20landmark%20multi-agent%20harness%20for%20Google%20Antigravity%20%26%20Gemini%203.8%20with%20Google%20Research%20Harness%C2%B2%20handshake%2C%2063%20progressive%20skills%2C%2013%20subagents%2C%20and%207%20safety%20gates.%0A%0A%F0%9F%91%89%20https%3A%2F%2Fsalmandev.github.io%2Feverything-gemini%2F" target="_blank" class="nav-link" style="color: var(--accent-cyan); font-weight: 600;">🐦 Share on X</a>
         <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fsalmandev.github.io%2Feverything-gemini%2F" target="_blank" class="nav-link" style="color: #00a0dc; font-weight: 600;">💼 Share on LinkedIn</a>
         <a href="https://github.com/salmandev/everything-gemini" target="_blank" class="btn-github">
           ⭐ Star on GitHub
@@ -567,6 +567,7 @@
       <!-- Profile Tabs -->
       <div class="profile-tabs">
         <button class="profile-tab active" onclick="setInstallProfile('developer', event)">Developer</button>
+        <button class="profile-tab" onclick="setInstallProfile('harness2', event)">Harness²</button>
         <button class="profile-tab" onclick="setInstallProfile('core', event)">Core</button>
         <button class="profile-tab" onclick="setInstallProfile('full', event)">Full Power</button>
         <button class="profile-tab" onclick="setInstallProfile('graph', event)">Topology Graph</button>
@@ -594,7 +595,7 @@
       <!-- Metrics -->
       <div class="metrics">
         <div class="metric-card">
-          <div class="metric-value">60</div>
+          <div class="metric-value">63</div>
           <div class="metric-label">Progressive Skills</div>
         </div>
         <div class="metric-card">
@@ -665,7 +666,8 @@
 
   <script>
     const items = [
-      // Frontier & Vision Skills (10)
+      // Frontier & Vision Skills (11)
+      { name: "harness2-recursive-optimization", type: "skill", cat: "frontier", desc: "Google Research Harness² framework (arXiv:2610.14224), 8-surface architecture, test-time Propose-Probe-Compose recursive loops, and continual harness learning." },
       { name: "gemini-multimodal", type: "skill", cat: "frontier", desc: "Native visual reasoning over UI mockups, converting wireframes to frontend code, diagram-to-Mermaid extraction, and visual regression QA." },
       { name: "context-caching", type: "skill", cat: "frontier", desc: "1M-2M token context optimization with deterministic static prefix caching, skeleton ingestion, and ~75% cost savings." },
       { name: "gemini-grounding", type: "skill", cat: "frontier", desc: "Live Google Search grounding to eliminate hallucinations, verify real-time APIs, and retrieve breaking documentation." },
@@ -677,7 +679,8 @@
       { name: "continuous-learning", type: "skill", cat: "frontier", desc: "Adaptive Learned Instincts and Knowledge Item memory capturing developer corrections across sessions." },
       { name: "repo-onboarding", type: "skill", cat: "frontier", desc: "Rapid codebase indexing, directory mapping, pattern extraction, and permanent Knowledge Item generation." },
 
-      // Scoped Subagents & Orchestration (13)
+      // Scoped Subagents & Orchestration (14)
+      { name: "google-flow-orchestrator", type: "skill", cat: "subagent", desc: "Google Agentic Flow state machine engine, cyclic multi-agent graph execution, conditional state transitions, and human-in-the-loop pauses." },
       { name: "subagent-handoff", type: "skill", cat: "subagent", desc: "Delegation protocol for multi-agent workflows with scoped context isolation and deterministic structured report synthesis." },
       { name: "architecture-designer", type: "skill", cat: "subagent", desc: "Comprehensive system design architectures, Mermaid diagrams, API contracts, and Architecture Decision Records (ADRs)." },
       { name: "langgraph-orchestrator", type: "skill", cat: "subagent", desc: "Stateful multi-agent systems, cyclic graphs, persistent checkpoints, human-in-the-loop pauses, and streaming orchestration." },
@@ -696,7 +699,8 @@
       { name: "agents/platform-engineer", type: "subagent", cat: "subagent", desc: "Cloud platform & IDP specialist authoring Terraform/OpenTofu, Kubernetes manifests, zero-trust network policies, and container right-sizing." },
       { name: "agents/mlops-engineer", type: "subagent", cat: "subagent", desc: "Specialist in AI model serving (Triton/vLLM), persistent vector stores (ChromaDB/Milvus), prefix context caching, and KEDA autoscaling." },
 
-      // Backend & Cloud Skills (33)
+      // Backend & Cloud Skills (34)
+      { name: "dataproc-spark-analytics", type: "skill", cat: "backend", desc: "Google Cloud Dataproc Serverless Spark, PySpark batch pipelines, Gemini embedding UDFs, BigLake vector indexing, and probe verification." },
       { name: "triton-inference-server", type: "skill", cat: "backend", desc: "NVIDIA Triton Inference Server multi-model serving, dynamic batching, GPU acceleration, TensorRT-LLM, and vLLM backends." },
       { name: "chromadb-vector-store", type: "skill", cat: "backend", desc: "Persistent vector database storage, Gemini embeddings, collection partitioning, metadata filtering, and semantic similarity search." },
       { name: "milvus-vector-clustering", type: "skill", cat: "backend", desc: "Enterprise Milvus vector clustering, HNSW/IVF-PQ indexing, hybrid dense-sparse search, and dynamic partition keys." },
@@ -875,6 +879,7 @@
       if (ev && ev.target) ev.target.classList.add('active');
       const cmdEl = document.getElementById('cmd-text');
       if (profile === 'developer') cmdEl.innerText = 'npx everything-gemini install --profile developer';
+      else if (profile === 'harness2') cmdEl.innerText = 'npx everything-gemini harness2';
       else if (profile === 'core') cmdEl.innerText = 'npx everything-gemini install --profile core';
       else if (profile === 'full') cmdEl.innerText = 'npx everything-gemini install --profile full';
       else if (profile === 'graph') cmdEl.innerText = 'npx everything-gemini graph';

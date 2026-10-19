@@ -149,7 +149,7 @@ if [ -f "$REPO_ROOT/tests/cli.test.js" ]; then
     echo "    ❌ ERROR: CLI test suite failed."
     ERRORS=$((ERRORS + 1))
   else
-    echo "    ✔ CLI test suite passed (31 assertions)"
+    echo "    ✔ CLI test suite passed (33 assertions)"
   fi
 fi
 
