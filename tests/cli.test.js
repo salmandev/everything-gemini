@@ -90,10 +90,10 @@ it('should benchmark ecosystem components and output valid JSON with --json', ()
   const res = runCli('benchmark --json');
   assert.strictEqual(res.status, 0);
   const data = JSON.parse(res.stdout);
-  assert.strictEqual(data.totalComponents, 84);
-  assert.strictEqual(data.progressiveSkillsCount, 63);
+  assert.strictEqual(data.totalComponents, 86);
+  assert.strictEqual(data.progressiveSkillsCount, 64);
   assert.strictEqual(data.scopedAgentsCount, 13);
-  assert.strictEqual(data.lifecycleHooksCount, 8);
+  assert.strictEqual(data.lifecycleHooksCount, 9);
   assert(data.totalRunbookTokens > 15000, 'Expected >15,000 runbook tokens');
   assert(data.estimatedTokensSavedPerTurn > 8000, 'Expected significant token savings');
 });
@@ -316,7 +316,7 @@ try {
     const dryRes = runCli(`bundle --output "${bundleTarget}" --dry-run`);
     assert.strictEqual(dryRes.status, 0);
     assert.match(dryRes.stdout, /DRY RUN MODE ACTIVATED/);
-    assert.match(dryRes.stdout, /Skills to bundle: 63/);
+    assert.match(dryRes.stdout, /Skills to bundle: 64/);
     assert.strictEqual(fs.existsSync(bundleTarget), false, 'Dry run should not create destination directory');
 
     // JSON Dry-run mode
@@ -324,7 +324,7 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.components.totalCount, 84);
+    assert.strictEqual(dryData.manifest.components.totalCount, 86);
 
     // Live mode
     const liveRes = runCli(`bundle --output "${bundleTarget}"`);
@@ -477,9 +477,9 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.metrics.total_skills, 63);
+    assert.strictEqual(dryData.manifest.metrics.total_skills, 64);
     assert.strictEqual(dryData.manifest.metrics.total_subagents, 13);
-    assert.strictEqual(dryData.manifest.metrics.total_hooks, 8);
+    assert.strictEqual(dryData.manifest.metrics.total_hooks, 9);
 
     // Live mode
     const liveRes = runCli(`harness2 "${h2Target}"`);
@@ -524,14 +524,14 @@ try {
   });
 
   // Benchmark Components Verification
-  it('should report 84 components, 63 skills, and 13 subagents in benchmark --json', () => {
+  it('should report 86 components, 64 skills, and 13 subagents in benchmark --json', () => {
     const res = runCli('benchmark --json');
     assert.strictEqual(res.status, 0);
     const data = JSON.parse(res.stdout);
-    assert.strictEqual(data.totalComponents, 84, 'Total components should be 84');
-    assert.strictEqual(data.progressiveSkillsCount, 63, 'Progressive skills should be 63');
+    assert.strictEqual(data.totalComponents, 86, 'Total components should be 86');
+    assert.strictEqual(data.progressiveSkillsCount, 64, 'Progressive skills should be 64');
     assert.strictEqual(data.scopedAgentsCount, 13, 'Scoped agents should be 13');
-    assert.strictEqual(data.lifecycleHooksCount, 8, 'Lifecycle hooks should be 8');
+    assert.strictEqual(data.lifecycleHooksCount, 9, 'Lifecycle hooks should be 9');
   });
 
   // Harness² Run & Ingest-Trace tests
@@ -581,6 +581,17 @@ try {
     assert.strictEqual(res.status, 0);
     assert.match(res.stdout, /budget-guard/);
     assert.match(res.stdout, /PreToolUse/);
+  });
+
+  it('should display info for context-warmer skill and human-gate hook', () => {
+    const resSkill = runCli('info context-warmer');
+    assert.strictEqual(resSkill.status, 0);
+    assert.match(resSkill.stdout, /context-warmer/);
+
+    const resHook = runCli('info human-gate');
+    assert.strictEqual(resHook.status, 0);
+    assert.match(resHook.stdout, /human-gate/);
+    assert.match(resHook.stdout, /PreToolUse/);
   });
 
 } finally {

@@ -595,7 +595,7 @@
       <!-- Metrics -->
       <div class="metrics">
         <div class="metric-card">
-          <div class="metric-value">63</div>
+          <div class="metric-value">64</div>
           <div class="metric-label">Progressive Skills</div>
         </div>
         <div class="metric-card">
@@ -603,7 +603,7 @@
           <div class="metric-label">Scoped Subagents</div>
         </div>
         <div class="metric-card">
-          <div class="metric-value">8</div>
+          <div class="metric-value">9</div>
           <div class="metric-label">Lifecycle Hooks</div>
         </div>
         <div class="metric-card">
@@ -670,6 +670,7 @@
       { name: "harness2-recursive-optimization", type: "skill", cat: "frontier", desc: "Google Research Harness² framework (arXiv:2610.14224), 8-surface architecture, test-time Propose-Probe-Compose recursive loops, and continual harness learning." },
       { name: "gemini-multimodal", type: "skill", cat: "frontier", desc: "Native visual reasoning over UI mockups, converting wireframes to frontend code, diagram-to-Mermaid extraction, and visual regression QA." },
       { name: "context-caching", type: "skill", cat: "frontier", desc: "1M-2M token context optimization with deterministic static prefix caching, skeleton ingestion, and ~75% cost savings." },
+      { name: "context-warmer", type: "skill", cat: "frontier", desc: "Automates workspace repository analysis, Knowledge Item clustering, and pre-warming prefix context caches before subagent execution." },
       { name: "gemini-grounding", type: "skill", cat: "frontier", desc: "Live Google Search grounding to eliminate hallucinations, verify real-time APIs, and retrieve breaking documentation." },
       { name: "rag-architect", type: "skill", cat: "frontier", desc: "Retrieval-augmented generation pipelines, semantic AST chunking, hybrid keyword-vector search, and Gemini re-ranking." },
       { name: "gemini-function-calling", type: "skill", cat: "frontier", desc: "Production function declarations, structured JSON output schemas (Pydantic), parallel tool execution, and error recovery." },
@@ -750,11 +751,12 @@
       { name: "git-craftsman", type: "skill", cat: "devops", desc: "Conventional atomic commits, interactive rebasing, clean branch lifecycles, and git hygiene." },
       { name: "performance-profiler", type: "skill", cat: "devops", desc: "Application latency profiling, CPU/memory leak diagnosis, and slow query optimization." },
 
-      // Lifecycle Safety Hooks (8)
+      // Lifecycle Safety Hooks (9)
       { name: "gemini-shield", type: "hook", cat: "hook", desc: "Deterministic PreToolUse lifecycle gate blocking catastrophic commands (rm -rf, DROP TABLE, git push --force)." },
       { name: "safety-shield", type: "hook", cat: "hook", desc: "PreToolUse shell execution firewall that inspects CLI commands against safety rules before execution." },
       { name: "secret-scrubber", type: "hook", cat: "hook", desc: "PreToolUse security gate intercepting file write operations to block hardcoded API keys and private secrets." },
       { name: "budget-guard", type: "hook", cat: "hook", desc: "PreToolUse financial spend guardrail enforcing hard USD limits (MAX_USD_BUDGET) to prevent runaway agent loops." },
+      { name: "human-gate", type: "hook", cat: "hook", desc: "Event-driven Human-in-the-Loop gating intercepting modifications to agent harness surfaces (.agents/, rules/) requiring interactive approval." },
       { name: "auto-lint-formatter", type: "hook", cat: "hook", desc: "PostToolUse automated formatting with project linters (prettier, black, ruff, gofmt) immediately after file edits." },
       { name: "goal-verifier", type: "hook", cat: "hook", desc: "Stop hook intercepting agent exit, validating whether test suites pass or objectives are fulfilled before stopping." },
       { name: "ephemeral-context", type: "hook", cat: "hook", desc: "PreInvocation hook dynamically injecting repo context, alerts, and instructions into model reasoning turns." },
