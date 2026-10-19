@@ -4,6 +4,29 @@ All notable changes to **Everything Gemini (`everything-gemini`)** will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2026-10-19
+
+### Added
+- **56 Progressive Disclosure Skills & 75-Component Ecosystem Milestone**:
+  - **`milvus-vector-clustering`**: Enterprise Milvus vector clustering, HNSW vs. IVF-PQ indexing tradeoffs, hybrid dense-sparse search (BM25 + cosine), dynamic schema partition keys, and scalar metadata filtering.
+  - **`cloudflare-r2-object-storage`**: Zero-egress fee object storage, S3-compatible APIs, pre-signed upload URL delegation, multipart parallel streaming uploads, and Workers edge CDN caching.
+  - **`vault-secrets-management`**: HashiCorp Vault enterprise secrets orchestration, AppRole machine-to-machine authentication, dynamic ephemeral database credentials with auto-revocation, and PKI mTLS certificate rotation.
+  - **`distributed-rate-limiting`**: High-throughput distributed rate limiting architectures, Redis Lua script atomic sliding window logs, token bucket replenishment, tiered tenant quotas, and RFC 6585 compliance.
+- **12th Scoped Subagent Fleet Expansion**:
+  - **`platform-engineer`** ([`agents/platform-engineer.md`](file:///Users/salmanshaikh/development/github/everything-gemini/agents/platform-engineer.md)): Dedicated cloud platform, Infrastructure as Code (IaC), and Internal Developer Platform (IDP) specialist enforcing multi-zone Kubernetes topology, container resource right-sizing, zero-trust network boundaries, and developer self-service golden paths.
+- **CLI Workspace Synchronization & Unified Component Scaffolding**:
+  - **`everything-gemini sync`**: Synchronize installed workspace skills, subagents, and hooks against the latest catalog, verifying checksum integrity and auto-updating stale components with `--dry-run` and `--json` support.
+  - **`everything-gemini scaffold <skill|agent|hook> <name>`** (aliases `new`, `create`): Scaffold 100% compliant progressive disclosure skills, scoped subagent specifications, and lifecycle hooks with YAML frontmatter, reference schemas, and executable helper scripts.
+  - Expanded shell completion scripts (`bin/everything-gemini completion`) for Bash and Zsh to autocomplete `sync`, `scaffold`, all 56 skills, and 12 subagents.
+- **Curated MCP Puppeteer Blueprint**:
+  - Added `@modelcontextprotocol/server-puppeteer` to [`mcp/mcp_config.example.json`](file:///Users/salmanshaikh/development/github/everything-gemini/mcp/mcp_config.example.json), [`templates/full-power/mcp_config.json`](file:///Users/salmanshaikh/development/github/everything-gemini/templates/full-power/mcp_config.json), and [`mcp/README.md`](file:///Users/salmanshaikh/development/github/everything-gemini/mcp/README.md) for headless browser automation and visual testing.
+- **Cloud Platform Provisioning Pipeline (`examples/python-sdk/platform_provisioning_pipeline.py`)**:
+  - 4-stage multi-agent infrastructure delivery loop orchestrating Architect -> Platform Engineer -> Security Auditor -> Release Engineer using the Python SDK.
+- **29-Assertion Automated E2E Test Suite & Benchmark**:
+  - Expanded `tests/cli.test.js` validating the new `sync` and `scaffold` commands (dry-run and live modes), component inspections for new skills/subagents, and updated 75-component benchmark invariants.
+- **Showcase Web App 75-Component Expansion**:
+  - Catalog and live metrics on [https://salmandev.github.io/everything-gemini/](https://salmandev.github.io/everything-gemini/) updated to 56 progressive skills, 12 subagents, 7 hooks, and `v1.9.0` release badge.
+
 ## [1.8.0] - 2026-10-19
 
 ### Added

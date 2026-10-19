@@ -163,10 +163,15 @@ Looking for inspiration on what to contribute? The community has requested the f
 | **`debezium-cdc`** | Data Eng | Change Data Capture (CDC) streaming from PostgreSQL / MySQL to Kafka / PubSub | ✅ *Shipped in v1.8.0* |
 | **`cilium-ebpf-networking`** | Cloud Native | eBPF-based service mesh, L7 security policies, and transparent encryption | ✅ *Shipped in v1.8.0* |
 | **`litellm-proxy-gateway`** | AI Gateway | Unified OpenAI-compatible multi-provider routing, fallback budgets, and load balancing | ✅ *Shipped in v1.8.0* |
+| **`milvus-vector-clustering`** | Vector DB | High-scale vector clustering, HNSW/IVF-PQ indexing, and hybrid dense-sparse search | ✅ *Shipped in v1.9.0* |
+| **`cloudflare-r2-object-storage`** | Storage | S3-compatible zero-egress object storage, pre-signed upload URLs, and Workers CDN | ✅ *Shipped in v1.9.0* |
+| **`vault-secrets-management`** | Security | HashiCorp Vault enterprise secrets orchestration, dynamic DB roles, and PKI mTLS | ✅ *Shipped in v1.9.0* |
+| **`distributed-rate-limiting`** | Traffic | Redis sliding-window logs, token buckets, tiered quotas, and RFC 6585 compliance | ✅ *Shipped in v1.9.0* |
 | **`keda-autoscaling`** | Cloud Native | Event-driven Kubernetes workload autoscaling (Kafka, SQS, RabbitMQ, Redis) | 🚀 *Open for PR* |
 | **`chromadb-vector-store`** | AI Eng | Embedded and client/server vector embeddings, HNSW indexing, and collection filters | 🚀 *Open for PR* |
 | **`opa-gatekeeper`** | Policy | Open Policy Agent (OPA) admission control, Rego constraints, and pod security standards | 🚀 *Open for PR* |
 | **`fal-ai-media`** | Generative AI | Ultra-fast multimodal diffusion, video generation, and real-time inference endpoints | 🚀 *Open for PR* |
+| **`iceberg-lakehouse`** | Data Lake | Apache Iceberg table format, ACID metadata, hidden partitioning, and time-travel | 🚀 *Open for PR* |
 
 ### How to Build a Wishlist Item:
 1. Open an issue using the [Skill Proposal template](.github/ISSUE_TEMPLATE/skill_proposal.md).

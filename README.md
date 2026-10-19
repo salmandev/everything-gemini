@@ -79,8 +79,8 @@ cd everything-gemini
 | Profile | Target Audience | What Gets Installed |
 | :--- | :--- | :--- |
 | **`core`** | Minimalists & Speed | Safety-shield hook, TDD skill, repo-onboarding skill, baseline `GEMINI.md`. |
-| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 11 Scoped Subagents (`agents/`), Frontier Skills (Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
-| **`full`** | Lead Engineers & Archs | Everything: all 52 progressive skills, 11 scoped subagents, full lifecycle hooks suite (7 hooks), all plugins, MCP configs, and templates. |
+| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 12 Scoped Subagents (`agents/`), Frontier Skills (Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
+| **`full`** | Lead Engineers & Archs | Everything: all 56 progressive skills, 12 scoped subagents, full lifecycle hooks suite (7 hooks), all plugins, MCP configs, and templates. |
 
 ### 5. In CI / GitHub Actions Workflows
 
@@ -188,10 +188,15 @@ Everything Gemini provides specialized subagent specifications designed for Anti
 | **[`documentation-writer`](agents/documentation-writer.md)** | Technical Documentation Specialist | API specifications, ADR governance, changelogs, and clickable file:// link fidelity. |
 | **[`release-engineer`](agents/release-engineer.md)** | Release Automation Gatekeeper | Semantic Versioning, build artifact checksums, git release tagging, and canary rollouts. |
 | **[`incident-responder`](agents/incident-responder.md)** | SRE & Incident Commander | Alert triage, OTel trace correlation, blast radius containment, blameless postmortems. |
+| **[`platform-engineer`](agents/platform-engineer.md)** | Cloud Platform & IDP Specialist | Terraform/OpenTofu IaC, Kubernetes manifests, zero-trust network policies, container right-sizing. |
 
 ### 1. Skills (`skills/`)
 Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`name` and `description`) is placed into the system prompt. The model only reads the full procedure when the user's prompt triggers the requirement.
 
+- **[`milvus-vector-clustering`](skills/milvus-vector-clustering/SKILL.md)**: Enterprise Milvus vector clustering, HNSW/IVF-PQ indexing, hybrid dense-sparse search, and partition keys.
+- **[`cloudflare-r2-object-storage`](skills/cloudflare-r2-object-storage/SKILL.md)**: Zero-egress fee object storage, S3-compatible APIs, pre-signed upload URLs, and Workers edge CDN.
+- **[`vault-secrets-management`](skills/vault-secrets-management/SKILL.md)**: HashiCorp Vault enterprise secrets orchestration, AppRole authentication, dynamic ephemeral DB credentials, and PKI mTLS.
+- **[`distributed-rate-limiting`](skills/distributed-rate-limiting/SKILL.md)**: High-throughput distributed rate limiting using Redis sliding window logs, token buckets, and RFC 6585 compliance.
 - **[`vllm-inference`](skills/vllm-inference/SKILL.md)**: High-throughput LLM serving, PagedAttention KV cache, continuous batching, and tensor parallelism.
 - **[`debezium-cdc`](skills/debezium-cdc/SKILL.md)**: Change Data Capture (CDC) streaming, PostgreSQL logical decoding, Kafka Connect, and outbox patterns.
 - **[`cilium-ebpf-networking`](skills/cilium-ebpf-networking/SKILL.md)**: Cloud-native eBPF networking, transparent mTLS, L7 CiliumNetworkPolicies, and Hubble observability.
@@ -402,20 +407,24 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 ./bin/everything-gemini audit
 ./bin/everything-gemini audit --json
 
-# Benchmark and validate all 52 skills, 11 subagents, and 7 hooks (human or JSON)
+# Benchmark and validate all 56 skills, 12 subagents, and 7 hooks (human or JSON)
 ./bin/everything-gemini test-all
 ./bin/everything-gemini benchmark --json
 
 # View detailed playbook or specification for any skill, subagent, or hook
 ./bin/everything-gemini info agent-evals
-./bin/everything-gemini info planner
+./bin/everything-gemini info platform-engineer
 ./bin/everything-gemini info gemini-shield
 
-# Scaffold a new progressive-disclosure skill
-./bin/everything-gemini new-skill my-custom-skill
+# Synchronize workspace with latest catalog & verify integrity
+./bin/everything-gemini sync
+./bin/everything-gemini sync --dry-run
+./bin/everything-gemini sync --json
 
-# Scaffold a new scoped subagent
-./bin/everything-gemini new-agent my-worker-agent
+# Scaffold a new progressive-disclosure skill, scoped subagent, or lifecycle hook
+./bin/everything-gemini scaffold skill my-custom-skill
+./bin/everything-gemini scaffold agent my-worker-agent
+./bin/everything-gemini scaffold hook my-safety-hook
 
 # Generate shell autocompletion script (bash/zsh)
 ./bin/everything-gemini completion >> ~/.zshrc

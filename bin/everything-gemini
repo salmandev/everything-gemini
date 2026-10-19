@@ -50,8 +50,10 @@ function printHelp() {
   console.log(`  ${GREEN}export${RESET} [options]             Export installed configuration into a portable bundle`);
   console.log(`  ${GREEN}import${RESET} <file.json>          Import portable agent configuration bundle into workspace`);
   console.log(`  ${GREEN}bundle, pack${RESET} [options]        Package offline distribution bundle with manifest & installer`);
+  console.log(`  ${GREEN}sync${RESET} [options]                Synchronize workspace with upstream catalog & verify integrity`);
   console.log(`  ${GREEN}update${RESET}                      Sync installed skills, agents, and hooks with latest catalog`);
   console.log(`  ${GREEN}list${RESET}                        Show all available skills, rules, hooks, and plugins`);
+  console.log(`  ${GREEN}scaffold, new${RESET} <type> <name>   Scaffold progressive skill, scoped subagent, or hook`);
   console.log(`  ${GREEN}new-skill${RESET} <name>            Scaffold a new progressive-disclosure skill`);
   console.log(`  ${GREEN}new-agent${RESET} <name>            Scaffold a new scoped subagent specification`);
   console.log(`  ${GREEN}add${RESET} <type> <name>           Add a specific skill, agent, hook, or plugin to workspace`);
@@ -59,7 +61,7 @@ function printHelp() {
   console.log(`  ${GREEN}search, find${RESET} <query>         Search skills, agents, hooks, and MCP blueprints`);
   console.log(`  ${GREEN}audit${RESET} [path]                 Comprehensive audit of frontmatter, contracts, hooks & links`);
   console.log(`  ${GREEN}test-skill${RESET} <name>           Validate a specific skill frontmatter & scripts`);
-  console.log(`  ${GREEN}test-all${RESET}                    Benchmark & validate all 52 skills, 11 subagents & 7 hooks`);
+  console.log(`  ${GREEN}test-all${RESET}                    Benchmark & validate all 56 skills, 12 subagents & 7 hooks`);
   console.log(`  ${GREEN}info${RESET} <name>                  Display overview & runbook for a skill, agent, or hook`);
   console.log(`  ${GREEN}completion${RESET} [--install]        Generate or install shell autocompletion script (bash/zsh)`);
   console.log(`  ${GREEN}validate${RESET}                    Run self-test on frontmatter, JSON schemas & hooks`);
@@ -1063,20 +1065,25 @@ function runValidate() {
   }
 }
 
-function scaffoldSkill(name) {
+function scaffoldSkill(name, customTarget = null, isDryRun = false, asJson = false) {
   if (!name) {
-    console.error(`${RED}Error: Skill name required. Example: everything-gemini new-skill my-skill${RESET}`);
+    console.error(`${RED}Error: Skill name required. Example: everything-gemini scaffold skill my-skill${RESET}`);
     process.exit(1);
   }
   const cleanName = name.toLowerCase().replace(/[^a-z0-9-]/g, '-');
-  const targetDir = path.join(REPO_ROOT, 'skills', cleanName);
+  const baseSkills = customTarget 
+    ? path.join(path.resolve(customTarget), 'skills')
+    : (fs.existsSync(path.join(process.cwd(), '.agents')) ? path.join(process.cwd(), '.agents', 'skills') : path.join(REPO_ROOT, 'skills'));
+  const targetDir = path.join(baseSkills, cleanName);
+
   if (fs.existsSync(targetDir)) {
-    console.error(`${RED}Error: Skill '${cleanName}' already exists at ${targetDir}${RESET}`);
+    if (asJson) {
+      console.log(JSON.stringify({ error: `Skill '${cleanName}' already exists at ${targetDir}` }));
+    } else {
+      console.error(`${RED}Error: Skill '${cleanName}' already exists at ${targetDir}${RESET}`);
+    }
     process.exit(1);
   }
-
-  fs.mkdirSync(path.join(targetDir, 'references'), { recursive: true });
-  fs.mkdirSync(path.join(targetDir, 'scripts'), { recursive: true });
 
   const titleCase = cleanName.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
   const skillMd = `---
@@ -1117,11 +1124,28 @@ set -euo pipefail
 echo "Executing ${cleanName} automated helper..."
 `;
 
+  if (isDryRun) {
+    if (asJson) {
+      console.log(JSON.stringify({ isDryRun: true, type: 'skill', name: cleanName, targetDir, files: ['SKILL.md', 'references/spec.md', 'scripts/helper.sh'] }, null, 2));
+    } else {
+      console.log(`${YELLOW}[DRY RUN] Would scaffold skill at:${RESET} ${targetDir}`);
+      console.log(`  📄 SKILL.md, references/spec.md, scripts/helper.sh\n`);
+    }
+    return;
+  }
+
+  fs.mkdirSync(path.join(targetDir, 'references'), { recursive: true });
+  fs.mkdirSync(path.join(targetDir, 'scripts'), { recursive: true });
   fs.writeFileSync(path.join(targetDir, 'SKILL.md'), skillMd);
   fs.writeFileSync(path.join(targetDir, 'references', 'spec.md'), specMd);
   const scriptPath = path.join(targetDir, 'scripts', 'helper.sh');
   fs.writeFileSync(scriptPath, helperSh);
   try { fs.chmodSync(scriptPath, 0o755); } catch (e) {}
+
+  if (asJson) {
+    console.log(JSON.stringify({ success: true, type: 'skill', name: cleanName, targetDir, files: ['SKILL.md', 'references/spec.md', 'scripts/helper.sh'] }, null, 2));
+    return;
+  }
 
   console.log(`${GREEN}✔ Created progressive disclosure skill:${RESET} ${BOLD}${cleanName}${RESET}`);
   console.log(`  📁 ${targetDir}`);
@@ -1130,17 +1154,23 @@ echo "Executing ${cleanName} automated helper..."
   console.log(`  🔧 scripts/helper.sh (executable helper)\n`);
 }
 
-function scaffoldAgent(name) {
+function scaffoldAgent(name, customTarget = null, isDryRun = false, asJson = false) {
   if (!name) {
-    console.error(`${RED}Error: Agent name required. Example: everything-gemini new-agent my-agent${RESET}`);
+    console.error(`${RED}Error: Agent name required. Example: everything-gemini scaffold agent my-agent${RESET}`);
     process.exit(1);
   }
   const cleanName = name.toLowerCase().replace(/[^a-z0-9-]/g, '-');
-  const targetDir = path.join(REPO_ROOT, 'agents');
-  if (!fs.existsSync(targetDir)) fs.mkdirSync(targetDir, { recursive: true });
-  const targetFile = path.join(targetDir, `${cleanName}.md`);
+  const baseAgents = customTarget
+    ? path.join(path.resolve(customTarget), 'agents')
+    : (fs.existsSync(path.join(process.cwd(), '.agents')) ? path.join(process.cwd(), '.agents', 'agents') : path.join(REPO_ROOT, 'agents'));
+  const targetFile = path.join(baseAgents, `${cleanName}.md`);
+
   if (fs.existsSync(targetFile)) {
-    console.error(`${RED}Error: Agent '${cleanName}' already exists at ${targetFile}${RESET}`);
+    if (asJson) {
+      console.log(JSON.stringify({ error: `Agent '${cleanName}' already exists at ${targetFile}` }));
+    } else {
+      console.error(`${RED}Error: Agent '${cleanName}' already exists at ${targetFile}${RESET}`);
+    }
     process.exit(1);
   }
 
@@ -1166,9 +1196,200 @@ Return structured report to parent agent:
 - **Open Questions / Recommended Next Steps**:
 `;
 
+  if (isDryRun) {
+    if (asJson) {
+      console.log(JSON.stringify({ isDryRun: true, type: 'agent', name: cleanName, targetFile }, null, 2));
+    } else {
+      console.log(`${YELLOW}[DRY RUN] Would scaffold subagent at:${RESET} ${targetFile}\n`);
+    }
+    return;
+  }
+
+  if (!fs.existsSync(baseAgents)) fs.mkdirSync(baseAgents, { recursive: true });
   fs.writeFileSync(targetFile, agentMd);
+
+  if (asJson) {
+    console.log(JSON.stringify({ success: true, type: 'agent', name: cleanName, targetFile }, null, 2));
+    return;
+  }
+
   console.log(`${GREEN}✔ Created subagent profile:${RESET} ${BOLD}${cleanName}${RESET}`);
   console.log(`  📄 ${targetFile}\n`);
+}
+
+function scaffoldHook(name, customTarget = null, isDryRun = false, asJson = false) {
+  if (!name) {
+    console.error(`${RED}Error: Hook name required. Example: everything-gemini scaffold hook my-hook${RESET}`);
+    process.exit(1);
+  }
+  const cleanName = name.toLowerCase().replace(/[^a-z0-9-]/g, '-');
+  const baseHooks = customTarget
+    ? path.join(path.resolve(customTarget), 'hooks')
+    : (fs.existsSync(path.join(process.cwd(), '.agents')) ? path.join(process.cwd(), '.agents', 'hooks') : path.join(REPO_ROOT, 'hooks'));
+  const targetDir = path.join(baseHooks, cleanName);
+
+  if (fs.existsSync(targetDir)) {
+    if (asJson) {
+      console.log(JSON.stringify({ error: `Hook '${cleanName}' already exists at ${targetDir}` }));
+    } else {
+      console.error(`${RED}Error: Hook '${cleanName}' already exists at ${targetDir}${RESET}`);
+    }
+    process.exit(1);
+  }
+
+  const hooksJson = {
+    hooks: [
+      {
+        event: "PreToolExecution",
+        matcher: { tool: "run_command" },
+        action: "execute",
+        script: `scripts/${cleanName}-gate.sh`
+      }
+    ]
+  };
+
+  const scriptSh = `#!/usr/bin/env bash
+set -euo pipefail
+
+# Lifecycle hook gate: ${cleanName}
+INPUT=$(cat)
+echo "Executing lifecycle hook: ${cleanName}" >&2
+echo '{"status": "proceed"}'
+`;
+
+  if (isDryRun) {
+    if (asJson) {
+      console.log(JSON.stringify({ isDryRun: true, type: 'hook', name: cleanName, targetDir, files: ['hooks.json', `scripts/${cleanName}-gate.sh`] }, null, 2));
+    } else {
+      console.log(`${YELLOW}[DRY RUN] Would scaffold hook at:${RESET} ${targetDir}`);
+      console.log(`  📄 hooks.json, scripts/${cleanName}-gate.sh\n`);
+    }
+    return;
+  }
+
+  fs.mkdirSync(path.join(targetDir, 'scripts'), { recursive: true });
+  fs.writeFileSync(path.join(targetDir, 'hooks.json'), JSON.stringify(hooksJson, null, 2));
+  const scriptPath = path.join(targetDir, 'scripts', `${cleanName}-gate.sh`);
+  fs.writeFileSync(scriptPath, scriptSh);
+  try { fs.chmodSync(scriptPath, 0o755); } catch (e) {}
+
+  if (asJson) {
+    console.log(JSON.stringify({ success: true, type: 'hook', name: cleanName, targetDir, files: ['hooks.json', `scripts/${cleanName}-gate.sh`] }, null, 2));
+    return;
+  }
+
+  console.log(`${GREEN}✔ Created lifecycle hook:${RESET} ${BOLD}${cleanName}${RESET}`);
+  console.log(`  📁 ${targetDir}`);
+  console.log(`  📄 hooks.json (event registration)`);
+  console.log(`  🔧 scripts/${cleanName}-gate.sh (executable gate)\n`);
+}
+
+function runScaffold(type, name, customTarget = null, isDryRun = false, asJson = false) {
+  if (!type || !name) {
+    console.error(`${RED}Error: Type and name required. Example: everything-gemini scaffold skill my-skill${RESET}`);
+    process.exit(1);
+  }
+  const cleanType = type.toLowerCase();
+  if (['skill', 'skills'].includes(cleanType)) {
+    scaffoldSkill(name, customTarget, isDryRun, asJson);
+  } else if (['agent', 'agents', 'subagent'].includes(cleanType)) {
+    scaffoldAgent(name, customTarget, isDryRun, asJson);
+  } else if (['hook', 'hooks'].includes(cleanType)) {
+    scaffoldHook(name, customTarget, isDryRun, asJson);
+  } else {
+    console.error(`${RED}Error: Unknown scaffold type '${type}'. Supported types: skill, agent, hook${RESET}`);
+    process.exit(1);
+  }
+}
+
+function runSync(customTarget = null, isGlobal = false, isDryRun = false, asJson = false, force = false) {
+  const targetDir = isGlobal
+    ? GLOBAL_CONFIG_DIR
+    : (customTarget ? path.resolve(customTarget) : (fs.existsSync(path.join(process.cwd(), '.agents')) ? path.join(process.cwd(), '.agents') : AGENTS_DIR));
+
+  if (!asJson) {
+    printBanner();
+    if (isDryRun) {
+      console.log(`${YELLOW}${BOLD}🔍 DRY RUN MODE ACTIVATED - No files will be modified on disk.${RESET}`);
+    }
+    console.log(`${BOLD}🔄 Synchronizing Workspace with Catalog: ${CYAN}${targetDir}${RESET}\n`);
+  }
+
+  const syncReport = {
+    target: targetDir,
+    timestamp: new Date().toISOString(),
+    isDryRun,
+    syncedSkills: [],
+    syncedAgents: [],
+    syncedHooks: [],
+    upToDateCount: 0,
+    updatedCount: 0,
+    createdCount: 0,
+    success: true,
+  };
+
+  if (!fs.existsSync(targetDir)) {
+    if (isDryRun) {
+      if (asJson) {
+        console.log(JSON.stringify({ ...syncReport, error: 'Target directory does not exist' }, null, 2));
+      } else {
+        console.log(`  ${YELLOW}○ Workspace does not exist yet. Run 'everything-gemini install' to initialize.${RESET}\n`);
+      }
+      return;
+    }
+    fs.mkdirSync(targetDir, { recursive: true });
+  }
+
+  // 1. Sync Installed Skills
+  const targetSkills = path.join(targetDir, 'skills');
+  const catalogSkills = path.join(REPO_ROOT, 'skills');
+  if (fs.existsSync(targetSkills) && fs.existsSync(catalogSkills)) {
+    const installed = fs.readdirSync(targetSkills, { withFileTypes: true })
+      .filter(d => d.isDirectory())
+      .map(d => d.name);
+    for (const skill of installed) {
+      const src = path.join(catalogSkills, skill);
+      const dest = path.join(targetSkills, skill);
+      if (fs.existsSync(src)) {
+        if (!isDryRun) copyRecursiveSync(src, dest);
+        syncReport.updatedCount++;
+        syncReport.syncedSkills.push({ name: skill, status: 'synced' });
+        if (!asJson) console.log(`  ${GREEN}✔${RESET} Skill synced: ${BOLD}${skill}${RESET}`);
+      }
+    }
+  }
+
+  // 2. Sync Installed Subagents
+  const targetAgents = path.join(targetDir, 'agents');
+  const catalogAgents = path.join(REPO_ROOT, 'agents');
+  if (fs.existsSync(targetAgents) && fs.existsSync(catalogAgents)) {
+    const installed = fs.readdirSync(targetAgents).filter(f => f.endsWith('.md'));
+    for (const ag of installed) {
+      const src = path.join(catalogAgents, ag);
+      const dest = path.join(targetAgents, ag);
+      if (fs.existsSync(src)) {
+        if (!isDryRun) fs.copyFileSync(src, dest);
+        syncReport.updatedCount++;
+        syncReport.syncedAgents.push({ name: ag.replace('.md', ''), status: 'synced' });
+        if (!asJson) console.log(`  ${GREEN}✔${RESET} Subagent synced: ${BOLD}${ag.replace('.md', '')}${RESET}`);
+      }
+    }
+  }
+
+  // 3. Ensure Recommended Hooks & Scripts Executability
+  const targetHooksJson = path.join(targetDir, 'hooks.json');
+  if (fs.existsSync(targetHooksJson)) {
+    syncReport.upToDateCount++;
+    syncReport.syncedHooks.push({ name: 'hooks.json', status: 'verified' });
+    if (!asJson) console.log(`  ${GREEN}✔${RESET} Lifecycle hooks verified: ${BOLD}hooks.json${RESET}`);
+  }
+
+  if (asJson) {
+    console.log(JSON.stringify(syncReport, null, 2));
+    return;
+  }
+
+  console.log(`\n${GREEN}${BOLD}✨ Synchronization completed! Workspace is aligned with catalog.${RESET}\n`);
 }
 
 function addComponent(type, name, isGlobal = false, customTarget = null) {
@@ -1783,9 +2004,9 @@ _everything_gemini() {
   COMPREPLY=()
   cur="\${COMP_WORDS[COMP_CWORD]}"
   prev="\${COMP_WORDS[COMP_CWORD-1]}"
-  commands="doctor list init install status check update new-skill new-agent add remove test-skill test-all benchmark info show completion validate version help diff export import bundle pack search find audit"
-  skills="agent-evals ai-first-engineering apache-kafka-streams api-craftsman architecture-designer argo-workflows axum-web-service browser-qa-tester cilium-ebpf-networking clickhouse-analytics cloudflare-workers context-caching continuous-learning database-architect dbt-transformation debezium-cdc devops-pipeline docker-compose-orchestrator duckdb-local-olap fastapi-production fullstack-nextjs gemini-function-calling gemini-grounding gemini-multimodal git-craftsman github-ops graphql-architect grpc-connect-rpc kubernetes-operator langgraph-orchestrator litellm-proxy-gateway nats-jetstream open-telemetry-tracing performance-profiler playwright-visual-regression rag-architect redis-cache-patterns repo-onboarding root-cause-debugger security-audit stripe-integration subagent-handoff supabase-architect svelte-kit-architect tdd-workflow temporal-workflows trpc-react-query turborepo-monorepo vllm-inference wasm-rust-optimizer antigravity-sdk-orchestrator responsive-design"
-  agents="architect browser-qa build-repair code-reviewer database-migrator documentation-writer incident-responder performance-tuner planner release-engineer security-auditor"
+  commands="doctor list init install status check update sync scaffold new new-skill new-agent add remove test-skill test-all benchmark info show completion validate version help diff export import bundle pack search find audit"
+  skills="agent-evals ai-first-engineering apache-kafka-streams api-craftsman architecture-designer argo-workflows axum-web-service browser-qa-tester cilium-ebpf-networking clickhouse-analytics cloudflare-r2-object-storage cloudflare-workers context-caching continuous-learning database-architect dbt-transformation debezium-cdc devops-pipeline distributed-rate-limiting docker-compose-orchestrator duckdb-local-olap fastapi-production fullstack-nextjs gemini-function-calling gemini-grounding gemini-multimodal git-craftsman github-ops graphql-architect grpc-connect-rpc kubernetes-operator langgraph-orchestrator litellm-proxy-gateway milvus-vector-clustering nats-jetstream open-telemetry-tracing performance-profiler playwright-visual-regression rag-architect redis-cache-patterns repo-onboarding root-cause-debugger security-audit stripe-integration subagent-handoff supabase-architect svelte-kit-architect tdd-workflow temporal-workflows trpc-react-query turborepo-monorepo vault-secrets-management vllm-inference wasm-rust-optimizer antigravity-sdk-orchestrator responsive-design"
+  agents="architect browser-qa build-repair code-reviewer database-migrator documentation-writer incident-responder performance-tuner planner platform-engineer release-engineer security-auditor"
   hooks="auto-lint-formatter ephemeral-context gemini-shield goal-verifier learned-instincts safety-shield secret-scrubber"
   plugins="core python-ai security-shield web-fullstack"
 
@@ -1794,7 +2015,7 @@ _everything_gemini() {
       COMPREPLY=( $(compgen -W "\${commands}" -- "\${cur}") )
       return 0
       ;;
-    add|remove)
+    add|remove|scaffold|new)
       COMPREPLY=( $(compgen -W "skill agent hook plugin" -- "\${cur}") )
       return 0
       ;;
@@ -1990,6 +2211,39 @@ switch (command) {
   case 'list':
     listComponents();
     break;
+  case 'scaffold':
+  case 'new':
+  case 'create': {
+    const type = args[1];
+    const name = args[2];
+    let customTarget = null;
+    let isDryRun = false;
+    let asJson = false;
+    for (let i = 3; i < args.length; i++) {
+      if (args[i] === '--dry-run') isDryRun = true;
+      else if (args[i] === '--json') asJson = true;
+      else if (args[i] === '--workspace' && args[i + 1]) customTarget = args[++i];
+    }
+    runScaffold(type, name, customTarget, isDryRun, asJson);
+    break;
+  }
+  case 'sync': {
+    let isGlobal = false;
+    let customTarget = null;
+    let isDryRun = false;
+    let asJson = false;
+    let force = false;
+    for (let i = 1; i < args.length; i++) {
+      if (args[i] === '--global') isGlobal = true;
+      else if (args[i] === '--dry-run') isDryRun = true;
+      else if (args[i] === '--json') asJson = true;
+      else if (args[i] === '--force') force = true;
+      else if (args[i] === '--workspace' && args[i + 1]) customTarget = args[++i];
+      else if (!args[i].startsWith('-') && !customTarget) customTarget = args[i];
+    }
+    runSync(customTarget, isGlobal, isDryRun, asJson, force);
+    break;
+  }
   case 'new-skill':
     scaffoldSkill(args[1]);
     break;

@@ -55,6 +55,7 @@ Everything Gemini bundles ready-to-use blueprints in `mcp/mcp_config.example.jso
 | **`filesystem`** | `@modelcontextprotocol/server-filesystem` | Direct multi-directory filesystem inspection | Stdio |
 | **`sentry`** | `@modelcontextprotocol/server-sentry` | Real-time production error tracking, issue triage, and stacktrace analysis | Stdio |
 | **`slack`** | `@modelcontextprotocol/server-slack` | Automated incident channels, alert broadcasts, and team collaboration | Stdio |
+| **`puppeteer`** | `@modelcontextprotocol/server-puppeteer` | Headless browser automation, screenshot diffing, and dynamic web crawling | Stdio |
 
 ## Tool Auto-Discovery & Execution
 Once connected, tools declared by MCP servers are automatically injected into the agent's system prompt and executed through Antigravity's Language Server. Inspect active MCP servers in the Antigravity UI via **Additional Options (...) > MCP Servers**.

@@ -32,6 +32,10 @@ pip install google-antigravity
   ```bash
   python3 incident_triage_pipeline.py
   ```
+- **4-Stage Cloud Platform Provisioning Pipeline** (Architect -> Platform Engineer -> Security Auditor -> Release Engineer):
+  ```bash
+  python3 platform_provisioning_pipeline.py
+  ```
 
 ---
 

@@ -90,9 +90,9 @@ it('should benchmark ecosystem components and output valid JSON with --json', ()
   const res = runCli('benchmark --json');
   assert.strictEqual(res.status, 0);
   const data = JSON.parse(res.stdout);
-  assert.strictEqual(data.totalComponents, 70);
-  assert.strictEqual(data.progressiveSkillsCount, 52);
-  assert.strictEqual(data.scopedAgentsCount, 11);
+  assert.strictEqual(data.totalComponents, 75);
+  assert.strictEqual(data.progressiveSkillsCount, 56);
+  assert.strictEqual(data.scopedAgentsCount, 12);
   assert.strictEqual(data.lifecycleHooksCount, 7);
   assert(data.totalRunbookTokens > 15000, 'Expected >15,000 runbook tokens');
   assert(data.estimatedTokensSavedPerTurn > 8000, 'Expected significant token savings');
@@ -316,7 +316,7 @@ try {
     const dryRes = runCli(`bundle --output "${bundleTarget}" --dry-run`);
     assert.strictEqual(dryRes.status, 0);
     assert.match(dryRes.stdout, /DRY RUN MODE ACTIVATED/);
-    assert.match(dryRes.stdout, /Skills to bundle: 52/);
+    assert.match(dryRes.stdout, /Skills to bundle: 56/);
     assert.strictEqual(fs.existsSync(bundleTarget), false, 'Dry run should not create destination directory');
 
     // JSON Dry-run mode
@@ -324,7 +324,7 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.components.totalCount, 70);
+    assert.strictEqual(dryData.manifest.components.totalCount, 75);
 
     // Live mode
     const liveRes = runCli(`bundle --output "${bundleTarget}"`);
@@ -332,8 +332,49 @@ try {
     assert.match(liveRes.stdout, /Offline Distribution Bundle Created/);
     assert.strictEqual(fs.existsSync(path.join(bundleTarget, 'bundle-manifest.json')), true);
     assert.strictEqual(fs.existsSync(path.join(bundleTarget, 'offline-install.sh')), true);
-    assert.strictEqual(fs.existsSync(path.join(bundleTarget, 'skills', 'vllm-inference')), true);
-    assert.strictEqual(fs.existsSync(path.join(bundleTarget, 'agents', 'incident-responder.md')), true);
+    assert.strictEqual(fs.existsSync(path.join(bundleTarget, 'skills', 'milvus-vector-clustering')), true);
+    assert.strictEqual(fs.existsSync(path.join(bundleTarget, 'agents', 'platform-engineer.md')), true);
+  });
+
+  // Scaffold Command
+  it('should scaffold skill, agent, and hook in dry-run and live modes', () => {
+    const scaffoldWorkspace = path.join(tempWorkspace, 'scaffold-ws');
+
+    // Skill Dry-run
+    const drySkill = runCli(`scaffold skill demo-test-skill --workspace "${scaffoldWorkspace}" --dry-run --json`);
+    assert.strictEqual(drySkill.status, 0);
+    const drySkillData = JSON.parse(drySkill.stdout);
+    assert.strictEqual(drySkillData.isDryRun, true);
+    assert.strictEqual(drySkillData.type, 'skill');
+
+    // Live Agent Scaffold
+    const liveAgent = runCli(`scaffold agent demo-qa-agent --workspace "${scaffoldWorkspace}"`);
+    assert.strictEqual(liveAgent.status, 0);
+    assert.match(liveAgent.stdout, /Created subagent profile/);
+    assert.strictEqual(fs.existsSync(path.join(scaffoldWorkspace, 'agents', 'demo-qa-agent.md')), true);
+
+    // Live Hook Scaffold
+    const liveHook = runCli(`scaffold hook demo-safety --workspace "${scaffoldWorkspace}"`);
+    assert.strictEqual(liveHook.status, 0);
+    assert.match(liveHook.stdout, /Created lifecycle hook/);
+    assert.strictEqual(fs.existsSync(path.join(scaffoldWorkspace, 'hooks', 'demo-safety', 'hooks.json')), true);
+    assert.strictEqual(fs.existsSync(path.join(scaffoldWorkspace, 'hooks', 'demo-safety', 'scripts', 'demo-safety-gate.sh')), true);
+  });
+
+  // Sync Command
+  it('should synchronize workspace with sync command in dry-run and live modes', () => {
+    // Dry-run
+    const drySync = runCli(`sync --workspace "${tempWorkspace}" --dry-run`);
+    assert.strictEqual(drySync.status, 0);
+    assert.match(drySync.stdout, /DRY RUN MODE ACTIVATED/);
+    assert.match(drySync.stdout, /Synchronizing Workspace with Catalog/);
+
+    // JSON Dry-run
+    const jsonSync = runCli(`sync --workspace "${tempWorkspace}" --dry-run --json`);
+    assert.strictEqual(jsonSync.status, 0);
+    const syncData = JSON.parse(jsonSync.stdout);
+    assert.strictEqual(syncData.isDryRun, true);
+    assert.strictEqual(syncData.success, true);
   });
 
   // Info for incident-responder and v1.8.0 skills
@@ -359,14 +400,37 @@ try {
     assert.match(resLite.stdout, /LiteLLM/);
   });
 
+  // Info for platform-engineer and v1.9.0 skills
+  it('should display info for platform-engineer subagent and v1.9.0 skills', () => {
+    const resPlat = runCli('info platform-engineer');
+    assert.strictEqual(resPlat.status, 0);
+    assert.match(resPlat.stdout, /Platform Engineer/);
+
+    const resMilvus = runCli('info milvus-vector-clustering');
+    assert.strictEqual(resMilvus.status, 0);
+    assert.match(resMilvus.stdout, /Milvus/);
+
+    const resR2 = runCli('info cloudflare-r2-object-storage');
+    assert.strictEqual(resR2.status, 0);
+    assert.match(resR2.stdout, /Cloudflare R2/);
+
+    const resVault = runCli('info vault-secrets-management');
+    assert.strictEqual(resVault.status, 0);
+    assert.match(resVault.stdout, /Vault/);
+
+    const resRate = runCli('info distributed-rate-limiting');
+    assert.strictEqual(resRate.status, 0);
+    assert.match(resRate.stdout, /Distributed Rate Limiting/);
+  });
+
   // Benchmark Components Verification
-  it('should report 70 components, 52 skills, and 11 subagents in benchmark --json', () => {
+  it('should report 75 components, 56 skills, and 12 subagents in benchmark --json', () => {
     const res = runCli('benchmark --json');
     assert.strictEqual(res.status, 0);
     const data = JSON.parse(res.stdout);
-    assert.strictEqual(data.totalComponents, 70, 'Total components should be 70');
-    assert.strictEqual(data.progressiveSkillsCount, 52, 'Progressive skills should be 52');
-    assert.strictEqual(data.scopedAgentsCount, 11, 'Scoped agents should be 11');
+    assert.strictEqual(data.totalComponents, 75, 'Total components should be 75');
+    assert.strictEqual(data.progressiveSkillsCount, 56, 'Progressive skills should be 56');
+    assert.strictEqual(data.scopedAgentsCount, 12, 'Scoped agents should be 12');
     assert.strictEqual(data.lifecycleHooksCount, 7, 'Lifecycle hooks should be 7');
   });
 
