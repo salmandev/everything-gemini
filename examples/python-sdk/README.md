@@ -36,6 +36,10 @@ pip install google-antigravity
   ```bash
   python3 platform_provisioning_pipeline.py
   ```
+- **4-Stage Autonomous MLOps & RAG Pipeline** (Architect -> MLOps Engineer -> Security Auditor -> Release Engineer):
+  ```bash
+  python3 autonomous_mlops_rag_pipeline.py
+  ```
 
 ---
 

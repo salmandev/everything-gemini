@@ -90,9 +90,9 @@ it('should benchmark ecosystem components and output valid JSON with --json', ()
   const res = runCli('benchmark --json');
   assert.strictEqual(res.status, 0);
   const data = JSON.parse(res.stdout);
-  assert.strictEqual(data.totalComponents, 75);
-  assert.strictEqual(data.progressiveSkillsCount, 56);
-  assert.strictEqual(data.scopedAgentsCount, 12);
+  assert.strictEqual(data.totalComponents, 80);
+  assert.strictEqual(data.progressiveSkillsCount, 60);
+  assert.strictEqual(data.scopedAgentsCount, 13);
   assert.strictEqual(data.lifecycleHooksCount, 7);
   assert(data.totalRunbookTokens > 15000, 'Expected >15,000 runbook tokens');
   assert(data.estimatedTokensSavedPerTurn > 8000, 'Expected significant token savings');
@@ -316,7 +316,7 @@ try {
     const dryRes = runCli(`bundle --output "${bundleTarget}" --dry-run`);
     assert.strictEqual(dryRes.status, 0);
     assert.match(dryRes.stdout, /DRY RUN MODE ACTIVATED/);
-    assert.match(dryRes.stdout, /Skills to bundle: 56/);
+    assert.match(dryRes.stdout, /Skills to bundle: 60/);
     assert.strictEqual(fs.existsSync(bundleTarget), false, 'Dry run should not create destination directory');
 
     // JSON Dry-run mode
@@ -324,7 +324,7 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.components.totalCount, 75);
+    assert.strictEqual(dryData.manifest.components.totalCount, 80);
 
     // Live mode
     const liveRes = runCli(`bundle --output "${bundleTarget}"`);
@@ -423,14 +423,57 @@ try {
     assert.match(resRate.stdout, /Distributed Rate Limiting/);
   });
 
+  // Info for mlops-engineer and v2.0.0 skills
+  it('should display info for mlops-engineer subagent and v2.0.0 skills', () => {
+    const resMl = runCli('info mlops-engineer');
+    assert.strictEqual(resMl.status, 0);
+    assert.match(resMl.stdout, /MLOps Engineer/);
+
+    const resKeda = runCli('info keda-event-autoscaling');
+    assert.strictEqual(resKeda.status, 0);
+    assert.match(resKeda.stdout, /KEDA/);
+
+    const resChroma = runCli('info chromadb-vector-store');
+    assert.strictEqual(resChroma.status, 0);
+    assert.match(resChroma.stdout, /ChromaDB/);
+
+    const resOpa = runCli('info opa-gatekeeper-policy');
+    assert.strictEqual(resOpa.status, 0);
+    assert.match(resOpa.stdout, /Gatekeeper/);
+
+    const resTriton = runCli('info triton-inference-server');
+    assert.strictEqual(resTriton.status, 0);
+    assert.match(resTriton.stdout, /Triton/);
+  });
+
+  // Graph command verification
+  it('should render interaction graph in terminal, mermaid, and JSON formats', () => {
+    const resTerm = runCli('graph');
+    assert.strictEqual(resTerm.status, 0);
+    assert.match(resTerm.stdout, /Multi-Agent Topology & Dependency Graph/);
+    assert.match(resTerm.stdout, /MLOPS-ENGINEER/);
+
+    const resMermaid = runCli('graph --mermaid');
+    assert.strictEqual(resMermaid.status, 0);
+    assert.match(resMermaid.stdout, /graph TD/);
+    assert.match(resMermaid.stdout, /A_mlops_engineer/);
+
+    const resJson = runCli('graph --json');
+    assert.strictEqual(resJson.status, 0);
+    const data = JSON.parse(resJson.stdout);
+    assert.ok(data.totalNodes > 50, 'Graph should contain > 50 nodes');
+    assert.ok(data.totalEdges > 50, 'Graph should contain > 50 edges');
+    assert.ok(data.nodes.find(n => n.id === 'agent:mlops-engineer'));
+  });
+
   // Benchmark Components Verification
-  it('should report 75 components, 56 skills, and 12 subagents in benchmark --json', () => {
+  it('should report 80 components, 60 skills, and 13 subagents in benchmark --json', () => {
     const res = runCli('benchmark --json');
     assert.strictEqual(res.status, 0);
     const data = JSON.parse(res.stdout);
-    assert.strictEqual(data.totalComponents, 75, 'Total components should be 75');
-    assert.strictEqual(data.progressiveSkillsCount, 56, 'Progressive skills should be 56');
-    assert.strictEqual(data.scopedAgentsCount, 12, 'Scoped agents should be 12');
+    assert.strictEqual(data.totalComponents, 80, 'Total components should be 80');
+    assert.strictEqual(data.progressiveSkillsCount, 60, 'Progressive skills should be 60');
+    assert.strictEqual(data.scopedAgentsCount, 13, 'Scoped agents should be 13');
     assert.strictEqual(data.lifecycleHooksCount, 7, 'Lifecycle hooks should be 7');
   });
 

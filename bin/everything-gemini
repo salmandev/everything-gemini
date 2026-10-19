@@ -28,6 +28,7 @@ const CYAN = '\x1b[36m';
 const GREEN = '\x1b[32m';
 const YELLOW = '\x1b[33m';
 const RED = '\x1b[31m';
+const MAGENTA = '\x1b[35m';
 const GRAY = '\x1b[90m';
 
 function printBanner() {
@@ -61,8 +62,9 @@ function printHelp() {
   console.log(`  ${GREEN}search, find${RESET} <query>         Search skills, agents, hooks, and MCP blueprints`);
   console.log(`  ${GREEN}audit${RESET} [path]                 Comprehensive audit of frontmatter, contracts, hooks & links`);
   console.log(`  ${GREEN}test-skill${RESET} <name>           Validate a specific skill frontmatter & scripts`);
-  console.log(`  ${GREEN}test-all${RESET}                    Benchmark & validate all 56 skills, 12 subagents & 7 hooks`);
+  console.log(`  ${GREEN}test-all${RESET}                    Benchmark & validate all 60 skills, 13 subagents & 7 hooks`);
   console.log(`  ${GREEN}info${RESET} <name>                  Display overview & runbook for a skill, agent, or hook`);
+  console.log(`  ${GREEN}graph${RESET} [--mermaid|--json]    Visualize multi-agent interaction & dependency topology graph`);
   console.log(`  ${GREEN}completion${RESET} [--install]        Generate or install shell autocompletion script (bash/zsh)`);
   console.log(`  ${GREEN}validate${RESET}                    Run self-test on frontmatter, JSON schemas & hooks`);
   console.log(`  ${GREEN}version, -v, --version${RESET}      Print everything-gemini version`);
@@ -2004,9 +2006,9 @@ _everything_gemini() {
   COMPREPLY=()
   cur="\${COMP_WORDS[COMP_CWORD]}"
   prev="\${COMP_WORDS[COMP_CWORD-1]}"
-  commands="doctor list init install status check update sync scaffold new new-skill new-agent add remove test-skill test-all benchmark info show completion validate version help diff export import bundle pack search find audit"
-  skills="agent-evals ai-first-engineering apache-kafka-streams api-craftsman architecture-designer argo-workflows axum-web-service browser-qa-tester cilium-ebpf-networking clickhouse-analytics cloudflare-r2-object-storage cloudflare-workers context-caching continuous-learning database-architect dbt-transformation debezium-cdc devops-pipeline distributed-rate-limiting docker-compose-orchestrator duckdb-local-olap fastapi-production fullstack-nextjs gemini-function-calling gemini-grounding gemini-multimodal git-craftsman github-ops graphql-architect grpc-connect-rpc kubernetes-operator langgraph-orchestrator litellm-proxy-gateway milvus-vector-clustering nats-jetstream open-telemetry-tracing performance-profiler playwright-visual-regression rag-architect redis-cache-patterns repo-onboarding root-cause-debugger security-audit stripe-integration subagent-handoff supabase-architect svelte-kit-architect tdd-workflow temporal-workflows trpc-react-query turborepo-monorepo vault-secrets-management vllm-inference wasm-rust-optimizer antigravity-sdk-orchestrator responsive-design"
-  agents="architect browser-qa build-repair code-reviewer database-migrator documentation-writer incident-responder performance-tuner planner platform-engineer release-engineer security-auditor"
+  commands="doctor list init install status check update sync scaffold new new-skill new-agent add remove test-skill test-all benchmark info show graph completion validate version help diff export import bundle pack search find audit"
+  skills="agent-evals ai-first-engineering apache-kafka-streams api-craftsman architecture-designer argo-workflows axum-web-service browser-qa-tester chromadb-vector-store cilium-ebpf-networking clickhouse-analytics cloudflare-r2-object-storage cloudflare-workers context-caching continuous-learning database-architect dbt-transformation debezium-cdc devops-pipeline distributed-rate-limiting docker-compose-orchestrator duckdb-local-olap fastapi-production fullstack-nextjs gemini-function-calling gemini-grounding gemini-multimodal git-craftsman github-ops graphql-architect grpc-connect-rpc keda-event-autoscaling kubernetes-operator langgraph-orchestrator litellm-proxy-gateway milvus-vector-clustering nats-jetstream opa-gatekeeper-policy open-telemetry-tracing performance-profiler playwright-visual-regression rag-architect redis-cache-patterns repo-onboarding root-cause-debugger security-audit stripe-integration subagent-handoff supabase-architect svelte-kit-architect tdd-workflow temporal-workflows triton-inference-server trpc-react-query turborepo-monorepo vault-secrets-management vllm-inference wasm-rust-optimizer antigravity-sdk-orchestrator responsive-design"
+  agents="architect browser-qa build-repair code-reviewer database-migrator documentation-writer incident-responder mlops-engineer performance-tuner planner platform-engineer release-engineer security-auditor"
   hooks="auto-lint-formatter ephemeral-context gemini-shield goal-verifier learned-instincts safety-shield secret-scrubber"
   plugins="core python-ai security-shield web-fullstack"
 
@@ -2200,11 +2202,127 @@ function showComponentInfo(query1, query2) {
   process.exit(1);
 }
 
+function runGraph(format = 'terminal') {
+  const agents = [
+    { name: 'architect', skills: ['architecture-designer', 'database-architect', 'rag-architect', 'graphql-architect', 'api-craftsman', 'grpc-connect-rpc'], mcps: ['sequential-thinking'] },
+    { name: 'mlops-engineer', skills: ['triton-inference-server', 'vllm-inference', 'chromadb-vector-store', 'milvus-vector-clustering', 'context-caching', 'keda-event-autoscaling', 'agent-evals'], mcps: ['memory', 'fetch', 'brave-search'] },
+    { name: 'platform-engineer', skills: ['kubernetes-operator', 'keda-event-autoscaling', 'opa-gatekeeper-policy', 'vault-secrets-management', 'cilium-ebpf-networking', 'docker-compose-orchestrator', 'cloudflare-r2-object-storage'], mcps: ['docker'] },
+    { name: 'security-auditor', skills: ['security-audit', 'opa-gatekeeper-policy', 'vault-secrets-management', 'distributed-rate-limiting'], mcps: ['sentry'] },
+    { name: 'database-migrator', skills: ['clickhouse-analytics', 'debezium-cdc', 'supabase-architect', 'duckdb-local-olap', 'dbt-transformation', 'redis-cache-patterns'], mcps: ['postgres', 'sqlite', 'clickhouse', 'redis'] },
+    { name: 'incident-responder', skills: ['root-cause-debugger', 'distributed-rate-limiting', 'open-telemetry-tracing', 'performance-profiler'], mcps: ['sentry', 'slack'] },
+    { name: 'release-engineer', skills: ['devops-pipeline', 'github-ops', 'turborepo-monorepo', 'argo-workflows'], mcps: ['github', 'docker'] },
+    { name: 'performance-tuner', skills: ['performance-profiler', 'wasm-rust-optimizer', 'redis-cache-patterns', 'temporal-workflows'], mcps: [] },
+    { name: 'browser-qa', skills: ['browser-qa-tester', 'playwright-visual-regression'], mcps: ['puppeteer'] },
+    { name: 'code-reviewer', skills: ['git-craftsman', 'tdd-workflow', 'repo-onboarding'], mcps: ['github'] },
+    { name: 'build-repair', skills: ['root-cause-debugger', 'tdd-workflow'], mcps: [] },
+    { name: 'planner', skills: ['subagent-handoff', 'continuous-learning', 'ai-first-engineering'], mcps: ['sequential-thinking'] },
+    { name: 'documentation-writer', skills: ['repo-onboarding', 'api-craftsman'], mcps: ['filesystem'] }
+  ];
+
+  const hooks = [
+    { name: 'gemini-shield', event: 'PreToolExecution', desc: 'Blocks high-risk file/system commands' },
+    { name: 'safety-shield', event: 'PreToolExecution', desc: 'Guards destructive CLI commands' },
+    { name: 'secret-scrubber', event: 'PreToolExecution', desc: 'Redacts leaked tokens, private keys & secrets' },
+    { name: 'auto-lint-formatter', event: 'PostToolExecution', desc: 'Auto-formats code files using Prettier/Black' },
+    { name: 'ephemeral-context', event: 'SessionStart', desc: 'Injects active git branch, diff & container status' },
+    { name: 'learned-instincts', event: 'PostInvocation', desc: 'Persists user feedback & operational instincts' },
+    { name: 'goal-verifier', event: 'PostInvocation', desc: 'Verifies objective completeness & test gates' }
+  ];
+
+  if (format === 'json') {
+    const nodes = [];
+    const edges = [];
+    agents.forEach(a => {
+      nodes.push({ id: `agent:${a.name}`, type: 'agent', label: a.name });
+      a.skills.forEach(s => {
+        if (!nodes.find(n => n.id === `skill:${s}`)) nodes.push({ id: `skill:${s}`, type: 'skill', label: s });
+        edges.push({ source: `agent:${a.name}`, target: `skill:${s}`, relation: 'orchestrates' });
+      });
+      a.mcps.forEach(m => {
+        if (!nodes.find(n => n.id === `mcp:${m}`)) nodes.push({ id: `mcp:${m}`, type: 'mcp', label: m });
+        edges.push({ source: `agent:${a.name}`, target: `mcp:${m}`, relation: 'connects' });
+      });
+    });
+    hooks.forEach(h => {
+      nodes.push({ id: `hook:${h.name}`, type: 'hook', label: h.name, event: h.event });
+      edges.push({ source: `hook:${h.name}`, target: 'lifecycle:antigravity', relation: 'intercepts' });
+    });
+    console.log(JSON.stringify({ version: VERSION, totalNodes: nodes.length, totalEdges: edges.length, nodes, edges }, null, 2));
+    return;
+  }
+
+  if (format === 'mermaid') {
+    console.log('```mermaid');
+    console.log('graph TD');
+    console.log('  %% Agents');
+    agents.forEach(a => {
+      console.log(`  subgraph Agents["🤖 Scoped Subagents"]`);
+      console.log(`    A_${a.name.replace(/-/g, '_')}["${a.name}"]`);
+      console.log(`  end`);
+    });
+    console.log('  %% Skills & Relationships');
+    agents.forEach(a => {
+      const aId = `A_${a.name.replace(/-/g, '_')}`;
+      a.skills.forEach(s => {
+        const sId = `S_${s.replace(/-/g, '_')}`;
+        console.log(`  ${aId} -->|uses| ${sId}["📘 ${s}"]`);
+      });
+      a.mcps.forEach(m => {
+        const mId = `M_${m.replace(/-/g, '_')}`;
+        console.log(`  ${aId} -.->|mcp| ${mId}["🔌 ${m}"]`);
+      });
+    });
+    console.log('  %% Lifecycle Hooks');
+    console.log('  subgraph Hooks["🛡️ Lifecycle Guardrails"]');
+    hooks.forEach(h => {
+      console.log(`    H_${h.name.replace(/-/g, '_')}["🛡️ ${h.name} (${h.event})"]`);
+    });
+    console.log('  end');
+    console.log('```');
+    return;
+  }
+
+  printBanner();
+  console.log(`${BOLD}🗺️ Everything Gemini Multi-Agent Topology & Dependency Graph${RESET}\n`);
+  console.log(`${GRAY}Showing 13 Scoped Subagents, 60 Progressive Skills, 14 MCP Blueprints, and 7 Lifecycle Hooks:${RESET}\n`);
+
+  console.log(`${CYAN}${BOLD}🛡️ LIFECYCLE HOOKS (System Protection Boundary):${RESET}`);
+  hooks.forEach(h => {
+    console.log(`  ${YELLOW}◆${RESET} ${BOLD}${h.name.padEnd(22)}${RESET} ${GRAY}[${h.event}]${RESET} ── ${h.desc}`);
+  });
+  console.log('');
+
+  console.log(`${CYAN}${BOLD}🤖 SCOPED SUBAGENTS & SKILL DEPENDENCIES:${RESET}`);
+  agents.forEach(a => {
+    console.log(`  ${GREEN}┌─●${RESET} ${BOLD}${a.name.toUpperCase()}${RESET} ${GRAY}(Agent)${RESET}`);
+    if (a.mcps.length > 0) {
+      console.log(`  ${GREEN}│${RESET}   ${MAGENTA}🔌 MCP Blueprints:${RESET} ${a.mcps.map(m => `${BOLD}${m}${RESET}`).join(', ')}`);
+    }
+    console.log(`  ${GREEN}│${RESET}   ${BLUE}📘 Primary Skills:${RESET}`);
+    a.skills.forEach((s, idx) => {
+      const isLast = idx === a.skills.length - 1;
+      const branch = isLast ? '└──' : '├──';
+      console.log(`  ${GREEN}│${RESET}     ${GRAY}${branch}${RESET} ${s}`);
+    });
+    console.log(`  ${GREEN}│${RESET}`);
+  });
+  console.log(`  ${GREEN}└──●${RESET} ${GRAY}All 60 Progressive Disclosure Skills indexed dynamically in catalog.${RESET}\n`);
+  console.log(`${GRAY}Tip: Run ${CYAN}everything-gemini graph --mermaid${GRAY} for Mermaid diagram or ${CYAN}--json${GRAY} for raw graph data.${RESET}\n`);
+}
+
 // CLI Argument Parsing
 const args = process.argv.slice(2);
 const command = args[0] || 'help';
 
 switch (command) {
+  case 'graph':
+  case 'topology': {
+    let format = 'terminal';
+    if (args.includes('--mermaid')) format = 'mermaid';
+    else if (args.includes('--json')) format = 'json';
+    runGraph(format);
+    break;
+  }
   case 'doctor':
     runDoctor();
     break;

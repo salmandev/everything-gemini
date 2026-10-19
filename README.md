@@ -79,8 +79,8 @@ cd everything-gemini
 | Profile | Target Audience | What Gets Installed |
 | :--- | :--- | :--- |
 | **`core`** | Minimalists & Speed | Safety-shield hook, TDD skill, repo-onboarding skill, baseline `GEMINI.md`. |
-| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 12 Scoped Subagents (`agents/`), Frontier Skills (Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
-| **`full`** | Lead Engineers & Archs | Everything: all 56 progressive skills, 12 scoped subagents, full lifecycle hooks suite (7 hooks), all plugins, MCP configs, and templates. |
+| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 13 Scoped Subagents (`agents/`), Frontier Skills (Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
+| **`full`** | Lead Engineers & Archs | Everything: all 60 progressive skills, 13 scoped subagents, full lifecycle hooks suite (7 hooks), 14 MCP blueprints, all plugins, configs, and templates. |
 
 ### 5. In CI / GitHub Actions Workflows
 
@@ -159,7 +159,7 @@ everything-gemini/
 ├── agents/                       # Scoped subagent fleet (Planner, Reviewer, Release Engineer, etc.)
 ├── scripts/                      # Automated installers and harness validators
 ├── plugins/                      # Reusable modular plugins (web-fullstack, python-ai, security)
-├── skills/                       # 48 Progressive disclosure skills (46 core + 2 plugins)
+├── skills/                       # 60 Progressive disclosure skills (58 core + 2 plugins)
 ├── rules/                        # Contextual guidelines & standards
 ├── hooks/                        # Event-driven lifecycle hooks (GeminiShield, Auto-lint)
 ├── mcp/                          # Production-ready MCP server blueprints
@@ -189,10 +189,15 @@ Everything Gemini provides specialized subagent specifications designed for Anti
 | **[`release-engineer`](agents/release-engineer.md)** | Release Automation Gatekeeper | Semantic Versioning, build artifact checksums, git release tagging, and canary rollouts. |
 | **[`incident-responder`](agents/incident-responder.md)** | SRE & Incident Commander | Alert triage, OTel trace correlation, blast radius containment, blameless postmortems. |
 | **[`platform-engineer`](agents/platform-engineer.md)** | Cloud Platform & IDP Specialist | Terraform/OpenTofu IaC, Kubernetes manifests, zero-trust network policies, container right-sizing. |
+| **[`mlops-engineer`](agents/mlops-engineer.md)** | MLOps & LLMOps Specialist | Model serving (Triton/vLLM), vector clustering (ChromaDB/Milvus), prefix context caching, KEDA autoscaling. |
 
 ### 1. Skills (`skills/`)
 Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`name` and `description`) is placed into the system prompt. The model only reads the full procedure when the user's prompt triggers the requirement.
 
+- **[`keda-event-autoscaling`](skills/keda-event-autoscaling/SKILL.md)**: Kubernetes Event-driven Autoscaling (KEDA), ScaledObjects/Jobs, Kafka/Redis/Prometheus triggers, scale-to-zero.
+- **[`chromadb-vector-store`](skills/chromadb-vector-store/SKILL.md)**: Persistent vector storage, Gemini embeddings, collection partitioning, metadata filtering, and semantic similarity search.
+- **[`opa-gatekeeper-policy`](skills/opa-gatekeeper-policy/SKILL.md)**: Open Policy Agent (OPA) Gatekeeper ConstraintTemplates and Rego admission policies for Kubernetes governance.
+- **[`triton-inference-server`](skills/triton-inference-server/SKILL.md)**: NVIDIA Triton Inference Server multi-model serving, dynamic batching, GPU acceleration, TensorRT-LLM, and vLLM backends.
 - **[`milvus-vector-clustering`](skills/milvus-vector-clustering/SKILL.md)**: Enterprise Milvus vector clustering, HNSW/IVF-PQ indexing, hybrid dense-sparse search, and partition keys.
 - **[`cloudflare-r2-object-storage`](skills/cloudflare-r2-object-storage/SKILL.md)**: Zero-egress fee object storage, S3-compatible APIs, pre-signed upload URLs, and Workers edge CDN.
 - **[`vault-secrets-management`](skills/vault-secrets-management/SKILL.md)**: HashiCorp Vault enterprise secrets orchestration, AppRole authentication, dynamic ephemeral DB credentials, and PKI mTLS.
@@ -407,9 +412,14 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 ./bin/everything-gemini audit
 ./bin/everything-gemini audit --json
 
-# Benchmark and validate all 56 skills, 12 subagents, and 7 hooks (human or JSON)
+# Benchmark and validate all 60 skills, 13 subagents, and 7 hooks (human or JSON)
 ./bin/everything-gemini test-all
 ./bin/everything-gemini benchmark --json
+
+# Visualize multi-agent interaction and dependency graph (terminal, Mermaid, or JSON)
+./bin/everything-gemini graph
+./bin/everything-gemini graph --mermaid
+./bin/everything-gemini graph --json
 
 # View detailed playbook or specification for any skill, subagent, or hook
 ./bin/everything-gemini info agent-evals

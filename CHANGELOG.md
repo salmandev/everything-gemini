@@ -4,6 +4,30 @@ All notable changes to **Everything Gemini (`everything-gemini`)** will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-10-19
+
+### Added
+- **60 Progressive Disclosure Skills & 80-Component Ecosystem Landmark Milestone**:
+  - **`keda-event-autoscaling`**: Kubernetes Event-driven Autoscaling (KEDA) ScaledObjects, ScaledJobs, scale-to-zero workloads, and external triggers for Kafka consumer lag, Redis queues, and Prometheus custom metrics.
+  - **`chromadb-vector-store`**: Persistent vector database storage, Google Gemini `text-embedding-004` embedding integration, collection metadata partitioning, and cosine similarity semantic retrieval.
+  - **`opa-gatekeeper-policy`**: Open Policy Agent (OPA) Gatekeeper ConstraintTemplates and Rego admission policies for Kubernetes governance, rootless containers, and shift-left CI testing (`gator`).
+  - **`triton-inference-server`**: NVIDIA Triton Inference Server multi-model serving, dynamic batching, TensorRT-LLM and vLLM backends, GPU instance scheduling, and low-latency gRPC inference.
+- **13th Scoped Subagent Fleet Expansion**:
+  - **`mlops-engineer`** ([`agents/mlops-engineer.md`](file:///Users/salmanshaikh/development/github/everything-gemini/agents/mlops-engineer.md)): Dedicated MLOps/LLMOps specialist agent for model inference serving, vector database clustering, prefix context caching strategies, and continuous model evaluation.
+- **CLI Interaction & Dependency Graph Visualization (`everything-gemini graph`)**:
+  - Visualize multi-agent interaction and dependency topology in terminal ASCII tree, Mermaid flowchart (`--mermaid`), or machine-readable JSON (`--json`).
+  - Updated shell completion scripts (`bin/everything-gemini completion`) registering `graph`, all 60 skills, and 13 subagents.
+- **Curated 14th MCP Blueprint**:
+  - Added `@modelcontextprotocol/server-brave-search` to [`mcp/mcp_config.example.json`](file:///Users/salmanshaikh/development/github/everything-gemini/mcp/mcp_config.example.json), [`templates/full-power/mcp_config.json`](file:///Users/salmanshaikh/development/github/everything-gemini/templates/full-power/mcp_config.json), and [`mcp/README.md`](file:///Users/salmanshaikh/development/github/everything-gemini/mcp/README.md) for live grounded search and documentation retrieval.
+- **Autonomous MLOps & RAG Pipeline (`examples/python-sdk/autonomous_mlops_rag_pipeline.py`)**:
+  - 4-stage multi-agent LLMOps delivery loop orchestrating Architect -> MLOps Engineer -> Security Auditor -> Release Engineer with Gemini context caching and token economy projections.
+- **Social Media Launch Kit (`docs/LAUNCH_KIT_v2.0.0.md`)**:
+  - Turnkey launch posts and threads formatted for LinkedIn, X (Twitter), Hacker News, Reddit (r/LocalLLaMA & r/programming), and Product Hunt.
+- **31-Assertion Automated E2E Test Suite & Benchmark**:
+  - Expanded `tests/cli.test.js` validating `graph` (terminal, mermaid, json), component info for all new v2.0.0 skills/subagents, and updated 80-component benchmark invariants.
+- **Showcase Web App 80-Component Milestone**:
+  - Catalog and live metrics on [https://salmandev.github.io/everything-gemini/](https://salmandev.github.io/everything-gemini/) updated to 60 progressive skills, 13 subagents, 14 MCP blueprints, 7 hooks, interactive topology tab, and `v2.0.0` release badge.
+
 ## [1.9.0] - 2026-10-19
 
 ### Added
