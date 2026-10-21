@@ -80,7 +80,7 @@ cd everything-gemini
 | :--- | :--- | :--- |
 | **`core`** | Minimalists & Speed | Safety-shield hook, TDD skill, repo-onboarding skill, baseline `GEMINI.md`. |
 | **`developer`** *(Recommended)* | Daily Software Engineers | Core + 13 Scoped Subagents (`agents/`), Frontier Skills (Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
-| **`full`** | Lead Engineers & Archs | Everything: all 64 progressive skills, 13 scoped subagents, full lifecycle hooks suite (9 hooks), 14 MCP blueprints, all plugins, configs, and templates. |
+| **`full`** | Lead Engineers & Archs | Everything: all 68 progressive skills, 13 scoped subagents, full lifecycle hooks suite (9 hooks), 14 MCP blueprints, all plugins, configs, and templates. |
 
 ### 5. In CI / GitHub Actions Workflows
 
@@ -159,7 +159,7 @@ everything-gemini/
 ├── agents/                       # Scoped subagent fleet (Planner, Reviewer, Release Engineer, etc.)
 ├── scripts/                      # Automated installers and harness validators
 ├── plugins/                      # Reusable modular plugins (web-fullstack, python-ai, security)
-├── skills/                       # 63 Progressive disclosure skills (61 core + 2 plugins)
+├── skills/                       # 68 Progressive disclosure skills (66 core + 2 plugins)
 ├── rules/                        # Contextual guidelines & standards
 ├── hooks/                        # Event-driven lifecycle hooks (GeminiShield, Auto-lint)
 ├── mcp/                          # Production-ready MCP server blueprints
@@ -194,6 +194,11 @@ Everything Gemini provides specialized subagent specifications designed for Anti
 ### 1. Skills (`skills/`)
 Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`name` and `description`) is placed into the system prompt. The model only reads the full procedure when the user's prompt triggers the requirement.
 
+- **[`bigquery-vector-search`](skills/bigquery-vector-search/SKILL.md)**: Native BigQuery vector search, `VECTOR_SEARCH` SQL statements, `ML.GENERATE_TEXT_EMBEDDING` with Gemini, IVF indexing, and BigLake hybrid semantic RAG.
+- **[`cloud-run-agents`](skills/cloud-run-agents/SKILL.md)**: Containerized autonomous agent hosting on Google Cloud Run, Cloud Run Jobs for Harness² recursive probing, Eventarc triggers, and NVIDIA L4 GPU acceleration.
+- **[`pubsub-event-mesh`](skills/pubsub-event-mesh/SKILL.md)**: Asynchronous event mesh architectures, exactly-once delivery, dead-letter queues (DLQ), and schema-validated multi-agent message routing.
+- **[`spanner-graph-rag`](skills/spanner-graph-rag/SKILL.md)**: Distributed Spanner Graph schemas, ISO GQL queries, knowledge graph traversal, and hybrid graph-vector RAG pipelines for Gemini agents.
+- **[`context-warmer`](skills/context-warmer/SKILL.md)**: Automated workspace repository analysis, Knowledge Item clustering, and pre-warming prefix context caches before subagent execution.
 - **[`harness2-recursive-optimization`](skills/harness2-recursive-optimization/SKILL.md)**: Google Research Harness² framework (*Harness²: Recursive Agent Harnessing for an Open World*, arXiv:2610.14224), 8-surface architecture, test-time Propose-Probe-Compose recursive loops, and continual harness learning.
 - **[`google-flow-orchestrator`](skills/google-flow-orchestrator/SKILL.md)**: Google Agentic Flow state machine orchestration, cyclic multi-agent graph execution, conditional state routing, and human-in-the-loop pauses.
 - **[`dataproc-spark-analytics`](skills/dataproc-spark-analytics/SKILL.md)**: Google Cloud Dataproc Serverless Spark, PySpark batch pipelines, Gemini embedding UDFs, BigLake vector indexing, and large-scale probe score verification.
@@ -338,7 +343,7 @@ Skill Body: Loaded on-demand ONLY when invoked = ~1,500 Tokens (one-time)
 Savings: > 85% Token Reduction & 3x Faster First-Token Latency!
 ```
 
-Run the built-in diagnostic benchmark across all 86 ecosystem components:
+Run the built-in diagnostic benchmark across all 90 ecosystem components:
 ```bash
 ./bin/everything-gemini test-all
 ```
@@ -417,7 +422,7 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 ./bin/everything-gemini audit
 ./bin/everything-gemini audit --json
 
-# Benchmark and validate all 64 skills, 13 subagents, and 9 hooks (human or JSON)
+# Benchmark and validate all 68 skills, 13 subagents, and 9 hooks (human or JSON)
 ./bin/everything-gemini test-all
 ./bin/everything-gemini benchmark --json
 

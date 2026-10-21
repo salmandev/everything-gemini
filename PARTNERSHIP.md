@@ -16,7 +16,7 @@ As frontier language models transition from chatbots into autonomous coding and 
 2. **Context Window Waste & Latency**: Dumping massive system prompts and hundreds of tool schemas on every reasoning turn inflates latency and token bills.
 3. **Safety & Governance Gaps**: Destructive commands and uncontrolled codebase modifications lack deterministic pre-execution gating.
 
-**Everything Gemini (`everything-gemini`)** resolves these blockers by providing the first production-grade, zero-dependency agent harness tailored specifically for **Google Antigravity** and **Gemini 3.8**. It operationalizes Google Research's **Harness²** (*arXiv:2610.14224*) into an enterprise runtime featuring deterministic ProtoJSON safety shields, automated prefix context cache warming, hard spend limits, and a catalog of **86 battle-tested components**.
+**Everything Gemini (`everything-gemini`)** resolves these blockers by providing the first production-grade, zero-dependency agent harness tailored specifically for **Google Antigravity** and **Gemini 3.8**. It operationalizes Google Research's **Harness²** (*arXiv:2610.14224*) into an enterprise runtime featuring deterministic ProtoJSON safety shields, automated prefix context cache warming, hard spend limits, and a catalog of **90 battle-tested components**.
 
 ---
 

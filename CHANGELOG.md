@@ -4,6 +4,24 @@ All notable changes to **Everything Gemini (`everything-gemini`)** will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-10-21
+
+### Added
+- **68 Progressive Disclosure Skills & 90-Component Landmark Milestone**:
+  - **`bigquery-vector-search`** ([`skills/bigquery-vector-search/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/bigquery-vector-search/SKILL.md)): Native BigQuery vector search, `VECTOR_SEARCH` SQL statements, `ML.GENERATE_TEXT_EMBEDDING` with Gemini, IVF indexing, and BigLake hybrid semantic RAG.
+  - **`cloud-run-agents`** ([`skills/cloud-run-agents/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/cloud-run-agents/SKILL.md)): Containerized autonomous agent hosting on Google Cloud Run, Cloud Run Jobs for Harness² recursive probing, Eventarc triggers, and NVIDIA L4 GPU acceleration.
+  - **`pubsub-event-mesh`** ([`skills/pubsub-event-mesh/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/pubsub-event-mesh/SKILL.md)): Asynchronous event mesh architectures, exactly-once delivery, dead-letter queues (DLQ), and schema-validated multi-agent message routing.
+  - **`spanner-graph-rag`** ([`skills/spanner-graph-rag/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/spanner-graph-rag/SKILL.md)): Distributed Spanner Graph schemas, ISO GQL queries, knowledge graph traversal, and hybrid graph-vector RAG pipelines for Gemini agents.
+  - **`context-warmer`** ([`skills/context-warmer/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/context-warmer/SKILL.md)): Automated workspace repository analysis, Knowledge Item clustering, and pre-warming prefix context caches before subagent execution.
+- **9th Lifecycle Safety Hook**:
+  - **`human-gate`** ([`hooks/human-gate/`](file:///Users/salmanshaikh/development/github/everything-gemini/hooks/human-gate/)): PreToolUse deterministic lifecycle hook enforcing interactive human signoff for speculative harness mutations on prompts, guardrails, and tool guidance.
+- **Google Antigravity & Gemini 3.8 Token-Efficiency Benchmark**:
+  - Published [`BENCHMARK.md`](file:///Users/salmanshaikh/development/github/everything-gemini/BENCHMARK.md) showing >85% (up to 92.7%) reduction in recurring token overhead and 3.2x faster TTFT across 90 ecosystem components.
+- **Google Ecosystem Partnership & Runtime Integration Proposal**:
+  - Published [`PARTNERSHIP.md`](file:///Users/salmanshaikh/development/github/everything-gemini/PARTNERSHIP.md) proposing official runtime alignment with Google Antigravity, Gemini 3.8, and Google Research Harness².
+- **Expanded CLI E2E Test Suite (38 Assertions)**:
+  - Updated `tests/cli.test.js` validating 90 components, 68 skills, 13 subagents, 9 hooks, and info command coverage for all new skills.
+
 ## [2.1.0] - 2026-10-19
 
 ### Added

@@ -2,8 +2,8 @@
 ## Empirical Analysis: Progressive Disclosure & Prefix Context Caching vs. Traditional Monolithic Agent Prompts
 
 **Benchmark Suite**: `everything-gemini benchmark`  
-**Dataset**: 86 Production Components (64 Progressive Skills, 13 Scoped Subagents, 9 Lifecycle Hooks)  
-**Total Runbook Corpus**: ~58,400 Tokens  
+**Dataset**: 90 Production Components (68 Progressive Skills, 13 Scoped Subagents, 9 Lifecycle Hooks)  
+**Total Runbook Corpus**: ~65,400 Tokens  
 **Hardware & Environment**: Apple M-Series / Linux x86_64, Node.js >= 18.0.0, Gemini 2.0 Flash & Gemini 3.8  
 
 ---

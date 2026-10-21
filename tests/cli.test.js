@@ -90,8 +90,8 @@ it('should benchmark ecosystem components and output valid JSON with --json', ()
   const res = runCli('benchmark --json');
   assert.strictEqual(res.status, 0);
   const data = JSON.parse(res.stdout);
-  assert.strictEqual(data.totalComponents, 86);
-  assert.strictEqual(data.progressiveSkillsCount, 64);
+  assert.strictEqual(data.totalComponents, 90);
+  assert.strictEqual(data.progressiveSkillsCount, 68);
   assert.strictEqual(data.scopedAgentsCount, 13);
   assert.strictEqual(data.lifecycleHooksCount, 9);
   assert(data.totalRunbookTokens > 15000, 'Expected >15,000 runbook tokens');
@@ -316,7 +316,7 @@ try {
     const dryRes = runCli(`bundle --output "${bundleTarget}" --dry-run`);
     assert.strictEqual(dryRes.status, 0);
     assert.match(dryRes.stdout, /DRY RUN MODE ACTIVATED/);
-    assert.match(dryRes.stdout, /Skills to bundle: 64/);
+    assert.match(dryRes.stdout, /Skills to bundle: 68/);
     assert.strictEqual(fs.existsSync(bundleTarget), false, 'Dry run should not create destination directory');
 
     // JSON Dry-run mode
@@ -324,7 +324,7 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.components.totalCount, 86);
+    assert.strictEqual(dryData.manifest.components.totalCount, 90);
 
     // Live mode
     const liveRes = runCli(`bundle --output "${bundleTarget}"`);
@@ -477,7 +477,7 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.metrics.total_skills, 64);
+    assert.strictEqual(dryData.manifest.metrics.total_skills, 68);
     assert.strictEqual(dryData.manifest.metrics.total_subagents, 13);
     assert.strictEqual(dryData.manifest.metrics.total_hooks, 9);
 
@@ -524,12 +524,12 @@ try {
   });
 
   // Benchmark Components Verification
-  it('should report 86 components, 64 skills, and 13 subagents in benchmark --json', () => {
+  it('should report 90 components, 68 skills, and 13 subagents in benchmark --json', () => {
     const res = runCli('benchmark --json');
     assert.strictEqual(res.status, 0);
     const data = JSON.parse(res.stdout);
-    assert.strictEqual(data.totalComponents, 86, 'Total components should be 86');
-    assert.strictEqual(data.progressiveSkillsCount, 64, 'Progressive skills should be 64');
+    assert.strictEqual(data.totalComponents, 90, 'Total components should be 90');
+    assert.strictEqual(data.progressiveSkillsCount, 68, 'Progressive skills should be 68');
     assert.strictEqual(data.scopedAgentsCount, 13, 'Scoped agents should be 13');
     assert.strictEqual(data.lifecycleHooksCount, 9, 'Lifecycle hooks should be 9');
   });
@@ -592,6 +592,14 @@ try {
     assert.strictEqual(resHook.status, 0);
     assert.match(resHook.stdout, /human-gate/);
     assert.match(resHook.stdout, /PreToolUse/);
+  });
+
+  it('should display info for v2.2.0 skills (bigquery-vector-search, cloud-run-agents, pubsub-event-mesh, spanner-graph-rag)', () => {
+    for (const skill of ['bigquery-vector-search', 'cloud-run-agents', 'pubsub-event-mesh', 'spanner-graph-rag']) {
+      const res = runCli(`info ${skill}`);
+      assert.strictEqual(res.status, 0);
+      assert.match(res.stdout, new RegExp(skill));
+    }
   });
 
 } finally {
