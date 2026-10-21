@@ -2,8 +2,8 @@
 ## Empirical Analysis: Progressive Disclosure & Prefix Context Caching vs. Traditional Monolithic Agent Prompts
 
 **Benchmark Suite**: `everything-gemini benchmark`  
-**Dataset**: 90 Production Components (68 Progressive Skills, 13 Scoped Subagents, 9 Lifecycle Hooks)  
-**Total Runbook Corpus**: ~65,400 Tokens  
+**Dataset**: 94 Production Components (72 Progressive Skills, 13 Scoped Subagents, 9 Lifecycle Hooks)  
+**Total Runbook Corpus**: ~70,700 Tokens  
 **Hardware & Environment**: Apple M-Series / Linux x86_64, Node.js >= 18.0.0, Gemini 2.0 Flash & Gemini 3.8  
 
 ---
@@ -23,23 +23,23 @@ This benchmark empirically demonstrates that **Everything Gemini on Google Antig
 
 ```
 [Traditional Monolithic Framework]
-Turn 1: Base Instructions + Full Text of 64 Skills + All Rules = ~48,200 Tokens
-Turn 2: Prior Turn + Full Text of 64 Skills + All Rules        = ~51,500 Tokens
-Turn 3: Prior Turns + Full Text of 64 Skills + All Rules       = ~54,800 Tokens
-Cumulative 10-turn cost: ~520,000 Tokens
+Turn 1: Base Instructions + Full Text of 72 Skills + All Rules = ~52,400 Tokens
+Turn 2: Prior Turn + Full Text of 72 Skills + All Rules        = ~55,800 Tokens
+Turn 3: Prior Turns + Full Text of 72 Skills + All Rules       = ~59,200 Tokens
+Cumulative 10-turn cost: ~560,000 Tokens
 
 [Everything Gemini on Antigravity]
-Turn 1: Base Instructions + 64 Skill YAML Frontmatter (3-line summaries) = ~3,400 Tokens
-Turn 2: Model triggers 1 Skill (e.g. `dataproc-spark-analytics`)         = ~4,900 Tokens (one-time)
-Turn 3: Subsequent turn (Skill unloaded; prefix context-cached)          = ~3,600 Tokens
-Cumulative 10-turn cost: ~38,000 Tokens (92.7% Token Savings!)
+Turn 1: Base Instructions + 72 Skill YAML Frontmatter (3-line summaries) = ~3,800 Tokens
+Turn 2: Model triggers 1 Skill (e.g. `dataproc-spark-analytics`)         = ~5,200 Tokens (one-time)
+Turn 3: Subsequent turn (Skill unloaded; prefix context-cached)          = ~3,900 Tokens
+Cumulative 10-turn cost: ~41,000 Tokens (92.6% Token Savings!)
 ```
 
 ---
 
 ## 📈 3. Empirical Benchmark Data
 
-Measurements captured across the complete catalog of 86 components:
+Measurements captured across the complete catalog of 94 components:
 
 | Architecture Metric | Traditional Monolithic Prompt | Everything Gemini (Progressive) | Everything Gemini + Prefix Cache | Delta / Savings |
 | :--- | :--- | :--- | :--- | :--- |

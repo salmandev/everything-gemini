@@ -80,7 +80,7 @@ cd everything-gemini
 | :--- | :--- | :--- |
 | **`core`** | Minimalists & Speed | Safety-shield hook, TDD skill, repo-onboarding skill, baseline `GEMINI.md`. |
 | **`developer`** *(Recommended)* | Daily Software Engineers | Core + 13 Scoped Subagents (`agents/`), Frontier Skills (Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
-| **`full`** | Lead Engineers & Archs | Everything: all 68 progressive skills, 13 scoped subagents, full lifecycle hooks suite (9 hooks), 14 MCP blueprints, all plugins, configs, and templates. |
+| **`full`** | Lead Engineers & Archs | Everything: all 72 progressive skills, 13 scoped subagents, full lifecycle hooks suite (9 hooks), 14 MCP blueprints, all plugins, configs, and templates. |
 
 ### 5. In CI / GitHub Actions Workflows
 
@@ -159,7 +159,7 @@ everything-gemini/
 ├── agents/                       # Scoped subagent fleet (Planner, Reviewer, Release Engineer, etc.)
 ├── scripts/                      # Automated installers and harness validators
 ├── plugins/                      # Reusable modular plugins (web-fullstack, python-ai, security)
-├── skills/                       # 68 Progressive disclosure skills (66 core + 2 plugins)
+├── skills/                       # 72 Progressive disclosure skills (70 core + 2 plugins)
 ├── rules/                        # Contextual guidelines & standards
 ├── hooks/                        # Event-driven lifecycle hooks (GeminiShield, Auto-lint)
 ├── mcp/                          # Production-ready MCP server blueprints
@@ -343,7 +343,7 @@ Skill Body: Loaded on-demand ONLY when invoked = ~1,500 Tokens (one-time)
 Savings: > 85% Token Reduction & 3x Faster First-Token Latency!
 ```
 
-Run the built-in diagnostic benchmark across all 90 ecosystem components:
+Run the built-in diagnostic benchmark across all 94 ecosystem components:
 ```bash
 ./bin/everything-gemini test-all
 ```
@@ -422,9 +422,24 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 ./bin/everything-gemini audit
 ./bin/everything-gemini audit --json
 
-# Benchmark and validate all 68 skills, 13 subagents, and 9 hooks (human or JSON)
+# Benchmark and validate all 72 skills, 13 subagents, and 9 hooks (human or JSON)
 ./bin/everything-gemini test-all
 ./bin/everything-gemini benchmark --json
+
+# Pre-flight predictive token cost modeling & FinOps spend budgeting across models
+./bin/everything-gemini estimate
+./bin/everything-gemini estimate --model flash --turns 5 --max-usd 5.00
+./bin/everything-gemini estimate --json
+
+# Run Harness³ Autonomous Darwinian genetic self-evolution & benchmark
+./bin/everything-gemini harness3 auto-bench --generations 3 --max-usd 2.50
+./bin/everything-gemini harness3 --dry-run
+./bin/everything-gemini harness3 --json
+
+# Launch interactive visual mission control web dashboard
+./bin/everything-gemini ui --port 4200
+./bin/everything-gemini ui --dry-run
+./bin/everything-gemini ui --json
 
 # Synthesize 8-surface Google Research Harness² workspace (prompts, guardrails, memory, etc.)
 ./bin/everything-gemini harness2

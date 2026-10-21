@@ -4,6 +4,23 @@ All notable changes to **Everything Gemini (`everything-gemini`)** will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2026-10-21
+
+### Added
+- **72 Progressive Disclosure Skills & 94-Component Landmark Milestone**:
+  - **`gemini-live-multimodal`** ([`skills/gemini-live-multimodal/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/gemini-live-multimodal/SKILL.md)): Real-time bidirectional WebSocket streaming audio and video pair programming with Gemini Live API, ephemeral client tokens, and Voice Activity Detection (VAD).
+  - **`cost-oracle-finops`** ([`skills/cost-oracle-finops/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/cost-oracle-finops/SKILL.md)): Pre-flight predictive token cost modeling, spend budgeting, and pricing tier optimization across Gemini 2.0 Flash, Pro, and Gemini 3.8 extended reasoning agents.
+  - **`vertex-ai-feature-store`** ([`skills/vertex-ai-feature-store/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/vertex-ai-feature-store/SKILL.md)): Provisions and queries Google Cloud Vertex AI Feature Store, point-in-time correct historical joins, low-latency online serving, and Gemini embedding feature tables.
+  - **`spanner-change-streams`** ([`skills/spanner-change-streams/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/spanner-change-streams/SKILL.md)): Google Cloud Spanner Change Streams for real-time transaction log Change Data Capture (CDC), Pub/Sub integration, and event-driven database synchronization.
+- **Predictive FinOps Cost Oracle (`everything-gemini estimate`)**:
+  - Pre-flight predictive token cost modeling, confidence intervals (P50, P90, P99), multi-model price arbitrage (Flash 2.0 vs Pro vs 3.8 Extended Thinking), and hard spend ceiling gating (`--max-usd`).
+- **Harness³ Genetic Darwinism & Auto-Bench Engine (`everything-gemini harness3`)**:
+  - Autonomous agentic Darwinism, multi-generation tournament selection, property-based adversarial probe evaluation, and Pareto frontier optimization with autonomous instinct distillation into `.agents/hooks/learned-instincts/`.
+- **Interactive Visual Mission Control (`everything-gemini ui`)**:
+  - Local web dashboard rendering real-time multi-agent execution graphs, live token burn velocity, Pareto probe frontiers, and interactive human-in-the-loop approval queues.
+- **Autonomous AGI Agent Operating System Roadmap**:
+  - Published [`ROADMAP_AGI_v3.0.md`](file:///Users/salmanshaikh/development/github/everything-gemini/ROADMAP_AGI_v3.0.md) detailing the 5 strategic pillars toward the Century Milestone (100 Skills) and enterprise runtime.
+
 ## [2.2.0] - 2026-10-21
 
 ### Added

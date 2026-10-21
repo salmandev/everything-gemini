@@ -1,6 +1,6 @@
 {
   "name": "everything-gemini",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Everything Gemini (everything-gemini) - The Ultimate Agent Harness, Multi-Agent Orchestrator & Performance Suite for Gemini & Google Antigravity",
   "main": "bin/everything-gemini",
   "bin": {

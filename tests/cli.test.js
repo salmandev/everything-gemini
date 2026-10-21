@@ -90,8 +90,8 @@ it('should benchmark ecosystem components and output valid JSON with --json', ()
   const res = runCli('benchmark --json');
   assert.strictEqual(res.status, 0);
   const data = JSON.parse(res.stdout);
-  assert.strictEqual(data.totalComponents, 90);
-  assert.strictEqual(data.progressiveSkillsCount, 68);
+  assert.strictEqual(data.totalComponents, 94);
+  assert.strictEqual(data.progressiveSkillsCount, 72);
   assert.strictEqual(data.scopedAgentsCount, 13);
   assert.strictEqual(data.lifecycleHooksCount, 9);
   assert(data.totalRunbookTokens > 15000, 'Expected >15,000 runbook tokens');
@@ -316,7 +316,7 @@ try {
     const dryRes = runCli(`bundle --output "${bundleTarget}" --dry-run`);
     assert.strictEqual(dryRes.status, 0);
     assert.match(dryRes.stdout, /DRY RUN MODE ACTIVATED/);
-    assert.match(dryRes.stdout, /Skills to bundle: 68/);
+    assert.match(dryRes.stdout, /Skills to bundle: 72/);
     assert.strictEqual(fs.existsSync(bundleTarget), false, 'Dry run should not create destination directory');
 
     // JSON Dry-run mode
@@ -324,7 +324,7 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.components.totalCount, 90);
+    assert.strictEqual(dryData.manifest.components.totalCount, 94);
 
     // Live mode
     const liveRes = runCli(`bundle --output "${bundleTarget}"`);
@@ -477,7 +477,7 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.metrics.total_skills, 68);
+    assert.strictEqual(dryData.manifest.metrics.total_skills, 72);
     assert.strictEqual(dryData.manifest.metrics.total_subagents, 13);
     assert.strictEqual(dryData.manifest.metrics.total_hooks, 9);
 
@@ -524,12 +524,12 @@ try {
   });
 
   // Benchmark Components Verification
-  it('should report 90 components, 68 skills, and 13 subagents in benchmark --json', () => {
+  it('should report 94 components, 72 skills, and 13 subagents in benchmark --json', () => {
     const res = runCli('benchmark --json');
     assert.strictEqual(res.status, 0);
     const data = JSON.parse(res.stdout);
-    assert.strictEqual(data.totalComponents, 90, 'Total components should be 90');
-    assert.strictEqual(data.progressiveSkillsCount, 68, 'Progressive skills should be 68');
+    assert.strictEqual(data.totalComponents, 94, 'Total components should be 94');
+    assert.strictEqual(data.progressiveSkillsCount, 72, 'Progressive skills should be 72');
     assert.strictEqual(data.scopedAgentsCount, 13, 'Scoped agents should be 13');
     assert.strictEqual(data.lifecycleHooksCount, 9, 'Lifecycle hooks should be 9');
   });
@@ -596,6 +596,62 @@ try {
 
   it('should display info for v2.2.0 skills (bigquery-vector-search, cloud-run-agents, pubsub-event-mesh, spanner-graph-rag)', () => {
     for (const skill of ['bigquery-vector-search', 'cloud-run-agents', 'pubsub-event-mesh', 'spanner-graph-rag']) {
+      const res = runCli(`info ${skill}`);
+      assert.strictEqual(res.status, 0);
+      assert.match(res.stdout, new RegExp(skill));
+    }
+  });
+
+  // Pre-flight Cost Oracle
+  it('should support estimate command in dry-run and json modes', () => {
+    const dryRes = runCli('estimate --dry-run');
+    assert.strictEqual(dryRes.status, 0);
+    assert.match(dryRes.stdout, /Pre-Flight Cost Oracle/);
+    assert.match(dryRes.stdout, /gemini-2\.0-flash/);
+    assert.match(dryRes.stdout, /FinOps Recommendation/);
+
+    const jsonRes = runCli('estimate --json');
+    assert.strictEqual(jsonRes.status, 0);
+    const data = JSON.parse(jsonRes.stdout);
+    assert.strictEqual(typeof data.filesAnalyzed, 'number');
+    assert.strictEqual(typeof data.progressiveSavingsPercent, 'number');
+    assert.ok(data.models['gemini-2.0-flash']);
+    assert.ok(data.models['gemini-3.8-extended-thinking']);
+  });
+
+  // Harness³ Darwin Engine & Auto-Bench
+  it('should support harness3 auto-bench in dry-run and json modes', () => {
+    const dryRes = runCli('harness3 auto-bench --dry-run');
+    assert.strictEqual(dryRes.status, 0);
+    assert.match(dryRes.stdout, /Harness³: Autonomous Agentic Darwinism/);
+    assert.match(dryRes.stdout, /Pareto Optimal/);
+
+    const jsonRes = runCli('harness3 --json');
+    assert.strictEqual(jsonRes.status, 0);
+    const data = JSON.parse(jsonRes.stdout);
+    assert.strictEqual(data.engine, 'Harness³ Genetic Darwinism & Auto-Bench');
+    assert.strictEqual(data.paretoWinningSurface.paretoOptimal, true);
+    assert.ok(data.candidates.length >= 5);
+  });
+
+  // Visual Mission Control UI
+  it('should support ui mission control in dry-run and json modes', () => {
+    const dryRes = runCli('ui --dry-run');
+    assert.strictEqual(dryRes.status, 0);
+    assert.match(dryRes.stdout, /Visual Mission Control/);
+    assert.match(dryRes.stdout, /DRY RUN MODE ACTIVATED/);
+
+    const jsonRes = runCli('ui --json');
+    assert.strictEqual(jsonRes.status, 0);
+    const data = JSON.parse(jsonRes.stdout);
+    assert.strictEqual(data.metrics.totalComponents, 94);
+    assert.strictEqual(data.metrics.progressiveSkills, 72);
+    assert.ok(data.endpoints.dashboard);
+  });
+
+  // v2.3.0 Skills Info Verification
+  it('should display info for v2.3.0 skills (gemini-live-multimodal, cost-oracle-finops, vertex-ai-feature-store, spanner-change-streams)', () => {
+    for (const skill of ['gemini-live-multimodal', 'cost-oracle-finops', 'vertex-ai-feature-store', 'spanner-change-streams']) {
       const res = runCli(`info ${skill}`);
       assert.strictEqual(res.status, 0);
       assert.match(res.stdout, new RegExp(skill));
