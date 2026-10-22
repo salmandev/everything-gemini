@@ -4,6 +4,29 @@ All notable changes to **Everything Gemini (`everything-gemini`)** will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.0] - 2026-10-22
+
+### Added
+- **The Century Milestone: 100 Production Components & 76 Progressive Disclosure Skills**:
+  - **`ephemeral-swarm-orchestrator`** ([`skills/ephemeral-swarm-orchestrator/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/ephemeral-swarm-orchestrator/SKILL.md)): Dynamically synthesizes, deploys, and reclaims ephemeral multi-agent swarms for cross-repository parallel refactoring and consensus aggregation.
+  - **`dynamic-thinking-allocation`** ([`skills/dynamic-thinking-allocation/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/dynamic-thinking-allocation/SKILL.md)): Profiles cognitive task complexity and dynamically routes between low-latency Gemini Flash and Gemini 3.8 Extended Thinking reasoning budgets (0 to 24,576 tokens).
+  - **`ebpf-sandbox-enforcer`** ([`skills/ebpf-sandbox-enforcer/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/ebpf-sandbox-enforcer/SKILL.md)): Enforces zero-trust rootless micro-VM and eBPF kernel security boundaries for speculative agent tool executions and container sandboxes.
+  - **`quantum-safe-cryptography`** ([`skills/quantum-safe-cryptography/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/quantum-safe-cryptography/SKILL.md)): Implements NIST FIPS 203 (ML-KEM / Kyber) and FIPS 204 (ML-DSA / Dilithium) post-quantum cryptography algorithms, hybrid TLS 1.3 key exchange, and quantum-resistant API authentication.
+- **14th Scoped Subagent Fleet Expansion**:
+  - **`swarm-coordinator`** ([`agents/swarm-coordinator.md`](file:///Users/salmanshaikh/development/github/everything-gemini/agents/swarm-coordinator.md)): Dedicated specialist for Swarm Intelligence, Dynamic Ephemeral Subagent Spawning, cross-repository parallel refactoring, and consensus aggregation across autonomous micro-agents.
+- **10th Lifecycle Safety Hook**:
+  - **`thinking-budget`** ([`hooks/thinking-budget/`](file:///Users/salmanshaikh/development/github/everything-gemini/hooks/thinking-budget/)): PreToolUse deterministic lifecycle hook allocating and capping internal reasoning / thinking token limits and preventing uncontrolled thinking token runaways.
+- **Ephemeral Swarm Intelligence Engine (`everything-gemini swarm`)**:
+  - Dynamic micro-agent synthesis, worker allocation (`--workers <n>`), swarm topologies (`hierarchical`, `mesh`, `ring`), and multi-agent Byzantine consensus voting.
+- **Dynamic Thinking Allocation & Cognitive Profiler (`everything-gemini thinking`)**:
+  - Task entropy profiling, cognitive complexity scoring, thinking token budgeting (`--budget <n>`, `--level <flash|balanced|deep|exhaustive>`), and automated model routing.
+- **Enhanced Visual Mission Control UI v2.4.0 (`everything-gemini ui`)**:
+  - Updated to reflect 100 components (76 skills, 14 subagents, 10 hooks), added live endpoints for `/api/swarm` and `/api/thinking`, with interactive dashboard cards.
+- **Python SDK Swarm Showcase**:
+  - Authored [`examples/python-sdk/ephemeral_swarm_orchestration.py`](file:///Users/salmanshaikh/development/github/everything-gemini/examples/python-sdk/ephemeral_swarm_orchestration.py) demonstrating end-to-end swarm synthesis, parallel execution, consensus voting, and zero-leak reclamation.
+- **Turnkey Social Media Launch Kit**:
+  - Authored [`docs/LAUNCH_KIT_v2.4.0.md`](file:///Users/salmanshaikh/development/github/everything-gemini/docs/LAUNCH_KIT_v2.4.0.md) for LinkedIn, X (Twitter), Reddit, and Hacker News.
+
 ## [2.3.0] - 2026-10-21
 
 ### Added

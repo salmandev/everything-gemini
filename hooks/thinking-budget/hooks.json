@@ -1,0 +1,16 @@
+{
+  "thinking-budget": {
+    "PreToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ./scripts/budget-thinking.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

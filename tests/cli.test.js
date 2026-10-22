@@ -90,10 +90,10 @@ it('should benchmark ecosystem components and output valid JSON with --json', ()
   const res = runCli('benchmark --json');
   assert.strictEqual(res.status, 0);
   const data = JSON.parse(res.stdout);
-  assert.strictEqual(data.totalComponents, 94);
-  assert.strictEqual(data.progressiveSkillsCount, 72);
-  assert.strictEqual(data.scopedAgentsCount, 13);
-  assert.strictEqual(data.lifecycleHooksCount, 9);
+  assert.strictEqual(data.totalComponents, 100);
+  assert.strictEqual(data.progressiveSkillsCount, 76);
+  assert.strictEqual(data.scopedAgentsCount, 14);
+  assert.strictEqual(data.lifecycleHooksCount, 10);
   assert(data.totalRunbookTokens > 15000, 'Expected >15,000 runbook tokens');
   assert(data.estimatedTokensSavedPerTurn > 8000, 'Expected significant token savings');
 });
@@ -316,7 +316,7 @@ try {
     const dryRes = runCli(`bundle --output "${bundleTarget}" --dry-run`);
     assert.strictEqual(dryRes.status, 0);
     assert.match(dryRes.stdout, /DRY RUN MODE ACTIVATED/);
-    assert.match(dryRes.stdout, /Skills to bundle: 72/);
+    assert.match(dryRes.stdout, /Skills to bundle: 76/);
     assert.strictEqual(fs.existsSync(bundleTarget), false, 'Dry run should not create destination directory');
 
     // JSON Dry-run mode
@@ -324,7 +324,7 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.components.totalCount, 94);
+    assert.strictEqual(dryData.manifest.components.totalCount, 100);
 
     // Live mode
     const liveRes = runCli(`bundle --output "${bundleTarget}"`);
@@ -477,9 +477,9 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.metrics.total_skills, 72);
-    assert.strictEqual(dryData.manifest.metrics.total_subagents, 13);
-    assert.strictEqual(dryData.manifest.metrics.total_hooks, 9);
+    assert.strictEqual(dryData.manifest.metrics.total_skills, 76);
+    assert.strictEqual(dryData.manifest.metrics.total_subagents, 14);
+    assert.strictEqual(dryData.manifest.metrics.total_hooks, 10);
 
     // Live mode
     const liveRes = runCli(`harness2 "${h2Target}"`);
@@ -524,14 +524,14 @@ try {
   });
 
   // Benchmark Components Verification
-  it('should report 94 components, 72 skills, and 13 subagents in benchmark --json', () => {
+  it('should report 100 components, 76 skills, 14 subagents, and 10 hooks in benchmark --json', () => {
     const res = runCli('benchmark --json');
     assert.strictEqual(res.status, 0);
     const data = JSON.parse(res.stdout);
-    assert.strictEqual(data.totalComponents, 94, 'Total components should be 94');
-    assert.strictEqual(data.progressiveSkillsCount, 72, 'Progressive skills should be 72');
-    assert.strictEqual(data.scopedAgentsCount, 13, 'Scoped agents should be 13');
-    assert.strictEqual(data.lifecycleHooksCount, 9, 'Lifecycle hooks should be 9');
+    assert.strictEqual(data.totalComponents, 100, 'Total components should be 100');
+    assert.strictEqual(data.progressiveSkillsCount, 76, 'Progressive skills should be 76');
+    assert.strictEqual(data.scopedAgentsCount, 14, 'Scoped agents should be 14');
+    assert.strictEqual(data.lifecycleHooksCount, 10, 'Lifecycle hooks should be 10');
   });
 
   // Harness² Run & Ingest-Trace tests
@@ -644,8 +644,8 @@ try {
     const jsonRes = runCli('ui --json');
     assert.strictEqual(jsonRes.status, 0);
     const data = JSON.parse(jsonRes.stdout);
-    assert.strictEqual(data.metrics.totalComponents, 94);
-    assert.strictEqual(data.metrics.progressiveSkills, 72);
+    assert.strictEqual(data.metrics.totalComponents, 100);
+    assert.strictEqual(data.metrics.progressiveSkills, 76);
     assert.ok(data.endpoints.dashboard);
   });
 
@@ -656,6 +656,56 @@ try {
       assert.strictEqual(res.status, 0);
       assert.match(res.stdout, new RegExp(skill));
     }
+  });
+
+  // v2.4.0 Swarm Command
+  it('should support swarm command in dry-run and json modes', () => {
+    const dryRes = runCli('swarm spawn "test refactor" --workers 3 --dry-run');
+    assert.strictEqual(dryRes.status, 0);
+    assert.match(dryRes.stdout, /Ephemeral Swarm Intelligence/);
+    assert.match(dryRes.stdout, /DRY RUN MODE ACTIVATED|Dry run complete/);
+
+    const jsonRes = runCli('swarm --json');
+    assert.strictEqual(jsonRes.status, 0);
+    const data = JSON.parse(jsonRes.stdout);
+    assert.strictEqual(data.workerCount, 3);
+    assert.strictEqual(data.topology, 'hierarchical');
+    assert.strictEqual(data.reclamation.status, 'reclaimed_clean');
+  });
+
+  // v2.4.0 Thinking Command
+  it('should support thinking command in dry-run and json modes', () => {
+    const dryRes = runCli('thinking budget --level deep --dry-run');
+    assert.strictEqual(dryRes.status, 0);
+    assert.match(dryRes.stdout, /Dynamic Thinking Allocation/);
+    assert.match(dryRes.stdout, /Dry run complete/);
+
+    const jsonRes = runCli('thinking --json');
+    assert.strictEqual(jsonRes.status, 0);
+    const data = JSON.parse(jsonRes.stdout);
+    assert.strictEqual(data.cognitiveLevel, 'Deep Reasoning');
+    assert.strictEqual(data.recommendedModel, 'gemini-3.8-extended-thinking');
+    assert.strictEqual(data.allocatedThinkingTokens, 16384);
+  });
+
+  // v2.4.0 Skills Info Verification
+  it('should display info for v2.4.0 skills (ephemeral-swarm-orchestrator, dynamic-thinking-allocation, ebpf-sandbox-enforcer, quantum-safe-cryptography)', () => {
+    for (const skill of ['ephemeral-swarm-orchestrator', 'dynamic-thinking-allocation', 'ebpf-sandbox-enforcer', 'quantum-safe-cryptography']) {
+      const res = runCli(`info ${skill}`);
+      assert.strictEqual(res.status, 0);
+      assert.match(res.stdout, new RegExp(skill));
+    }
+  });
+
+  // v2.4.0 Subagent & Hook Info Verification
+  it('should display info for swarm-coordinator subagent and thinking-budget hook', () => {
+    const agentRes = runCli('info swarm-coordinator');
+    assert.strictEqual(agentRes.status, 0);
+    assert.match(agentRes.stdout, /swarm-coordinator/);
+
+    const hookRes = runCli('info thinking-budget');
+    assert.strictEqual(hookRes.status, 0);
+    assert.match(hookRes.stdout, /thinking-budget/);
   });
 
 } finally {

@@ -80,7 +80,7 @@ cd everything-gemini
 | :--- | :--- | :--- |
 | **`core`** | Minimalists & Speed | Safety-shield hook, TDD skill, repo-onboarding skill, baseline `GEMINI.md`. |
 | **`developer`** *(Recommended)* | Daily Software Engineers | Core + 13 Scoped Subagents (`agents/`), Frontier Skills (Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
-| **`full`** | Lead Engineers & Archs | Everything: all 72 progressive skills, 13 scoped subagents, full lifecycle hooks suite (9 hooks), 14 MCP blueprints, all plugins, configs, and templates. |
+| **`full`** | Lead Engineers & Archs | Everything: all 76 progressive skills, 14 scoped subagents, full lifecycle hooks suite (10 hooks), 14 MCP blueprints, all plugins, configs, and templates (The 100-Component Century Milestone). |
 
 ### 5. In CI / GitHub Actions Workflows
 
@@ -159,9 +159,9 @@ everything-gemini/
 ├── agents/                       # Scoped subagent fleet (Planner, Reviewer, Release Engineer, etc.)
 ├── scripts/                      # Automated installers and harness validators
 ├── plugins/                      # Reusable modular plugins (web-fullstack, python-ai, security)
-├── skills/                       # 72 Progressive disclosure skills (70 core + 2 plugins)
+├── skills/                       # 76 Progressive disclosure skills (74 core + 2 plugins)
 ├── rules/                        # Contextual guidelines & standards
-├── hooks/                        # Event-driven lifecycle hooks (GeminiShield, Auto-lint)
+├── hooks/                        # Event-driven lifecycle hooks (GeminiShield, Auto-lint, ThinkingBudget)
 ├── mcp/                          # Production-ready MCP server blueprints
 ├── docs/                         # The Comprehensive Antigravity Bible
 └── templates/                    # Starter templates (minimal, recommended, full-power)
@@ -190,10 +190,19 @@ Everything Gemini provides specialized subagent specifications designed for Anti
 | **[`incident-responder`](agents/incident-responder.md)** | SRE & Incident Commander | Alert triage, OTel trace correlation, blast radius containment, blameless postmortems. |
 | **[`platform-engineer`](agents/platform-engineer.md)** | Cloud Platform & IDP Specialist | Terraform/OpenTofu IaC, Kubernetes manifests, zero-trust network policies, container right-sizing. |
 | **[`mlops-engineer`](agents/mlops-engineer.md)** | MLOps & LLMOps Specialist | Model serving (Triton/vLLM), vector clustering (ChromaDB/Milvus), prefix context caching, KEDA autoscaling. |
+| **[`swarm-coordinator`](agents/swarm-coordinator.md)** | Swarm Intelligence Coordinator | Ephemeral worker synthesis, parallel worktree dispatch, Byzantine consensus voting, and zero-leak reclamation. |
 
 ### 1. Skills (`skills/`)
 Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`name` and `description`) is placed into the system prompt. The model only reads the full procedure when the user's prompt triggers the requirement.
 
+- **[`ephemeral-swarm-orchestrator`](skills/ephemeral-swarm-orchestrator/SKILL.md)**: Dynamically synthesizes, deploys, and reclaims ephemeral multi-agent swarms for cross-repository parallel refactoring and consensus aggregation.
+- **[`dynamic-thinking-allocation`](skills/dynamic-thinking-allocation/SKILL.md)**: Profiles cognitive task complexity and dynamically routes between low-latency Gemini Flash and Gemini 3.8 Extended Thinking reasoning budgets.
+- **[`ebpf-sandbox-enforcer`](skills/ebpf-sandbox-enforcer/SKILL.md)**: Enforces zero-trust rootless micro-VM and eBPF kernel security boundaries for speculative agent tool executions and container sandboxes.
+- **[`quantum-safe-cryptography`](skills/quantum-safe-cryptography/SKILL.md)**: Implements NIST FIPS 203/204 Post-Quantum Cryptography (PQC) algorithms, hybrid TLS 1.3 key exchange, and quantum-resistant API authentication.
+- **[`gemini-live-multimodal`](skills/gemini-live-multimodal/SKILL.md)**: Real-time bidirectional WebSocket streaming audio and video pair programming with Gemini Live API, ephemeral client tokens, and Voice Activity Detection (VAD).
+- **[`cost-oracle-finops`](skills/cost-oracle-finops/SKILL.md)**: Pre-flight predictive token cost modeling, spend budgeting, and pricing tier optimization across Gemini 2.0 Flash, Pro, and Gemini 3.8 extended reasoning agents.
+- **[`vertex-ai-feature-store`](skills/vertex-ai-feature-store/SKILL.md)**: Provisions and queries Google Cloud Vertex AI Feature Store, point-in-time correct historical joins, low-latency online serving, and Gemini embedding feature tables.
+- **[`spanner-change-streams`](skills/spanner-change-streams/SKILL.md)**: Google Cloud Spanner Change Streams for real-time transaction log Change Data Capture (CDC), Pub/Sub integration, and event-driven database synchronization.
 - **[`bigquery-vector-search`](skills/bigquery-vector-search/SKILL.md)**: Native BigQuery vector search, `VECTOR_SEARCH` SQL statements, `ML.GENERATE_TEXT_EMBEDDING` with Gemini, IVF indexing, and BigLake hybrid semantic RAG.
 - **[`cloud-run-agents`](skills/cloud-run-agents/SKILL.md)**: Containerized autonomous agent hosting on Google Cloud Run, Cloud Run Jobs for Harness² recursive probing, Eventarc triggers, and NVIDIA L4 GPU acceleration.
 - **[`pubsub-event-mesh`](skills/pubsub-event-mesh/SKILL.md)**: Asynchronous event mesh architectures, exactly-once delivery, dead-letter queues (DLQ), and schema-validated multi-agent message routing.
@@ -275,6 +284,7 @@ Hooks run shell scripts at critical lifecycle events with typed JSON contracts o
 - **[`learned-instincts`](hooks/learned-instincts/hooks.json)**: Session learning hook that records developer corrections and feedback into persistent instincts.
 - **[`budget-guard`](hooks/budget-guard/hooks.json) (`PreToolUse`)**: Intercepts tool execution to enforce hard USD spend caps (`MAX_USD_BUDGET`), tracking step-by-step token expenditure and denying execution when financial limits are met.
 - **[`human-gate`](hooks/human-gate/hooks.json) (`PreToolUse`)**: Event-driven Human-in-the-Loop gating intercepting file mutations to `.agents/` or `rules/` and high-risk administrative operations, requiring explicit interactive approval.
+- **[`thinking-budget`](hooks/thinking-budget/hooks.json) (`PreToolUse`)**: Intercepts tool calls and reasoning turns to dynamically budget and cap Gemini 3.8 extended reasoning token runaways.
 
 ### 3. Rules Hierarchy (`rules/`)
 Antigravity automatically discovers rules by walking up from the current file's directory to the repository root:
@@ -343,7 +353,7 @@ Skill Body: Loaded on-demand ONLY when invoked = ~1,500 Tokens (one-time)
 Savings: > 85% Token Reduction & 3x Faster First-Token Latency!
 ```
 
-Run the built-in diagnostic benchmark across all 94 ecosystem components:
+Run the built-in diagnostic benchmark across all 100 ecosystem components (The Century Milestone):
 ```bash
 ./bin/everything-gemini test-all
 ```
@@ -422,7 +432,7 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 ./bin/everything-gemini audit
 ./bin/everything-gemini audit --json
 
-# Benchmark and validate all 72 skills, 13 subagents, and 9 hooks (human or JSON)
+# Benchmark and validate all 76 skills, 14 subagents, and 10 hooks (100 components)
 ./bin/everything-gemini test-all
 ./bin/everything-gemini benchmark --json
 
@@ -440,6 +450,16 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 ./bin/everything-gemini ui --port 4200
 ./bin/everything-gemini ui --dry-run
 ./bin/everything-gemini ui --json
+
+# Spawn dynamic ephemeral micro-agent swarms with Byzantine consensus
+./bin/everything-gemini swarm spawn "refactor auth middleware to zero-trust mTLS" --workers 3
+./bin/everything-gemini swarm --dry-run
+./bin/everything-gemini swarm --json
+
+# Profile cognitive task complexity and allocate Gemini 3.8 thinking tokens
+./bin/everything-gemini thinking profile "Resolve distributed Spanner deadlock"
+./bin/everything-gemini thinking budget --level deep --dry-run
+./bin/everything-gemini thinking --json
 
 # Synthesize 8-surface Google Research Harness² workspace (prompts, guardrails, memory, etc.)
 ./bin/everything-gemini harness2
