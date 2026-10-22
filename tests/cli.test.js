@@ -90,10 +90,10 @@ it('should benchmark ecosystem components and output valid JSON with --json', ()
   const res = runCli('benchmark --json');
   assert.strictEqual(res.status, 0);
   const data = JSON.parse(res.stdout);
-  assert.strictEqual(data.totalComponents, 100);
-  assert.strictEqual(data.progressiveSkillsCount, 76);
-  assert.strictEqual(data.scopedAgentsCount, 14);
-  assert.strictEqual(data.lifecycleHooksCount, 10);
+  assert.strictEqual(data.totalComponents, 106);
+  assert.strictEqual(data.progressiveSkillsCount, 80);
+  assert.strictEqual(data.scopedAgentsCount, 15);
+  assert.strictEqual(data.lifecycleHooksCount, 11);
   assert(data.totalRunbookTokens > 15000, 'Expected >15,000 runbook tokens');
   assert(data.estimatedTokensSavedPerTurn > 8000, 'Expected significant token savings');
 });
@@ -316,7 +316,7 @@ try {
     const dryRes = runCli(`bundle --output "${bundleTarget}" --dry-run`);
     assert.strictEqual(dryRes.status, 0);
     assert.match(dryRes.stdout, /DRY RUN MODE ACTIVATED/);
-    assert.match(dryRes.stdout, /Skills to bundle: 76/);
+    assert.match(dryRes.stdout, /Skills to bundle: 80/);
     assert.strictEqual(fs.existsSync(bundleTarget), false, 'Dry run should not create destination directory');
 
     // JSON Dry-run mode
@@ -324,7 +324,7 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.components.totalCount, 100);
+    assert.strictEqual(dryData.manifest.components.totalCount, 106);
 
     // Live mode
     const liveRes = runCli(`bundle --output "${bundleTarget}"`);
@@ -477,9 +477,9 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.metrics.total_skills, 76);
-    assert.strictEqual(dryData.manifest.metrics.total_subagents, 14);
-    assert.strictEqual(dryData.manifest.metrics.total_hooks, 10);
+    assert.strictEqual(dryData.manifest.metrics.total_skills, 80);
+    assert.strictEqual(dryData.manifest.metrics.total_subagents, 15);
+    assert.strictEqual(dryData.manifest.metrics.total_hooks, 11);
 
     // Live mode
     const liveRes = runCli(`harness2 "${h2Target}"`);
@@ -524,14 +524,14 @@ try {
   });
 
   // Benchmark Components Verification
-  it('should report 100 components, 76 skills, 14 subagents, and 10 hooks in benchmark --json', () => {
+  it('should report 106 components, 80 skills, 15 subagents, and 11 hooks in benchmark --json', () => {
     const res = runCli('benchmark --json');
     assert.strictEqual(res.status, 0);
     const data = JSON.parse(res.stdout);
-    assert.strictEqual(data.totalComponents, 100, 'Total components should be 100');
-    assert.strictEqual(data.progressiveSkillsCount, 76, 'Progressive skills should be 76');
-    assert.strictEqual(data.scopedAgentsCount, 14, 'Scoped agents should be 14');
-    assert.strictEqual(data.lifecycleHooksCount, 10, 'Lifecycle hooks should be 10');
+    assert.strictEqual(data.totalComponents, 106, 'Total components should be 106');
+    assert.strictEqual(data.progressiveSkillsCount, 80, 'Progressive skills should be 80');
+    assert.strictEqual(data.scopedAgentsCount, 15, 'Scoped agents should be 15');
+    assert.strictEqual(data.lifecycleHooksCount, 11, 'Lifecycle hooks should be 11');
   });
 
   // Harness² Run & Ingest-Trace tests
@@ -644,8 +644,8 @@ try {
     const jsonRes = runCli('ui --json');
     assert.strictEqual(jsonRes.status, 0);
     const data = JSON.parse(jsonRes.stdout);
-    assert.strictEqual(data.metrics.totalComponents, 100);
-    assert.strictEqual(data.metrics.progressiveSkills, 76);
+    assert.strictEqual(data.metrics.totalComponents, 106);
+    assert.strictEqual(data.metrics.progressiveSkills, 80);
     assert.ok(data.endpoints.dashboard);
   });
 
@@ -706,6 +706,56 @@ try {
     const hookRes = runCli('info thinking-budget');
     assert.strictEqual(hookRes.status, 0);
     assert.match(hookRes.stdout, /thinking-budget/);
+  });
+
+  // v2.5.0 Resilience Command
+  it('should support resilience command in dry-run and json modes', () => {
+    const dryRes = runCli('resilience run --iterations 10 --dry-run');
+    assert.strictEqual(dryRes.status, 0);
+    assert.match(dryRes.stdout, /Harness³ Mutation Testing & Chaos Resilience Engine/);
+    assert.match(dryRes.stdout, /Dry run complete/);
+
+    const jsonRes = runCli('resilience --json');
+    assert.strictEqual(jsonRes.status, 0);
+    const data = JSON.parse(jsonRes.stdout);
+    assert.strictEqual(data.verdict, 'PASSED_PRODUCTION_CERTIFIED');
+    assert.ok(data.faultMatrix.length >= 5);
+    assert.strictEqual(data.circuitBreaker.status, 'active');
+  });
+
+  // v2.5.0 Telemetry Command
+  it('should support telemetry command in dry-run and json modes', () => {
+    const dryRes = runCli('telemetry status --dry-run');
+    assert.strictEqual(dryRes.status, 0);
+    assert.match(dryRes.stdout, /OpenTelemetry GenAI Observability/);
+    assert.match(dryRes.stdout, /Dry run complete/);
+
+    const jsonRes = runCli('telemetry --json');
+    assert.strictEqual(jsonRes.status, 0);
+    const data = JSON.parse(jsonRes.stdout);
+    assert.strictEqual(data.semanticConventions, 'OpenTelemetry GenAI v1.30+');
+    assert.ok(data.spans.length >= 4);
+    assert.strictEqual(data.tokenMetrics.thinkingTokens, 20480);
+  });
+
+  // v2.5.0 Skills Info Verification
+  it('should display info for v2.5.0 skills (webrtc-agent-gateway, opentelemetry-agent-observability, harness3-mutation-testing, envoy-ai-gateway)', () => {
+    for (const skill of ['webrtc-agent-gateway', 'opentelemetry-agent-observability', 'harness3-mutation-testing', 'envoy-ai-gateway']) {
+      const res = runCli(`info ${skill}`);
+      assert.strictEqual(res.status, 0);
+      assert.match(res.stdout, new RegExp(skill));
+    }
+  });
+
+  // v2.5.0 Subagent & Hook Info Verification
+  it('should display info for resilience-engineer subagent and drift-detector hook', () => {
+    const agentRes = runCli('info resilience-engineer');
+    assert.strictEqual(agentRes.status, 0);
+    assert.match(agentRes.stdout, /resilience-engineer/);
+
+    const hookRes = runCli('info drift-detector');
+    assert.strictEqual(hookRes.status, 0);
+    assert.match(hookRes.stdout, /drift-detector/);
   });
 
 } finally {

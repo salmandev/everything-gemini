@@ -79,8 +79,8 @@ cd everything-gemini
 | Profile | Target Audience | What Gets Installed |
 | :--- | :--- | :--- |
 | **`core`** | Minimalists & Speed | Safety-shield hook, TDD skill, repo-onboarding skill, baseline `GEMINI.md`. |
-| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 13 Scoped Subagents (`agents/`), Frontier Skills (Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
-| **`full`** | Lead Engineers & Archs | Everything: all 76 progressive skills, 14 scoped subagents, full lifecycle hooks suite (10 hooks), 14 MCP blueprints, all plugins, configs, and templates (The 100-Component Century Milestone). |
+| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 14 Scoped Subagents (`agents/`), Frontier Skills (Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
+| **`full`** | Lead Engineers & Archs | Everything: all 80 progressive skills, 15 scoped subagents, full lifecycle hooks suite (11 hooks), 14 MCP blueprints, all plugins, configs, and templates (The 106-Component Landmark / 80-Skill Frontier). |
 
 ### 5. In CI / GitHub Actions Workflows
 
@@ -191,10 +191,15 @@ Everything Gemini provides specialized subagent specifications designed for Anti
 | **[`platform-engineer`](agents/platform-engineer.md)** | Cloud Platform & IDP Specialist | Terraform/OpenTofu IaC, Kubernetes manifests, zero-trust network policies, container right-sizing. |
 | **[`mlops-engineer`](agents/mlops-engineer.md)** | MLOps & LLMOps Specialist | Model serving (Triton/vLLM), vector clustering (ChromaDB/Milvus), prefix context caching, KEDA autoscaling. |
 | **[`swarm-coordinator`](agents/swarm-coordinator.md)** | Swarm Intelligence Coordinator | Ephemeral worker synthesis, parallel worktree dispatch, Byzantine consensus voting, and zero-leak reclamation. |
+| **[`resilience-engineer`](agents/resilience-engineer.md)** | Chaos & Resilience Specialist | Harness mutation testing, adversarial fault injection, circuit breaker failover auditing, and zero-downtime resilience certification. |
 
 ### 1. Skills (`skills/`)
 Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`name` and `description`) is placed into the system prompt. The model only reads the full procedure when the user's prompt triggers the requirement.
 
+- **[`webrtc-agent-gateway`](skills/webrtc-agent-gateway/SKILL.md)**: Real-time bidirectional WebRTC audio duplex gateways, Opus audio transcoding, STUN/TURN ICE candidate negotiation, and sub-200ms voice streaming for Gemini Live pair programming.
+- **[`opentelemetry-agent-observability`](skills/opentelemetry-agent-observability/SKILL.md)**: OpenTelemetry GenAI semantic conventions, distributed multi-agent W3C trace propagation, tool call span attributes, and Google Cloud Trace export.
+- **[`harness3-mutation-testing`](skills/harness3-mutation-testing/SKILL.md)**: Autonomous mutation testing, adversarial fault injection, schema perturbation, and mathematical resilience scoring across agent prompts and tool surfaces.
+- **[`envoy-ai-gateway`](skills/envoy-ai-gateway/SKILL.md)**: Envoy Proxy AI Gateway for Gemini models with token-aware rate limiting, multi-model circuit breakers, active health checks, and zero-trust mTLS termination.
 - **[`ephemeral-swarm-orchestrator`](skills/ephemeral-swarm-orchestrator/SKILL.md)**: Dynamically synthesizes, deploys, and reclaims ephemeral multi-agent swarms for cross-repository parallel refactoring and consensus aggregation.
 - **[`dynamic-thinking-allocation`](skills/dynamic-thinking-allocation/SKILL.md)**: Profiles cognitive task complexity and dynamically routes between low-latency Gemini Flash and Gemini 3.8 Extended Thinking reasoning budgets.
 - **[`ebpf-sandbox-enforcer`](skills/ebpf-sandbox-enforcer/SKILL.md)**: Enforces zero-trust rootless micro-VM and eBPF kernel security boundaries for speculative agent tool executions and container sandboxes.
@@ -285,6 +290,7 @@ Hooks run shell scripts at critical lifecycle events with typed JSON contracts o
 - **[`budget-guard`](hooks/budget-guard/hooks.json) (`PreToolUse`)**: Intercepts tool execution to enforce hard USD spend caps (`MAX_USD_BUDGET`), tracking step-by-step token expenditure and denying execution when financial limits are met.
 - **[`human-gate`](hooks/human-gate/hooks.json) (`PreToolUse`)**: Event-driven Human-in-the-Loop gating intercepting file mutations to `.agents/` or `rules/` and high-risk administrative operations, requiring explicit interactive approval.
 - **[`thinking-budget`](hooks/thinking-budget/hooks.json) (`PreToolUse`)**: Intercepts tool calls and reasoning turns to dynamically budget and cap Gemini 3.8 extended reasoning token runaways.
+- **[`drift-detector`](hooks/drift-detector/hooks.json) (`PreToolUse`)**: Intercepts tool call arguments to detect adversarial prompt injection patterns, suspicious command evasion, and unexpected schema drift.
 
 ### 3. Rules Hierarchy (`rules/`)
 Antigravity automatically discovers rules by walking up from the current file's directory to the repository root:
@@ -460,6 +466,16 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 ./bin/everything-gemini thinking profile "Resolve distributed Spanner deadlock"
 ./bin/everything-gemini thinking budget --level deep --dry-run
 ./bin/everything-gemini thinking --json
+
+# Run Harness³ autonomous mutation testing, fault injection & resilience scoring
+./bin/everything-gemini resilience run --iterations 10
+./bin/everything-gemini resilience inject --faults latency,schema,oom --dry-run
+./bin/everything-gemini resilience --json
+
+# Inspect OpenTelemetry GenAI semantic spans & distributed traces
+./bin/everything-gemini telemetry status
+./bin/everything-gemini telemetry --trace-id 4bf92f3577b34da6a3ce929d0e0e4736 --dry-run
+./bin/everything-gemini telemetry --json
 
 # Synthesize 8-surface Google Research Harness² workspace (prompts, guardrails, memory, etc.)
 ./bin/everything-gemini harness2

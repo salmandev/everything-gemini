@@ -4,6 +4,29 @@ All notable changes to **Everything Gemini (`everything-gemini`)** will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] - 2026-10-22
+
+### Added
+- **The 80-Skill Frontier: 106 Production Components & 80 Progressive Disclosure Skills**:
+  - **`webrtc-agent-gateway`** ([`skills/webrtc-agent-gateway/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/webrtc-agent-gateway/SKILL.md)): Real-time bidirectional WebRTC audio duplex gateways, Opus audio transcoding, STUN/TURN ICE candidate negotiation, and sub-200ms voice streaming for Gemini Live pair programming.
+  - **`opentelemetry-agent-observability`** ([`skills/opentelemetry-agent-observability/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/opentelemetry-agent-observability/SKILL.md)): OpenTelemetry GenAI semantic conventions (v1.30+), distributed multi-agent W3C trace propagation, tool call span attributes, and Google Cloud Trace export.
+  - **`harness3-mutation-testing`** ([`skills/harness3-mutation-testing/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/harness3-mutation-testing/SKILL.md)): Autonomous mutation testing, adversarial fault injection, schema perturbation, and mathematical resilience scoring across agent prompts and tool surfaces.
+  - **`envoy-ai-gateway`** ([`skills/envoy-ai-gateway/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/envoy-ai-gateway/SKILL.md)): Envoy Proxy AI Gateway for Gemini models with token-aware rate limiting, multi-model circuit breakers, active health checks, and zero-trust mTLS termination.
+- **15th Scoped Subagent Fleet Expansion**:
+  - **`resilience-engineer`** ([`agents/resilience-engineer.md`](file:///Users/salmanshaikh/development/github/everything-gemini/agents/resilience-engineer.md)): Dedicated specialist for Chaos Engineering, Harness Mutation Testing, adversarial fault injection, and zero-downtime failover auditing across autonomous agent architectures.
+- **11th Lifecycle Safety Hook**:
+  - **`drift-detector`** ([`hooks/drift-detector/`](file:///Users/salmanshaikh/development/github/everything-gemini/hooks/drift-detector/)): PreToolUse deterministic safety hook inspecting tool input arguments for adversarial prompt injection vectors, unexpected environment variable leakage, and schema drift.
+- **Harness³ Mutation Testing & Chaos Resilience Engine (`everything-gemini resilience`)**:
+  - Simulated latency injection, schema drift, 429 rate limit shocks, thinking token exhaustion, and poisoned tool output recovery with mathematical resilience scoring.
+- **OpenTelemetry GenAI Distributed Tracing Inspector (`everything-gemini telemetry`)**:
+  - W3C traceparent context verification, GenAI semantic spans, token usage telemetry, and Google Cloud Trace export.
+- **Enhanced Visual Mission Control UI v2.5.0 (`everything-gemini ui`)**:
+  - Updated to reflect 106 components (80 skills, 15 subagents, 11 hooks), added live endpoints for `/api/resilience` and `/api/telemetry`, with interactive dashboard cards for Chaos Resilience and OpenTelemetry.
+- **Python SDK Resilience & Telemetry Showcase**:
+  - Authored [`examples/python-sdk/resilience_and_telemetry_pipeline.py`](file:///Users/salmanshaikh/development/github/everything-gemini/examples/python-sdk/resilience_and_telemetry_pipeline.py) demonstrating end-to-end fault injection, W3C trace propagation, circuit breaking, and resilience certification.
+- **Turnkey Social Media Launch Kit**:
+  - Authored [`docs/LAUNCH_KIT_v2.5.0.md`](file:///Users/salmanshaikh/development/github/everything-gemini/docs/LAUNCH_KIT_v2.5.0.md) for LinkedIn, X (Twitter), Reddit, and Hacker News.
+
 ## [2.4.0] - 2026-10-22
 
 ### Added

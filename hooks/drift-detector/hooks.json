@@ -1,0 +1,16 @@
+{
+  "drift-detector": {
+    "PreToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ./scripts/detect-drift.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
