@@ -4,6 +4,27 @@ All notable changes to **Everything Gemini (`everything-gemini`)** will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.0] - 2026-10-23
+
+### Added
+- **The Distributed Swarm & Cognitive Distillation Milestone: 112 Production Components & 84 Progressive Skills**:
+  - **`cross-repo-swarm-sync`** ([`skills/cross-repo-swarm-sync/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/cross-repo-swarm-sync/SKILL.md)): Coordinates distributed multi-repository agent swarm synchronization, atomic dependency alignment, and cross-boundary git branch PR orchestration via Google Cloud Pub/Sub and Cloud Run.
+  - **`ebpf-microvm-sandbox`** ([`skills/ebpf-microvm-sandbox/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/ebpf-microvm-sandbox/SKILL.md)): Enforces rootless ephemeral Micro-VM isolation (Firecracker/gVisor), Linux Landlock filesystem jails, and Cilium eBPF network filtering for zero-trust speculative tool and code execution.
+  - **`context-distillation-compressor`** ([`skills/context-distillation-compressor/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/context-distillation-compressor/SKILL.md)): Performs AST-guided semantic context distillation, lossy-to-lossless prompt compaction, and memory pruning to prevent context bloat and token degradation in long agent trajectories.
+  - **`speculative-decoding-orchestrator`** ([`skills/speculative-decoding-orchestrator/SKILL.md`](file:///Users/salmanshaikh/development/github/everything-gemini/skills/speculative-decoding-orchestrator/SKILL.md)): Orchestrates dual-model speculative decoding routing draft tokens via Gemini 2.0 Flash and parallel verification via Gemini 3.8 Extended Thinking for 3.5x inference acceleration.
+- **16th Scoped Subagent Fleet Expansion**:
+  - **`cross-repo-orchestrator`** ([`agents/cross-repo-orchestrator.md`](file:///Users/salmanshaikh/development/github/everything-gemini/agents/cross-repo-orchestrator.md)): Dedicated specialist for multi-repository dependency synchronization, cross-boundary pull request coordination, and distributed agent swarm management.
+- **12th Lifecycle Safety Hook**:
+  - **`context-compactor`** ([`hooks/context-compactor/`](file:///Users/salmanshaikh/development/github/everything-gemini/hooks/context-compactor/)): PreToolUse deterministic context monitor inspecting tool payload token pressure and recommending Tree-Sitter AST distillation before context overflow occurs.
+- **Cross-Repository Swarm Synchronization CLI (`everything-gemini cross-repo`)**:
+  - Multi-repo dependency discovery, Two-Phase Commit (2PC) consensus state management, branch synchronization, and Cloud Pub/Sub event mesh dispatch.
+- **AST Context Distillation & Semantic Compaction CLI (`everything-gemini compact`)**:
+  - Prompt buffer token analysis, Tree-Sitter AST outline compaction, tool log artifact deduplication, and structured markdown summary synthesis.
+- **Production Python SDK Pipeline**:
+  - Authored [`examples/python-sdk/cross_repo_swarm_and_compaction.py`](file:///Users/salmanshaikh/development/github/everything-gemini/examples/python-sdk/cross_repo_swarm_and_compaction.py) demonstrating end-to-end 2PC multi-repo sync, AST context compaction, and speculative verification.
+- **Distribution Launch Kit**:
+  - Authored [`docs/LAUNCH_KIT_v2.6.0.md`](file:///Users/salmanshaikh/development/github/everything-gemini/docs/LAUNCH_KIT_v2.6.0.md) for LinkedIn, X (Twitter), Reddit, and Hacker News.
+
 ## [2.5.0] - 2026-10-22
 
 ### Added

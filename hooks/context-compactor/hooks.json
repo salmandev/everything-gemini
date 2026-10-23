@@ -1,0 +1,16 @@
+{
+  "context-compactor": {
+    "PreToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ./scripts/compact-context.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

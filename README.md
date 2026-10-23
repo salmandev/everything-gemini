@@ -80,7 +80,7 @@ cd everything-gemini
 | :--- | :--- | :--- |
 | **`core`** | Minimalists & Speed | Safety-shield hook, TDD skill, repo-onboarding skill, baseline `GEMINI.md`. |
 | **`developer`** *(Recommended)* | Daily Software Engineers | Core + 14 Scoped Subagents (`agents/`), Frontier Skills (Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
-| **`full`** | Lead Engineers & Archs | Everything: all 80 progressive skills, 15 scoped subagents, full lifecycle hooks suite (11 hooks), 14 MCP blueprints, all plugins, configs, and templates (The 106-Component Landmark / 80-Skill Frontier). |
+| **`full`** | Lead Engineers & Archs | Everything: all 84 progressive skills, 16 scoped subagents, full lifecycle hooks suite (12 hooks), 14 MCP blueprints, all plugins, configs, and templates (The 112-Component Landmark / Distributed Swarm & Cognitive Distillation Milestone). |
 
 ### 5. In CI / GitHub Actions Workflows
 
@@ -192,10 +192,15 @@ Everything Gemini provides specialized subagent specifications designed for Anti
 | **[`mlops-engineer`](agents/mlops-engineer.md)** | MLOps & LLMOps Specialist | Model serving (Triton/vLLM), vector clustering (ChromaDB/Milvus), prefix context caching, KEDA autoscaling. |
 | **[`swarm-coordinator`](agents/swarm-coordinator.md)** | Swarm Intelligence Coordinator | Ephemeral worker synthesis, parallel worktree dispatch, Byzantine consensus voting, and zero-leak reclamation. |
 | **[`resilience-engineer`](agents/resilience-engineer.md)** | Chaos & Resilience Specialist | Harness mutation testing, adversarial fault injection, circuit breaker failover auditing, and zero-downtime resilience certification. |
+| **[`cross-repo-orchestrator`](agents/cross-repo-orchestrator.md)** | Cross-Repository Swarm Architect | Multi-repository dependency synchronization, cross-boundary 2PC commit gating, and contract schema alignment. |
 
 ### 1. Skills (`skills/`)
 Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`name` and `description`) is placed into the system prompt. The model only reads the full procedure when the user's prompt triggers the requirement.
 
+- **[`cross-repo-swarm-sync`](skills/cross-repo-swarm-sync/SKILL.md)**: Coordinates distributed multi-repository agent swarm synchronization, atomic dependency alignment, and cross-boundary git branch PR orchestration via Google Cloud Pub/Sub and Cloud Run.
+- **[`ebpf-microvm-sandbox`](skills/ebpf-microvm-sandbox/SKILL.md)**: Enforces rootless ephemeral Micro-VM isolation (Firecracker/gVisor), Linux Landlock filesystem jails, and Cilium eBPF network filtering for zero-trust speculative tool and code execution.
+- **[`context-distillation-compressor`](skills/context-distillation-compressor/SKILL.md)**: Performs AST-guided semantic context distillation, lossy-to-lossless prompt compaction, and memory pruning to prevent context bloat and token degradation in long agent trajectories.
+- **[`speculative-decoding-orchestrator`](skills/speculative-decoding-orchestrator/SKILL.md)**: Orchestrates dual-model speculative decoding routing draft tokens via Gemini 2.0 Flash and parallel verification via Gemini 3.8 Extended Thinking for 3.5x inference acceleration.
 - **[`webrtc-agent-gateway`](skills/webrtc-agent-gateway/SKILL.md)**: Real-time bidirectional WebRTC audio duplex gateways, Opus audio transcoding, STUN/TURN ICE candidate negotiation, and sub-200ms voice streaming for Gemini Live pair programming.
 - **[`opentelemetry-agent-observability`](skills/opentelemetry-agent-observability/SKILL.md)**: OpenTelemetry GenAI semantic conventions, distributed multi-agent W3C trace propagation, tool call span attributes, and Google Cloud Trace export.
 - **[`harness3-mutation-testing`](skills/harness3-mutation-testing/SKILL.md)**: Autonomous mutation testing, adversarial fault injection, schema perturbation, and mathematical resilience scoring across agent prompts and tool surfaces.
@@ -291,6 +296,7 @@ Hooks run shell scripts at critical lifecycle events with typed JSON contracts o
 - **[`human-gate`](hooks/human-gate/hooks.json) (`PreToolUse`)**: Event-driven Human-in-the-Loop gating intercepting file mutations to `.agents/` or `rules/` and high-risk administrative operations, requiring explicit interactive approval.
 - **[`thinking-budget`](hooks/thinking-budget/hooks.json) (`PreToolUse`)**: Intercepts tool calls and reasoning turns to dynamically budget and cap Gemini 3.8 extended reasoning token runaways.
 - **[`drift-detector`](hooks/drift-detector/hooks.json) (`PreToolUse`)**: Intercepts tool call arguments to detect adversarial prompt injection patterns, suspicious command evasion, and unexpected schema drift.
+- **[`context-compactor`](hooks/context-compactor/hooks.json) (`PreToolUse`)**: Evaluates tool input payload sizes and trajectory context pressure to recommend AST pruning or compacting oversized buffers.
 
 ### 3. Rules Hierarchy (`rules/`)
 Antigravity automatically discovers rules by walking up from the current file's directory to the repository root:
@@ -438,7 +444,7 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 ./bin/everything-gemini audit
 ./bin/everything-gemini audit --json
 
-# Benchmark and validate all 76 skills, 14 subagents, and 10 hooks (100 components)
+# Benchmark and validate all 84 skills, 16 subagents, and 12 hooks (112 components)
 ./bin/everything-gemini test-all
 ./bin/everything-gemini benchmark --json
 
@@ -476,6 +482,16 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 ./bin/everything-gemini telemetry status
 ./bin/everything-gemini telemetry --trace-id 4bf92f3577b34da6a3ce929d0e0e4736 --dry-run
 ./bin/everything-gemini telemetry --json
+
+# Synchronize distributed cross-repository multi-agent swarms with 2PC consensus
+./bin/everything-gemini cross-repo status
+./bin/everything-gemini cross-repo sync --repos "backend,frontend,infra" --dry-run
+./bin/everything-gemini cross-repo --json
+
+# Perform AST-guided context distillation and semantic prompt compaction
+./bin/everything-gemini compact analyze
+./bin/everything-gemini compact distill --threshold 75 --ast --dry-run
+./bin/everything-gemini compact --json
 
 # Synthesize 8-surface Google Research Harness² workspace (prompts, guardrails, memory, etc.)
 ./bin/everything-gemini harness2

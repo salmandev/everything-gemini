@@ -90,10 +90,10 @@ it('should benchmark ecosystem components and output valid JSON with --json', ()
   const res = runCli('benchmark --json');
   assert.strictEqual(res.status, 0);
   const data = JSON.parse(res.stdout);
-  assert.strictEqual(data.totalComponents, 106);
-  assert.strictEqual(data.progressiveSkillsCount, 80);
-  assert.strictEqual(data.scopedAgentsCount, 15);
-  assert.strictEqual(data.lifecycleHooksCount, 11);
+  assert.strictEqual(data.totalComponents, 112);
+  assert.strictEqual(data.progressiveSkillsCount, 84);
+  assert.strictEqual(data.scopedAgentsCount, 16);
+  assert.strictEqual(data.lifecycleHooksCount, 12);
   assert(data.totalRunbookTokens > 15000, 'Expected >15,000 runbook tokens');
   assert(data.estimatedTokensSavedPerTurn > 8000, 'Expected significant token savings');
 });
@@ -316,7 +316,7 @@ try {
     const dryRes = runCli(`bundle --output "${bundleTarget}" --dry-run`);
     assert.strictEqual(dryRes.status, 0);
     assert.match(dryRes.stdout, /DRY RUN MODE ACTIVATED/);
-    assert.match(dryRes.stdout, /Skills to bundle: 80/);
+    assert.match(dryRes.stdout, /Skills to bundle: 84/);
     assert.strictEqual(fs.existsSync(bundleTarget), false, 'Dry run should not create destination directory');
 
     // JSON Dry-run mode
@@ -324,7 +324,7 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.components.totalCount, 106);
+    assert.strictEqual(dryData.manifest.components.totalCount, 112);
 
     // Live mode
     const liveRes = runCli(`bundle --output "${bundleTarget}"`);
@@ -477,9 +477,9 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.metrics.total_skills, 80);
-    assert.strictEqual(dryData.manifest.metrics.total_subagents, 15);
-    assert.strictEqual(dryData.manifest.metrics.total_hooks, 11);
+    assert.strictEqual(dryData.manifest.metrics.total_skills, 84);
+    assert.strictEqual(dryData.manifest.metrics.total_subagents, 16);
+    assert.strictEqual(dryData.manifest.metrics.total_hooks, 12);
 
     // Live mode
     const liveRes = runCli(`harness2 "${h2Target}"`);
@@ -524,14 +524,14 @@ try {
   });
 
   // Benchmark Components Verification
-  it('should report 106 components, 80 skills, 15 subagents, and 11 hooks in benchmark --json', () => {
+  it('should report 112 components, 84 skills, 16 subagents, and 12 hooks in benchmark --json', () => {
     const res = runCli('benchmark --json');
     assert.strictEqual(res.status, 0);
     const data = JSON.parse(res.stdout);
-    assert.strictEqual(data.totalComponents, 106, 'Total components should be 106');
-    assert.strictEqual(data.progressiveSkillsCount, 80, 'Progressive skills should be 80');
-    assert.strictEqual(data.scopedAgentsCount, 15, 'Scoped agents should be 15');
-    assert.strictEqual(data.lifecycleHooksCount, 11, 'Lifecycle hooks should be 11');
+    assert.strictEqual(data.totalComponents, 112, 'Total components should be 112');
+    assert.strictEqual(data.progressiveSkillsCount, 84, 'Progressive skills should be 84');
+    assert.strictEqual(data.scopedAgentsCount, 16, 'Scoped agents should be 16');
+    assert.strictEqual(data.lifecycleHooksCount, 12, 'Lifecycle hooks should be 12');
   });
 
   // Harness² Run & Ingest-Trace tests
@@ -644,8 +644,8 @@ try {
     const jsonRes = runCli('ui --json');
     assert.strictEqual(jsonRes.status, 0);
     const data = JSON.parse(jsonRes.stdout);
-    assert.strictEqual(data.metrics.totalComponents, 106);
-    assert.strictEqual(data.metrics.progressiveSkills, 80);
+    assert.strictEqual(data.metrics.totalComponents, 112);
+    assert.strictEqual(data.metrics.progressiveSkills, 84);
     assert.ok(data.endpoints.dashboard);
   });
 
@@ -756,6 +756,56 @@ try {
     const hookRes = runCli('info drift-detector');
     assert.strictEqual(hookRes.status, 0);
     assert.match(hookRes.stdout, /drift-detector/);
+  });
+
+  // v2.6.0 Cross-Repo Command
+  it('should support cross-repo command in dry-run and json modes', () => {
+    const dryRes = runCli('cross-repo sync --dry-run');
+    assert.strictEqual(dryRes.status, 0);
+    assert.match(dryRes.stdout, /Cross-Repository Swarm Synchronization/);
+    assert.match(dryRes.stdout, /Dry run complete/);
+
+    const jsonRes = runCli('cross-repo --json');
+    assert.strictEqual(jsonRes.status, 0);
+    const data = JSON.parse(jsonRes.stdout);
+    assert.strictEqual(data.twoPhaseCommitState, 'PREPARED');
+    assert.ok(data.repositories.length >= 3);
+    assert.ok(data.eventMesh.topic);
+  });
+
+  // v2.6.0 Compact Command
+  it('should support compact command in dry-run and json modes', () => {
+    const dryRes = runCli('compact analyze --dry-run');
+    assert.strictEqual(dryRes.status, 0);
+    assert.match(dryRes.stdout, /Context Distillation & Semantic Compaction/);
+    assert.match(dryRes.stdout, /Dry run complete/);
+
+    const jsonRes = runCli('compact --ast --json');
+    assert.strictEqual(jsonRes.status, 0);
+    const data = JSON.parse(jsonRes.stdout);
+    assert.strictEqual(data.astSkeletalization, true);
+    assert.ok(data.metrics.originalTokens > 0);
+    assert.ok(data.compactionStrategies.length >= 3);
+  });
+
+  // v2.6.0 Skills Info Verification
+  it('should display info for v2.6.0 skills (cross-repo-swarm-sync, ebpf-microvm-sandbox, context-distillation-compressor, speculative-decoding-orchestrator)', () => {
+    for (const skill of ['cross-repo-swarm-sync', 'ebpf-microvm-sandbox', 'context-distillation-compressor', 'speculative-decoding-orchestrator']) {
+      const res = runCli(`info ${skill}`);
+      assert.strictEqual(res.status, 0);
+      assert.match(res.stdout, new RegExp(skill));
+    }
+  });
+
+  // v2.6.0 Subagent & Hook Info Verification
+  it('should display info for cross-repo-orchestrator subagent and context-compactor hook', () => {
+    const agentRes = runCli('info cross-repo-orchestrator');
+    assert.strictEqual(agentRes.status, 0);
+    assert.match(agentRes.stdout, /cross-repo-orchestrator/);
+
+    const hookRes = runCli('info context-compactor');
+    assert.strictEqual(hookRes.status, 0);
+    assert.match(hookRes.stdout, /context-compactor/);
   });
 
 } finally {
