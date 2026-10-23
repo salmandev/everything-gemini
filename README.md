@@ -74,6 +74,20 @@ cd everything-gemini
 ./bin/everything-gemini install --profile developer
 ```
 
+### 🛡️ Instant PHP2Shell Audit (CVE-2026-109618 / CVE-2026-109619)
+
+Perform non-intrusive defensive security audits on public endpoints and private servers without installing anything:
+
+```bash
+# Audit any public website or API endpoint
+npx everything-gemini phpcheck "https://example.com"
+
+# Audit local server, container, and detect un-restarted PHP-FPM workers in RAM
+npx everything-gemini phpcheck --server
+```
+
+> Read the full [PHP2Shell Security Advisory & Social Media Launch Kit](docs/LAUNCH_KIT_PHP2SHELL.md) for distribution backport matrices and ready-to-post copy.
+
 ### 4. Installation Profiles
 
 | Profile | Target Audience | What Gets Installed |
@@ -277,6 +291,10 @@ Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`na
 - **[`repo-onboarding`](skills/repo-onboarding/SKILL.md)**: Fast codebase indexing into Knowledge Items (KI).
 - **[`git-craftsman`](skills/git-craftsman/SKILL.md)**: Enforces conventional commits, atomic diffs, and clean PR descriptions.
 - **[`security-audit`](skills/security-audit/SKILL.md)**: Scans for credentials in commit history and audits dependency risks.
+- **[`php2shell-version-auditor`](skills/php2shell-version-auditor/SKILL.md)**: Enterprise vulnerability auditor and fleet triage runbook for PHP2Shell (CVE-2026-109618 & CVE-2026-109619).
+- **[`cve-remediation-orchestrator`](skills/cve-remediation-orchestrator/SKILL.md)**: Defense-in-depth CVE mitigation, virtual patching, kernel ASLR hardening, and worker memory verification.
+- **[`phpcheck-url`](skills/phpcheck-url/SKILL.md)**: Fast non-intrusive remote HTTP banner and advertised PHP version auditor.
+- **[`phpcheck-server`](skills/phpcheck-server/SKILL.md)**: Server-side OS package backport auditor and un-restarted worker memory detector.
 - **[`performance-profiler`](skills/performance-profiler/SKILL.md)**: Identifies CPU/memory bottlenecks, analyzes database queries, and critical paths.
 - **[`continuous-learning`](skills/continuous-learning/SKILL.md)**: Codifies corrections and developer feedback into enduring Knowledge Items.
 - **[`antigravity-sdk-orchestrator`](plugins/python-ai/skills/antigravity-sdk-orchestrator/SKILL.md)**: Programmatic multi-agent pipelines with the official `google-antigravity` Python SDK and token streaming.

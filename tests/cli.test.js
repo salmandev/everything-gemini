@@ -90,9 +90,9 @@ it('should benchmark ecosystem components and output valid JSON with --json', ()
   const res = runCli('benchmark --json');
   assert.strictEqual(res.status, 0);
   const data = JSON.parse(res.stdout);
-  assert.strictEqual(data.totalComponents, 112);
-  assert.strictEqual(data.progressiveSkillsCount, 84);
-  assert.strictEqual(data.scopedAgentsCount, 16);
+  assert.strictEqual(data.totalComponents, 121);
+  assert.strictEqual(data.progressiveSkillsCount, 92);
+  assert.strictEqual(data.scopedAgentsCount, 17);
   assert.strictEqual(data.lifecycleHooksCount, 12);
   assert(data.totalRunbookTokens > 15000, 'Expected >15,000 runbook tokens');
   assert(data.estimatedTokensSavedPerTurn > 8000, 'Expected significant token savings');
@@ -316,7 +316,7 @@ try {
     const dryRes = runCli(`bundle --output "${bundleTarget}" --dry-run`);
     assert.strictEqual(dryRes.status, 0);
     assert.match(dryRes.stdout, /DRY RUN MODE ACTIVATED/);
-    assert.match(dryRes.stdout, /Skills to bundle: 84/);
+    assert.match(dryRes.stdout, /Skills to bundle: 92/);
     assert.strictEqual(fs.existsSync(bundleTarget), false, 'Dry run should not create destination directory');
 
     // JSON Dry-run mode
@@ -324,7 +324,7 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.components.totalCount, 112);
+    assert.strictEqual(dryData.manifest.components.totalCount, 121);
 
     // Live mode
     const liveRes = runCli(`bundle --output "${bundleTarget}"`);
@@ -477,8 +477,8 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.metrics.total_skills, 84);
-    assert.strictEqual(dryData.manifest.metrics.total_subagents, 16);
+    assert.strictEqual(dryData.manifest.metrics.total_skills, 92);
+    assert.strictEqual(dryData.manifest.metrics.total_subagents, 17);
     assert.strictEqual(dryData.manifest.metrics.total_hooks, 12);
 
     // Live mode
@@ -524,13 +524,13 @@ try {
   });
 
   // Benchmark Components Verification
-  it('should report 112 components, 84 skills, 16 subagents, and 12 hooks in benchmark --json', () => {
+  it('should report 121 components, 92 skills, 17 subagents, and 12 hooks in benchmark --json', () => {
     const res = runCli('benchmark --json');
     assert.strictEqual(res.status, 0);
     const data = JSON.parse(res.stdout);
-    assert.strictEqual(data.totalComponents, 112, 'Total components should be 112');
-    assert.strictEqual(data.progressiveSkillsCount, 84, 'Progressive skills should be 84');
-    assert.strictEqual(data.scopedAgentsCount, 16, 'Scoped agents should be 16');
+    assert.strictEqual(data.totalComponents, 121, 'Total components should be 121');
+    assert.strictEqual(data.progressiveSkillsCount, 92, 'Progressive skills should be 92');
+    assert.strictEqual(data.scopedAgentsCount, 17, 'Scoped agents should be 17');
     assert.strictEqual(data.lifecycleHooksCount, 12, 'Lifecycle hooks should be 12');
   });
 
@@ -644,8 +644,8 @@ try {
     const jsonRes = runCli('ui --json');
     assert.strictEqual(jsonRes.status, 0);
     const data = JSON.parse(jsonRes.stdout);
-    assert.strictEqual(data.metrics.totalComponents, 112);
-    assert.strictEqual(data.metrics.progressiveSkills, 84);
+    assert.strictEqual(data.metrics.totalComponents, 121);
+    assert.strictEqual(data.metrics.progressiveSkills, 92);
     assert.ok(data.endpoints.dashboard);
   });
 
@@ -806,6 +806,39 @@ try {
     const hookRes = runCli('info context-compactor');
     assert.strictEqual(hookRes.status, 0);
     assert.match(hookRes.stdout, /context-compactor/);
+  });
+
+  // PHP2Shell Version Checker & Skill Suite
+  it('should audit remote URLs or local server with phpcheck subcommand', () => {
+    const helpRes = runCli('phpcheck --help');
+    assert.strictEqual(helpRes.status, 0);
+    assert.match(helpRes.stdout, /PHP2Shell Patch Checker/);
+    assert.match(helpRes.stdout, /CVE-2026-109618/);
+
+    const serverRes = runCli('phpcheck --server --json');
+    assert.ok(serverRes.status === 0 || serverRes.status === 3);
+    const serverData = JSON.parse(serverRes.stdout);
+    assert.ok(Array.isArray(serverData.cves));
+    assert.ok(serverData.patch_status);
+
+    for (const skill of ['phpcheck-url', 'phpcheck-server', 'php2shell-version-auditor', 'cve-remediation-orchestrator']) {
+      const infoRes = runCli(`info ${skill}`);
+      assert.strictEqual(infoRes.status, 0);
+      assert.match(infoRes.stdout, new RegExp(skill));
+    }
+
+    const { versionStatus } = require(path.join(REPO_ROOT, 'skills', 'phpcheck-url', 'scripts', 'phpcheck.js'));
+    assert.strictEqual(versionStatus('8.2.34'), 'potentially_vulnerable');
+    assert.strictEqual(versionStatus('8.2.35'), 'ok');
+    assert.strictEqual(versionStatus('8.3.35'), 'potentially_vulnerable');
+    assert.strictEqual(versionStatus('8.3.36'), 'ok');
+    assert.strictEqual(versionStatus('8.4.26'), 'potentially_vulnerable');
+    assert.strictEqual(versionStatus('8.4.27'), 'ok');
+    assert.strictEqual(versionStatus('8.5.11'), 'potentially_vulnerable');
+    assert.strictEqual(versionStatus('8.5.12'), 'ok');
+    assert.strictEqual(versionStatus('8.1.35'), 'potentially_vulnerable');
+    assert.strictEqual(versionStatus('7.4.33'), 'potentially_vulnerable');
+    assert.strictEqual(versionStatus('8.3.0-dev'), 'unknown');
   });
 
 } finally {

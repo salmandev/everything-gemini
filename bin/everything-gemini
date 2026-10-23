@@ -77,7 +77,7 @@ function printHelp() {
   console.log(`  ${GREEN}test-all${RESET}                    Benchmark & validate all 84 skills, 16 subagents & 12 hooks (112 components)`);
   console.log(`  ${GREEN}info${RESET} <name>                  Display overview & runbook for a skill, agent, or hook`);
   console.log(`  ${GREEN}graph${RESET} [--mermaid|--json]    Visualize multi-agent interaction & dependency topology graph`);
-  console.log(`  ${GREEN}completion${RESET} [--install]        Generate or install shell autocompletion script (bash/zsh)`);
+  console.log(`  ${GREEN}phpcheck, php2shell${RESET} <t>      Audit remote URL or local server for PHP2Shell (CVE-2026-109618/19)`);
   console.log(`  ${GREEN}validate${RESET}                    Run self-test on frontmatter, JSON schemas & hooks`);
   console.log(`  ${GREEN}version, -v, --version${RESET}      Print everything-gemini version`);
   console.log(`  ${GREEN}help, -h, --help${RESET}            Show this help message\n`);
@@ -3443,8 +3443,8 @@ _everything_gemini() {
   COMPREPLY=()
   cur="\${COMP_WORDS[COMP_CWORD]}"
   prev="\${COMP_WORDS[COMP_CWORD-1]}"
-  commands="doctor list init install status check update sync scaffold new new-skill new-agent add remove test-skill test-all benchmark info show graph completion validate version help diff export import bundle pack search find audit harness2 harness estimate cost-oracle harness3 auto-bench ui mission-control swarm thinking resilience mutate telemetry trace cross-repo compact"
-  skills="agent-evals ai-first-engineering apache-kafka-streams api-craftsman architecture-designer argo-workflows axum-web-service bigquery-vector-search browser-qa-tester chromadb-vector-store cilium-ebpf-networking clickhouse-analytics cloud-run-agents cloudflare-r2-object-storage cloudflare-workers context-caching context-compactor context-distillation-compressor context-warmer continuous-learning cost-oracle-finops cross-repo-swarm-sync database-architect dataproc-spark-analytics dbt-transformation debezium-cdc devops-pipeline distributed-rate-limiting docker-compose-orchestrator duckdb-local-olap dynamic-thinking-allocation ebpf-microvm-sandbox ebpf-sandbox-enforcer envoy-ai-gateway ephemeral-swarm-orchestrator fastapi-production fullstack-nextjs gemini-function-calling gemini-grounding gemini-live-multimodal gemini-multimodal git-craftsman github-ops google-flow-orchestrator graphql-architect grpc-connect-rpc harness2-recursive-optimization harness3-mutation-testing keda-event-autoscaling kubernetes-operator langgraph-orchestrator litellm-proxy-gateway milvus-vector-clustering nats-jetstream opa-gatekeeper-policy open-telemetry-tracing opentelemetry-agent-observability performance-profiler playwright-visual-regression pubsub-event-mesh quantum-safe-cryptography rag-architect redis-cache-patterns repo-onboarding root-cause-debugger security-audit spanner-change-streams spanner-graph-rag speculative-decoding-orchestrator stripe-integration subagent-handoff supabase-architect svelte-kit-architect tdd-workflow temporal-workflows triton-inference-server trpc-react-query turborepo-monorepo vault-secrets-management vertex-ai-feature-store vllm-inference wasm-rust-optimizer webrtc-agent-gateway antigravity-sdk-orchestrator responsive-design"
+  commands="doctor list init install status check update sync scaffold new new-skill new-agent add remove test-skill test-all benchmark info show graph completion validate version help diff export import bundle pack search find audit harness2 harness estimate cost-oracle harness3 auto-bench ui mission-control swarm thinking resilience mutate telemetry trace cross-repo compact phpcheck php2shell"
+  skills="agent-evals ai-first-engineering apache-kafka-streams api-craftsman architecture-designer argo-workflows axum-web-service bigquery-vector-search browser-qa-tester chromadb-vector-store cilium-ebpf-networking clickhouse-analytics cloud-run-agents cloudflare-r2-object-storage cloudflare-workers context-caching context-compactor context-distillation-compressor context-warmer continuous-learning cost-oracle-finops cross-repo-swarm-sync cve-remediation-orchestrator database-architect dataproc-spark-analytics dbt-transformation debezium-cdc devops-pipeline distributed-rate-limiting docker-compose-orchestrator duckdb-local-olap dynamic-thinking-allocation ebpf-microvm-sandbox ebpf-sandbox-enforcer envoy-ai-gateway ephemeral-swarm-orchestrator fastapi-production fullstack-nextjs gemini-function-calling gemini-grounding gemini-live-multimodal gemini-multimodal git-craftsman github-ops google-flow-orchestrator graphql-architect grpc-connect-rpc harness2-recursive-optimization harness3-mutation-testing keda-event-autoscaling kubernetes-operator langgraph-orchestrator litellm-proxy-gateway milvus-vector-clustering nats-jetstream opa-gatekeeper-policy open-telemetry-tracing opentelemetry-agent-observability performance-profiler php2shell-version-auditor phpcheck-server phpcheck-url playwright-visual-regression pubsub-event-mesh quantum-safe-cryptography rag-architect redis-cache-patterns repo-onboarding root-cause-debugger security-audit spanner-change-streams spanner-graph-rag speculative-decoding-orchestrator stripe-integration subagent-handoff supabase-architect svelte-kit-architect tdd-workflow temporal-workflows triton-inference-server trpc-react-query turborepo-monorepo vault-secrets-management vertex-ai-feature-store vllm-inference wasm-rust-optimizer webrtc-agent-gateway antigravity-sdk-orchestrator responsive-design"
   agents="architect browser-qa build-repair code-reviewer cross-repo-orchestrator database-migrator documentation-writer incident-responder mlops-engineer performance-tuner planner platform-engineer release-engineer resilience-engineer security-auditor swarm-coordinator"
   hooks="auto-lint-formatter budget-guard context-compactor drift-detector ephemeral-context gemini-shield goal-verifier human-gate learned-instincts safety-shield secret-scrubber thinking-budget"
   plugins="core python-ai security-shield web-fullstack"
@@ -3751,6 +3751,49 @@ function runGraph(format = 'terminal') {
   });
   console.log(`  ${GREEN}└──●${RESET} ${GRAY}All 63 Progressive Disclosure Skills indexed dynamically in catalog.${RESET}\n`);
   console.log(`${GRAY}Tip: Run ${CYAN}everything-gemini graph --mermaid${GRAY} for Mermaid diagram or ${CYAN}--json${GRAY} for raw graph data.${RESET}\n`);
+}
+
+function runPhpCheckCommand(subArgs) {
+  if (subArgs.length === 0 || subArgs.includes('--help') || subArgs.includes('-h')) {
+    console.log(`
+${BOLD}🛡️ Everything Gemini PHP2Shell Patch Checker (CVE-2026-109618 / CVE-2026-109619)${RESET}
+
+${BOLD}USAGE:${RESET}
+  everything-gemini phpcheck <URL> [options]
+  everything-gemini phpcheck --server [options]
+
+${BOLD}COMMANDS & OPTIONS:${RESET}
+  <URL>                       Scan remote web URL/hostname headers (Server, X-Powered-By)
+  --server, --local           Audit local server/container PHP packages and active workers
+  --json                      Emit structured JSON report for CI/CD and automation
+  --timeout <seconds>         HTTP connection timeout in seconds (default: 10s)
+  --help, -h                  Show this help message
+
+${BOLD}EXAMPLES:${RESET}
+  everything-gemini phpcheck https://example.com
+  everything-gemini phpcheck https://example.com --json
+  everything-gemini phpcheck --server
+`);
+    return;
+  }
+
+  const isServer = subArgs.includes('--server') || subArgs.includes('--local');
+  if (isServer) {
+    const scriptPath = path.join(REPO_ROOT, 'skills', 'phpcheck-server', 'scripts', 'audit-server.sh');
+    const jsonFlag = subArgs.includes('--json') ? ' --json' : '';
+    try {
+      execSync(`bash "${scriptPath}"${jsonFlag}`, { stdio: 'inherit', cwd: WORKSPACE_DIR });
+    } catch (err) {
+      process.exitCode = err.status || 1;
+    }
+    return;
+  }
+
+  const { runPhpCheck } = require(path.join(REPO_ROOT, 'skills', 'phpcheck-url', 'scripts', 'phpcheck.js'));
+  runPhpCheck(subArgs).catch(err => {
+    console.error('Check failed:', err.message);
+    process.exitCode = 2;
+  });
 }
 
 // CLI Argument Parsing
@@ -4195,6 +4238,11 @@ switch (command) {
       else if (!args[i].startsWith('-') && !customTarget) customTarget = args[i];
     }
     runAudit(customTarget, isGlobal, asJson);
+    break;
+  }
+  case 'phpcheck':
+  case 'php2shell': {
+    runPhpCheckCommand(args.slice(1));
     break;
   }
   case 'version':
