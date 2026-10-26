@@ -1,0 +1,16 @@
+{
+  "zero-trust-gate": {
+    "PreToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ./scripts/zero-trust-gate.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

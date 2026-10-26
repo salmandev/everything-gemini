@@ -90,10 +90,10 @@ it('should benchmark ecosystem components and output valid JSON with --json', ()
   const res = runCli('benchmark --json');
   assert.strictEqual(res.status, 0);
   const data = JSON.parse(res.stdout);
-  assert.strictEqual(data.totalComponents, 121);
-  assert.strictEqual(data.progressiveSkillsCount, 92);
-  assert.strictEqual(data.scopedAgentsCount, 17);
-  assert.strictEqual(data.lifecycleHooksCount, 12);
+  assert.strictEqual(data.totalComponents, 131);
+  assert.strictEqual(data.progressiveSkillsCount, 100);
+  assert.strictEqual(data.scopedAgentsCount, 18);
+  assert.strictEqual(data.lifecycleHooksCount, 13);
   assert(data.totalRunbookTokens > 15000, 'Expected >15,000 runbook tokens');
   assert(data.estimatedTokensSavedPerTurn > 8000, 'Expected significant token savings');
 });
@@ -316,7 +316,7 @@ try {
     const dryRes = runCli(`bundle --output "${bundleTarget}" --dry-run`);
     assert.strictEqual(dryRes.status, 0);
     assert.match(dryRes.stdout, /DRY RUN MODE ACTIVATED/);
-    assert.match(dryRes.stdout, /Skills to bundle: 92/);
+    assert.match(dryRes.stdout, /Skills to bundle: 100/);
     assert.strictEqual(fs.existsSync(bundleTarget), false, 'Dry run should not create destination directory');
 
     // JSON Dry-run mode
@@ -324,7 +324,7 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.components.totalCount, 121);
+    assert.strictEqual(dryData.manifest.components.totalCount, 131);
 
     // Live mode
     const liveRes = runCli(`bundle --output "${bundleTarget}"`);
@@ -477,9 +477,9 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.metrics.total_skills, 92);
-    assert.strictEqual(dryData.manifest.metrics.total_subagents, 17);
-    assert.strictEqual(dryData.manifest.metrics.total_hooks, 12);
+    assert.strictEqual(dryData.manifest.metrics.total_skills, 100);
+    assert.strictEqual(dryData.manifest.metrics.total_subagents, 18);
+    assert.strictEqual(dryData.manifest.metrics.total_hooks, 13);
 
     // Live mode
     const liveRes = runCli(`harness2 "${h2Target}"`);
@@ -524,14 +524,14 @@ try {
   });
 
   // Benchmark Components Verification
-  it('should report 121 components, 92 skills, 17 subagents, and 12 hooks in benchmark --json', () => {
+  it('should report 131 components, 100 skills, 18 subagents, and 13 hooks in benchmark --json', () => {
     const res = runCli('benchmark --json');
     assert.strictEqual(res.status, 0);
     const data = JSON.parse(res.stdout);
-    assert.strictEqual(data.totalComponents, 121, 'Total components should be 121');
-    assert.strictEqual(data.progressiveSkillsCount, 92, 'Progressive skills should be 92');
-    assert.strictEqual(data.scopedAgentsCount, 17, 'Scoped agents should be 17');
-    assert.strictEqual(data.lifecycleHooksCount, 12, 'Lifecycle hooks should be 12');
+    assert.strictEqual(data.totalComponents, 131, 'Total components should be 131');
+    assert.strictEqual(data.progressiveSkillsCount, 100, 'Progressive skills should be 100');
+    assert.strictEqual(data.scopedAgentsCount, 18, 'Scoped agents should be 18');
+    assert.strictEqual(data.lifecycleHooksCount, 13, 'Lifecycle hooks should be 13');
   });
 
   // Harness² Run & Ingest-Trace tests
@@ -644,8 +644,8 @@ try {
     const jsonRes = runCli('ui --json');
     assert.strictEqual(jsonRes.status, 0);
     const data = JSON.parse(jsonRes.stdout);
-    assert.strictEqual(data.metrics.totalComponents, 121);
-    assert.strictEqual(data.metrics.progressiveSkills, 92);
+    assert.strictEqual(data.metrics.totalComponents, 131);
+    assert.strictEqual(data.metrics.progressiveSkills, 100);
     assert.ok(data.endpoints.dashboard);
   });
 
@@ -839,6 +839,61 @@ try {
     assert.strictEqual(versionStatus('8.1.35'), 'potentially_vulnerable');
     assert.strictEqual(versionStatus('7.4.33'), 'potentially_vulnerable');
     assert.strictEqual(versionStatus('8.3.0-dev'), 'unknown');
+  });
+
+  // Harness³ Darwin Prompt Evolution & CVE Remediation Suite (v2.8.0 Century Landmark)
+  it('should support darwin prompt evolution and cve remediation commands', () => {
+    // Darwin prompt tournament
+    const darwinDry = runCli('darwin tournament --generations 2 --population 3 --dry-run');
+    assert.strictEqual(darwinDry.status, 0);
+    assert.match(darwinDry.stdout, /Darwin Prompt Evolution/);
+    assert.match(darwinDry.stdout, /GENETIC TOURNAMENT LEADERBOARD/);
+
+    const darwinJson = runCli('darwin --json');
+    assert.strictEqual(darwinJson.status, 0);
+    const darwinData = JSON.parse(darwinJson.stdout);
+    assert.strictEqual(darwinData.engine, 'everything-gemini-darwin-evolution');
+    assert.strictEqual(darwinData.status, 'OPTIMAL_PARETO_FRONTIER_ACHIEVED');
+    assert.ok(Array.isArray(darwinData.paretoFrontier));
+
+    // CVE remediation audit
+    const cveDry = runCli('cve audit --dry-run');
+    assert.strictEqual(cveDry.status, 0);
+    assert.match(cveDry.stdout, /CVE Remediation & Hardening Orchestrator/);
+    assert.match(cveDry.stdout, /4-LAYER DEFENSE-IN-DEPTH STATUS/);
+
+    const cveJson = runCli('cve --json');
+    assert.strictEqual(cveJson.status, 0);
+    const cveData = JSON.parse(cveJson.stdout);
+    assert.strictEqual(cveData.engine, 'cve-remediation-orchestrator');
+    assert.strictEqual(cveData.status, 'SECURED_AND_HARDENED');
+    assert.strictEqual(cveData.hostHardening.aslrLevel, 2);
+
+    // Verify subagent & hook info
+    const cveAgentInfo = runCli('info cve-mitigator');
+    assert.strictEqual(cveAgentInfo.status, 0);
+    assert.match(cveAgentInfo.stdout, /cve-mitigator/);
+
+    const zeroTrustHookInfo = runCli('info zero-trust-gate');
+    assert.strictEqual(zeroTrustHookInfo.status, 0);
+    assert.match(zeroTrustHookInfo.stdout, /zero-trust-gate/);
+
+    // Verify new skills
+    const newSkills = [
+      'autonomous-incident-healer',
+      'spanner-distributed-locks',
+      'gemini-live-audio-transcriber',
+      'multi-modal-screen-actor',
+      'spanner-vector-search',
+      'cloud-deploy-canary',
+      'alloydb-omni-vector',
+      'zero-trust-workload-identity'
+    ];
+    for (const skill of newSkills) {
+      const res = runCli(`info ${skill}`);
+      assert.strictEqual(res.status, 0);
+      assert.match(res.stdout, new RegExp(skill));
+    }
   });
 
 } finally {

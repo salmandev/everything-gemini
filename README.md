@@ -93,8 +93,8 @@ npx everything-gemini phpcheck --server
 | Profile | Target Audience | What Gets Installed |
 | :--- | :--- | :--- |
 | **`core`** | Minimalists & Speed | Safety-shield hook, TDD skill, repo-onboarding skill, baseline `GEMINI.md`. |
-| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 14 Scoped Subagents (`agents/`), Frontier Skills (Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
-| **`full`** | Lead Engineers & Archs | Everything: all 84 progressive skills, 16 scoped subagents, full lifecycle hooks suite (12 hooks), 14 MCP blueprints, all plugins, configs, and templates (The 112-Component Landmark / Distributed Swarm & Cognitive Distillation Milestone). |
+| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 18 Scoped Subagents (`agents/`), Frontier Skills (Darwin prompt evolution, CVE mitigator, Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
+| **`full`** | Lead Engineers & Archs | Everything: all 100 progressive skills, 18 scoped subagents, full lifecycle hooks suite (13 hooks), 14 MCP blueprints, all plugins, configs, and templates (The 131-Component Century Milestone). |
 
 ### 5. In CI / GitHub Actions Workflows
 
@@ -207,10 +207,28 @@ Everything Gemini provides specialized subagent specifications designed for Anti
 | **[`swarm-coordinator`](agents/swarm-coordinator.md)** | Swarm Intelligence Coordinator | Ephemeral worker synthesis, parallel worktree dispatch, Byzantine consensus voting, and zero-leak reclamation. |
 | **[`resilience-engineer`](agents/resilience-engineer.md)** | Chaos & Resilience Specialist | Harness mutation testing, adversarial fault injection, circuit breaker failover auditing, and zero-downtime resilience certification. |
 | **[`cross-repo-orchestrator`](agents/cross-repo-orchestrator.md)** | Cross-Repository Swarm Architect | Multi-repository dependency synchronization, cross-boundary 2PC commit gating, and contract schema alignment. |
+| **[`darwin-prompt-engineer`](agents/darwin-prompt-engineer.md)** | Darwinian Genetic Prompt Architect | Multi-generation prompt tournament selection, adversarial fuzzing, and Pareto efficiency optimization. |
+| **[`cve-mitigator`](agents/cve-mitigator.md)** | Zero-Day CVE Remediation Specialist | 4-layer defense-in-depth virtual patching, kernel ASLR verification, container least-privilege, and memory inode auditing. |
 
 ### 1. Skills (`skills/`)
 Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`name` and `description`) is placed into the system prompt. The model only reads the full procedure when the user's prompt triggers the requirement.
 
+- **[`autonomous-incident-healer`](skills/autonomous-incident-healer/SKILL.md)**: Autonomously detects production incident anomalies, executes deterministic self-healing runbooks, triggers automated canary traffic draining or rollback, and compiles blameless root-cause analysis (RCA).
+- **[`spanner-distributed-locks`](skills/spanner-distributed-locks/SKILL.md)**: Implements enterprise distributed locks, leader election, and mutual exclusion leases on Google Cloud Spanner using TrueTime and conditional mutations.
+- **[`gemini-live-audio-transcriber`](skills/gemini-live-audio-transcriber/SKILL.md)**: Streams bidirectional low-latency audio via WebSocket/WebRTC to the Gemini Live API, handling Opus framing, Voice Activity Detection (VAD), live turn interruptions, and real-time pair-programming transcription.
+- **[`multi-modal-screen-actor`](skills/multi-modal-screen-actor/SKILL.md)**: Executes autonomous GUI perception and mouse/keyboard action loops for Desktop 2.0, normalizing screen coordinates (0-1000), grounding UI elements, and verifying visual side-effects.
+- **[`spanner-vector-search`](skills/spanner-vector-search/SKILL.md)**: Executes high-performance Approximate Nearest Neighbor (ANN) vector search and hybrid Graph RAG queries on Google Cloud Spanner using ScaNN indexes and COSINE_DISTANCE functions.
+- **[`cloud-deploy-canary`](skills/cloud-deploy-canary/SKILL.md)**: Orchestrates automated progressive delivery, canary traffic splitting, and metric-based rollback gates using Google Cloud Deploy for Cloud Run and GKE.
+- **[`alloydb-omni-vector`](skills/alloydb-omni-vector/SKILL.md)**: Configures AlloyDB Omni with pgvector and the Columnar Engine for ultra-fast HNSW vector similarity search and analytical queries.
+- **[`zero-trust-workload-identity`](skills/zero-trust-workload-identity/SKILL.md)**: Configures GCP Workload Identity Federation, SPIFFE/SPIRE cryptographic attestation, and short-lived STS tokens for multi-cloud autonomous agents without static service account keys.
+- **[`cve-remediation-orchestrator`](skills/cve-remediation-orchestrator/SKILL.md)**: Defense-in-depth CVE mitigation, virtual patching, kernel ASLR hardening, and worker memory verification.
+- **[`php2shell-version-auditor`](skills/php2shell-version-auditor/SKILL.md)**: Enterprise vulnerability auditor and fleet triage runbook for PHP2Shell (CVE-2026-109618 & CVE-2026-109619).
+- **[`phpcheck-url`](skills/phpcheck-url/SKILL.md)**: Fast non-intrusive remote HTTP banner and advertised PHP version auditor.
+- **[`phpcheck-server`](skills/phpcheck-server/SKILL.md)**: Server-side OS package backport auditor and un-restarted worker memory detector.
+- **[`adversarial-fuzz-generator`](skills/adversarial-fuzz-generator/SKILL.md)**: Synthesizes property-based and adversarial test suites using hypothesis-style fuzzing to mathematically verify codebase and prompt modifications.
+- **[`genetic-prompt-cross-pollinator`](skills/genetic-prompt-cross-pollinator/SKILL.md)**: Cross-pollinates winning agent prompt traits and subagent contracts using genetic crossover operators and Pareto selection.
+- **[`instinct-distillation-compiler`](skills/instinct-distillation-compiler/SKILL.md)**: Compiles runtime edge cases and failure modes into persistent, deterministic learned rules in `.agents/hooks/learned-instincts/`.
+- **[`gemini-live-screen-vision`](skills/gemini-live-screen-vision/SKILL.md)**: Streams active IDE screens and browser DOM states to Gemini Live, analyzing real-time repaints, terminal error bursts, and layout regressions.
 - **[`cross-repo-swarm-sync`](skills/cross-repo-swarm-sync/SKILL.md)**: Coordinates distributed multi-repository agent swarm synchronization, atomic dependency alignment, and cross-boundary git branch PR orchestration via Google Cloud Pub/Sub and Cloud Run.
 - **[`ebpf-microvm-sandbox`](skills/ebpf-microvm-sandbox/SKILL.md)**: Enforces rootless ephemeral Micro-VM isolation (Firecracker/gVisor), Linux Landlock filesystem jails, and Cilium eBPF network filtering for zero-trust speculative tool and code execution.
 - **[`context-distillation-compressor`](skills/context-distillation-compressor/SKILL.md)**: Performs AST-guided semantic context distillation, lossy-to-lossless prompt compaction, and memory pruning to prevent context bloat and token degradation in long agent trajectories.
@@ -315,6 +333,7 @@ Hooks run shell scripts at critical lifecycle events with typed JSON contracts o
 - **[`thinking-budget`](hooks/thinking-budget/hooks.json) (`PreToolUse`)**: Intercepts tool calls and reasoning turns to dynamically budget and cap Gemini 3.8 extended reasoning token runaways.
 - **[`drift-detector`](hooks/drift-detector/hooks.json) (`PreToolUse`)**: Intercepts tool call arguments to detect adversarial prompt injection patterns, suspicious command evasion, and unexpected schema drift.
 - **[`context-compactor`](hooks/context-compactor/hooks.json) (`PreToolUse`)**: Evaluates tool input payload sizes and trajectory context pressure to recommend AST pruning or compacting oversized buffers.
+- **[`zero-trust-gate`](hooks/zero-trust-gate/hooks.json) (`PreToolUse`)**: Deterministic container confinement sentinel blocking privileged flags (`--privileged`), dangerous capabilities (`CAP_SYS_ADMIN`), and unsafe docker socket mounts.
 
 ### 3. Rules Hierarchy (`rules/`)
 Antigravity automatically discovers rules by walking up from the current file's directory to the repository root:

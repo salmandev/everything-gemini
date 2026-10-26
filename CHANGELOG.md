@@ -4,6 +4,45 @@ All notable changes to **Everything Gemini (`everything-gemini`)** will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.0] - 2026-10-26
+
+### Added
+- **The 100-Skill Century Landmark: 131 Production Components & 100 Progressive Disclosure Skills**:
+  - **`autonomous-incident-healer`** ([`skills/autonomous-incident-healer/SKILL.md`](skills/autonomous-incident-healer/SKILL.md)): Autonomously detects production incident anomalies, executes deterministic self-healing runbooks, triggers automated canary traffic draining or rollback, and compiles blameless root-cause analysis (RCA).
+  - **`spanner-distributed-locks`** ([`skills/spanner-distributed-locks/SKILL.md`](skills/spanner-distributed-locks/SKILL.md)): Implements enterprise distributed locks, leader election, and mutual exclusion leases on Google Cloud Spanner using TrueTime and conditional mutations.
+  - **`gemini-live-audio-transcriber`** ([`skills/gemini-live-audio-transcriber/SKILL.md`](skills/gemini-live-audio-transcriber/SKILL.md)): Streams bidirectional low-latency audio via WebSocket/WebRTC to the Gemini Live API, handling Opus framing, Voice Activity Detection (VAD), live turn interruptions, and real-time pair-programming transcription.
+  - **`multi-modal-screen-actor`** ([`skills/multi-modal-screen-actor/SKILL.md`](skills/multi-modal-screen-actor/SKILL.md)): Executes autonomous GUI perception and mouse/keyboard action loops for Desktop 2.0, normalizing screen coordinates (0-1000), grounding UI elements, and verifying visual side-effects.
+  - **`spanner-vector-search`** ([`skills/spanner-vector-search/SKILL.md`](skills/spanner-vector-search/SKILL.md)): Executes high-performance Approximate Nearest Neighbor (ANN) vector search and hybrid Graph RAG queries on Google Cloud Spanner using ScaNN indexes and COSINE_DISTANCE functions.
+  - **`cloud-deploy-canary`** ([`skills/cloud-deploy-canary/SKILL.md`](skills/cloud-deploy-canary/SKILL.md)): Orchestrates automated progressive delivery, canary traffic splitting, and metric-based rollback gates using Google Cloud Deploy for Cloud Run and GKE.
+  - **`alloydb-omni-vector`** ([`skills/alloydb-omni-vector/SKILL.md`](skills/alloydb-omni-vector/SKILL.md)): Configures AlloyDB Omni with pgvector and the Columnar Engine for ultra-fast HNSW vector similarity search and analytical queries.
+  - **`zero-trust-workload-identity`** ([`skills/zero-trust-workload-identity/SKILL.md`](skills/zero-trust-workload-identity/SKILL.md)): Configures GCP Workload Identity Federation, SPIFFE/SPIRE cryptographic attestation, and short-lived STS tokens for multi-cloud autonomous agents without static service account keys.
+- **18th Scoped Subagent Fleet Expansion**:
+  - **`cve-mitigator`** ([`agents/cve-mitigator.md`](agents/cve-mitigator.md)): Dedicated specialist for zero-day vulnerability remediation, runtime isolation, host kernel ASLR verification, container least-privilege, and memory inode auditing.
+- **13th Lifecycle Safety Hook**:
+  - **`zero-trust-gate`** ([`hooks/zero-trust-gate/`](hooks/zero-trust-gate/)): PreToolUse deterministic safety hook inspecting container execution flags, blocking privileged execution (`--privileged`), dangerous capabilities (`CAP_SYS_ADMIN`), and unsafe docker socket mounts.
+- **Harness³ Darwin Prompt Evolution CLI (`everything-gemini darwin`)**:
+  - Multi-generation genetic prompt tournament selection, trait cross-pollination, and Pareto frontier reporting.
+- **Zero-Day CVE Remediation Orchestrator CLI (`everything-gemini cve`)**:
+  - 4-layer defense-in-depth security verification, host ASLR compliance checks, and container read-only rootfs auditing.
+- **Production Python SDK Pipeline**:
+  - Authored [`examples/python-sdk/cve_remediation_and_darwin_evolution.py`](examples/python-sdk/cve_remediation_and_darwin_evolution.py) demonstrating end-to-end zero-day remediation and genetic prompt optimization.
+- **Distribution Launch Kit**:
+  - Authored [`docs/LAUNCH_KIT_v2.8.0.md`](docs/LAUNCH_KIT_v2.8.0.md) celebrating the 100-Skill Century Milestone across LinkedIn, X, Reddit, and Hacker News.
+
+## [2.7.0] - 2026-10-24
+
+### Added
+- **PHP2Shell Defensive Auditor, CVE Remediation & Darwin Prompt Evolution**:
+  - **`cve-remediation-orchestrator`** ([`skills/cve-remediation-orchestrator/SKILL.md`](skills/cve-remediation-orchestrator/SKILL.md)): Exploit-agnostic 4-layer defensive remediation for critical CVEs (virtual patching, kernel ASLR, container least-privilege, worker memory verification).
+  - **`php2shell-version-auditor`** ([`skills/php2shell-version-auditor/SKILL.md`](skills/php2shell-version-auditor/SKILL.md)): Vulnerability triage runbook and package backport auditor for PHP2Shell (CVE-2026-109618 & CVE-2026-109619).
+  - **`phpcheck-url`** ([`skills/phpcheck-url/SKILL.md`](skills/phpcheck-url/SKILL.md)) & **`phpcheck-server`** ([`skills/phpcheck-server/SKILL.md`](skills/phpcheck-server/SKILL.md)): Non-intrusive remote banner audit and server-side worker memory inspection CLI (`everything-gemini phpcheck`).
+  - **`adversarial-fuzz-generator`** ([`skills/adversarial-fuzz-generator/SKILL.md`](skills/adversarial-fuzz-generator/SKILL.md)): Property-based and adversarial test suite synthesizer using hypothesis-style fuzzing.
+  - **`genetic-prompt-cross-pollinator`** ([`skills/genetic-prompt-cross-pollinator/SKILL.md`](skills/genetic-prompt-cross-pollinator/SKILL.md)): Genetic crossover operators and Pareto tournament selection for agent prompt engineering.
+  - **`instinct-distillation-compiler`** ([`skills/instinct-distillation-compiler/SKILL.md`](skills/instinct-distillation-compiler/SKILL.md)): Compiles runtime edge cases into persistent deterministic rules in `.agents/hooks/learned-instincts/`.
+  - **`gemini-live-screen-vision`** ([`skills/gemini-live-screen-vision/SKILL.md`](skills/gemini-live-screen-vision/SKILL.md)): Streams active IDE screens and DOM repaints to Gemini Live for real-time visual pair-programming.
+- **17th Scoped Subagent**:
+  - **`darwin-prompt-engineer`** ([`agents/darwin-prompt-engineer.md`](agents/darwin-prompt-engineer.md)): Dedicated specialist for Darwinian genetic prompt optimization and adversarial fuzzing.
+
 ## [2.6.0] - 2026-10-23
 
 ### Added
