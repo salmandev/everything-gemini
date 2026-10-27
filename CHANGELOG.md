@@ -4,6 +4,23 @@ All notable changes to **Everything Gemini (`everything-gemini`)** will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.0] - 2026-10-27
+
+### Added
+- **Agentic Superpowers Software Methodology & TDD Orchestrator (101 Progressive Skills & 132 Total Components)**:
+  - **`superpowers`** ([`skills/superpowers/SKILL.md`](skills/superpowers/SKILL.md)): Enforces a disciplined agentic software development methodology (inspired by Jesse Vincent's `obra/superpowers` and customized for Google Antigravity & Gemini 3.8). Conducts interactive specification interviews, creates step-by-step red-green TDD implementation plans, orchestrates scoped subagents, and guarantees zero-drift verification before committing changes.
+  - **Superpowers Harness Script** ([`skills/superpowers/scripts/superpowers-harness.sh`](skills/superpowers/scripts/superpowers-harness.sh)): Automated workspace initializer, spec/plan checker, and TDD verification engine.
+- **Superpowers CLI Command (`everything-gemini superpowers`)**:
+  - `everything-gemini superpowers init`: Scaffolds `.superpowers/` directory with `spec.md`, `plan.md`, and `tdd-checklist.json`.
+  - `everything-gemini superpowers check`: Verifies workspace adherence to specifications, TDD status, and subagent assignments.
+  - `everything-gemini superpowers run`: Evaluates automated TDD cycles with full `--dry-run` and `--json` support.
+- **Production Python SDK Orchestration Pipeline**:
+  - Authored [`examples/python-sdk/superpowers_tdd_orchestration.py`](examples/python-sdk/superpowers_tdd_orchestration.py) demonstrating programmatic 5-phase Superpowers execution with multi-subagent coordination.
+- **Ecosystem Test Suite Expansion**:
+  - Expanded [`tests/cli.test.js`](tests/cli.test.js) to 57 end-to-end integration tests verifying 132 total components, 101 progressive skills, 18 scoped subagents, and 13 lifecycle hooks.
+- **Distribution Launch Kit**:
+  - Authored [`docs/LAUNCH_KIT_v2.9.0.md`](docs/LAUNCH_KIT_v2.9.0.md) containing ready-to-publish social media announcements (LinkedIn, X/Twitter, Reddit, Hacker News, Dev.to) and npm release instructions.
+
 ## [2.8.0] - 2026-10-26
 
 ### Added

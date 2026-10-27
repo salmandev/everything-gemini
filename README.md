@@ -93,8 +93,8 @@ npx everything-gemini phpcheck --server
 | Profile | Target Audience | What Gets Installed |
 | :--- | :--- | :--- |
 | **`core`** | Minimalists & Speed | Safety-shield hook, TDD skill, repo-onboarding skill, baseline `GEMINI.md`. |
-| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 18 Scoped Subagents (`agents/`), Frontier Skills (Darwin prompt evolution, CVE mitigator, Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
-| **`full`** | Lead Engineers & Archs | Everything: all 100 progressive skills, 18 scoped subagents, full lifecycle hooks suite (13 hooks), 14 MCP blueprints, all plugins, configs, and templates (The 131-Component Century Milestone). |
+| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 18 Scoped Subagents (`agents/`), Frontier Skills (Superpowers TDD methodology, Darwin prompt evolution, CVE mitigator, Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
+| **`full`** | Lead Engineers & Archs | Everything: all 101 progressive skills, 18 scoped subagents, full lifecycle hooks suite (13 hooks), 14 MCP blueprints, all plugins, configs, and templates (The 132-Component Century Milestone). |
 
 ### 5. In CI / GitHub Actions Workflows
 
@@ -213,6 +213,7 @@ Everything Gemini provides specialized subagent specifications designed for Anti
 ### 1. Skills (`skills/`)
 Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`name` and `description`) is placed into the system prompt. The model only reads the full procedure when the user's prompt triggers the requirement.
 
+- **[`superpowers`](skills/superpowers/SKILL.md)**: Enforces disciplined agentic software development methodology (inspired by Jesse Vincent's `obra/superpowers`). Conducts interactive specification gathering, creates step-by-step red-green TDD implementation plans, orchestrates scoped subagents, and ensures zero-drift verification before committing changes.
 - **[`autonomous-incident-healer`](skills/autonomous-incident-healer/SKILL.md)**: Autonomously detects production incident anomalies, executes deterministic self-healing runbooks, triggers automated canary traffic draining or rollback, and compiles blameless root-cause analysis (RCA).
 - **[`spanner-distributed-locks`](skills/spanner-distributed-locks/SKILL.md)**: Implements enterprise distributed locks, leader election, and mutual exclusion leases on Google Cloud Spanner using TrueTime and conditional mutations.
 - **[`gemini-live-audio-transcriber`](skills/gemini-live-audio-transcriber/SKILL.md)**: Streams bidirectional low-latency audio via WebSocket/WebRTC to the Gemini Live API, handling Opus framing, Voice Activity Detection (VAD), live turn interruptions, and real-time pair-programming transcription.
@@ -402,7 +403,7 @@ Skill Body: Loaded on-demand ONLY when invoked = ~1,500 Tokens (one-time)
 Savings: > 85% Token Reduction & 3x Faster First-Token Latency!
 ```
 
-Run the built-in diagnostic benchmark across all 100 ecosystem components (The Century Milestone):
+Run the built-in diagnostic benchmark across all 132 ecosystem components (101 progressive skills):
 ```bash
 ./bin/everything-gemini test-all
 ```
