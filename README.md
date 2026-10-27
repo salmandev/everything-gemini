@@ -93,8 +93,8 @@ npx everything-gemini phpcheck --server
 | Profile | Target Audience | What Gets Installed |
 | :--- | :--- | :--- |
 | **`core`** | Minimalists & Speed | Safety-shield hook, TDD skill, repo-onboarding skill, baseline `GEMINI.md`. |
-| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 18 Scoped Subagents (`agents/`), Frontier Skills (Superpowers TDD methodology, Darwin prompt evolution, CVE mitigator, Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
-| **`full`** | Lead Engineers & Archs | Everything: all 101 progressive skills, 18 scoped subagents, full lifecycle hooks suite (13 hooks), 14 MCP blueprints, all plugins, configs, and templates (The 132-Component Century Milestone). |
+| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 20 Scoped Subagents (`agents/`), Frontier Skills (Google Elephant-Goldfish Model, Superpowers TDD methodology, Darwin prompt evolution, CVE mitigator, Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
+| **`full`** | Lead Engineers & Archs | Everything: all 102 progressive skills, 20 scoped subagents, full lifecycle hooks suite (13 hooks), 14 MCP blueprints, all plugins, configs, and templates (The 135-Component Landmark Release). |
 
 ### 5. In CI / GitHub Actions Workflows
 
@@ -209,10 +209,13 @@ Everything Gemini provides specialized subagent specifications designed for Anti
 | **[`cross-repo-orchestrator`](agents/cross-repo-orchestrator.md)** | Cross-Repository Swarm Architect | Multi-repository dependency synchronization, cross-boundary 2PC commit gating, and contract schema alignment. |
 | **[`darwin-prompt-engineer`](agents/darwin-prompt-engineer.md)** | Darwinian Genetic Prompt Architect | Multi-generation prompt tournament selection, adversarial fuzzing, and Pareto efficiency optimization. |
 | **[`cve-mitigator`](agents/cve-mitigator.md)** | Zero-Day CVE Remediation Specialist | 4-layer defense-in-depth virtual patching, kernel ASLR verification, container least-privilege, and memory inode auditing. |
+| **[`elephant-architect`](agents/elephant-architect.md)** | Deep-Context Technical Architect | Long-horizon design exploration, requirements decomposition, living design documents under the strict "NO CODE" invariant. |
+| **[`goldfish-reviewer`](agents/goldfish-reviewer.md)** | Zero-Memory Adversarial Reviewer | Stateless, unbiased peer review across 4 lenses (Design Critic, Naive Reader, Tech Lead, Codebase Auditor) eliminating sycophancy. |
 
 ### 1. Skills (`skills/`)
 Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`name` and `description`) is placed into the system prompt. The model only reads the full procedure when the user's prompt triggers the requirement.
 
+- **[`elephant-goldfish-model`](skills/elephant-goldfish-model/SKILL.md)**: Implements Google's Elephant-Goldfish Model (Dave Rensin) for spec-driven development. Couples long-horizon deep-context Elephant architecture sessions (strict NO CODE rule) with stateless zero-memory Goldfish adversarial review swarms across 4 distinct critical lenses.
 - **[`superpowers`](skills/superpowers/SKILL.md)**: Enforces disciplined agentic software development methodology (inspired by Jesse Vincent's `obra/superpowers`). Conducts interactive specification gathering, creates step-by-step red-green TDD implementation plans, orchestrates scoped subagents, and ensures zero-drift verification before committing changes.
 - **[`autonomous-incident-healer`](skills/autonomous-incident-healer/SKILL.md)**: Autonomously detects production incident anomalies, executes deterministic self-healing runbooks, triggers automated canary traffic draining or rollback, and compiles blameless root-cause analysis (RCA).
 - **[`spanner-distributed-locks`](skills/spanner-distributed-locks/SKILL.md)**: Implements enterprise distributed locks, leader election, and mutual exclusion leases on Google Cloud Spanner using TrueTime and conditional mutations.
@@ -403,7 +406,7 @@ Skill Body: Loaded on-demand ONLY when invoked = ~1,500 Tokens (one-time)
 Savings: > 85% Token Reduction & 3x Faster First-Token Latency!
 ```
 
-Run the built-in diagnostic benchmark across all 132 ecosystem components (101 progressive skills):
+Run the built-in diagnostic benchmark across all 135 ecosystem components (102 progressive skills, 20 scoped subagents):
 ```bash
 ./bin/everything-gemini test-all
 ```

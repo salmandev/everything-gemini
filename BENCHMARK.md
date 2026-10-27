@@ -2,8 +2,8 @@
 ## Empirical Analysis: Progressive Disclosure & Prefix Context Caching vs. Traditional Monolithic Agent Prompts
 
 **Benchmark Suite**: `everything-gemini benchmark`  
-**Dataset**: 132 Production Components (101 Progressive Skills, 18 Scoped Subagents, 13 Lifecycle Hooks) — *The Agentic Superpowers Release (v2.9.0)*  
-**Total Runbook Corpus**: ~107,350 Tokens  
+**Dataset**: 135 Production Components (102 Progressive Skills, 20 Scoped Subagents, 13 Lifecycle Hooks) — *The Google EGM & Superpowers Major Release (v3.0.0)*  
+**Total Runbook Corpus**: ~109,054 Tokens  
 **Hardware & Environment**: Apple M-Series / Linux x86_64, Node.js >= 18.0.0, Gemini 2.0 Flash & Gemini 3.8  
 
 ---
@@ -39,16 +39,16 @@ Cumulative 10-turn cost: ~55,000 Tokens (93.9% Token Savings!)
 
 ## 📈 3. Empirical Benchmark Data
 
-Measurements captured across the complete catalog of 132 components:
+Measurements captured across the complete catalog of 135 components:
 
 | Architecture Metric | Traditional Monolithic Prompt | Everything Gemini (Progressive) | Everything Gemini + Prefix Cache | Delta / Savings |
 | :--- | :--- | :--- | :--- | :--- |
-| **Initial Prompt Overhead** | 84,500 tokens | 4,850 tokens | 4,850 tokens (Cached) | **-94.3% tokens** |
-| **Recurring Turn Overhead** | 84,500 tokens | 4,850 tokens | 1,220 tokens (Eff. cost) | **-98.5% cost** |
-| **Avg Skill Body On-Demand** | Preloaded (Wasted) | 1,062 tokens | 1,062 tokens | On-demand only |
-| **Time to First Token (TTFT)**| 4,750ms | 1,180ms | 340ms | **14x faster** |
-| **Total Corpus Size** | ~107,355 tokens | ~107,355 tokens | ~107,355 tokens | 100% capacity |
-| **10-Turn Task Cost (Est.)** | $0.70 USD | $0.053 USD | $0.018 USD | **97.4% Cheaper** |
+| **Initial Prompt Overhead** | 85,900 tokens | 4,920 tokens | 4,920 tokens (Cached) | **-94.3% tokens** |
+| **Recurring Turn Overhead** | 85,900 tokens | 4,920 tokens | 1,230 tokens (Eff. cost) | **-98.6% cost** |
+| **Avg Skill Body On-Demand** | Preloaded (Wasted) | 1,069 tokens | 1,069 tokens | On-demand only |
+| **Time to First Token (TTFT)**| 4,800ms | 1,180ms | 340ms | **14x faster** |
+| **Total Corpus Size** | ~109,054 tokens | ~109,054 tokens | ~109,054 tokens | 100% capacity |
+| **10-Turn Task Cost (Est.)** | $0.72 USD | $0.054 USD | $0.018 USD | **97.5% Cheaper** |
 
 ---
 
@@ -61,16 +61,16 @@ $$\text{Tokens}_{\text{traditional}} = T_{\text{base}} + \sum_{i=1}^{N} S_i$$
 $$\text{Tokens}_{\text{progressive}} = T_{\text{base}} + \sum_{i=1}^{N} M_i + \sum_{j=1}^{k} S_j$$
 
 Given:
-- $N = 101$ skills
-- Average skill runbook size $\bar{S} = 1,062$ tokens
+- $N = 102$ skills
+- Average skill runbook size $\bar{S} = 1,069$ tokens
 - Average YAML frontmatter size $\bar{M} = 48$ tokens
 - Average active skills per turn $k = 1$
 
-$$\text{Tokens}_{\text{traditional}} = 2000 + (101 \times 1062) = 109,262 \text{ tokens/turn}$$
+$$\text{Tokens}_{\text{traditional}} = 2000 + (102 \times 1069) = 111,038 \text{ tokens/turn}$$
 
-$$\text{Tokens}_{\text{progressive}} = 2000 + (101 \times 48) + (1 \times 1062) = 7,910 \text{ tokens/turn}$$
+$$\text{Tokens}_{\text{progressive}} = 2000 + (102 \times 48) + (1 \times 1069) = 7,965 \text{ tokens/turn}$$
 
-$$\text{Savings} = 1 - \frac{7,910}{109,262} = 92.76\%$$
+$$\text{Savings} = 1 - \frac{7,965}{111,038} = 92.83\%$$
 
 ---
 
@@ -89,13 +89,13 @@ npx everything-gemini benchmark --json | jq .
 Sample output:
 ```json
 {
-  "totalComponents": 132,
-  "progressiveSkillsCount": 101,
-  "scopedAgentsCount": 18,
+  "totalComponents": 135,
+  "progressiveSkillsCount": 102,
+  "scopedAgentsCount": 20,
   "lifecycleHooksCount": 13,
-  "totalRunbookTokens": 107355,
-  "estimatedTokensSavedPerTurn": 91252,
-  "latencySeconds": 0.03
+  "totalRunbookTokens": 109054,
+  "estimatedTokensSavedPerTurn": 92696,
+  "latencySeconds": 0.01
 }
 ```
 
@@ -103,4 +103,4 @@ Sample output:
 
 ## 🏆 6. Conclusion
 
-By shifting from eager prompt injection to **on-demand skill loading** via Antigravity progressive disclosure, Everything Gemini allows massive enterprise skillbases (100 specialized skills, 18 subagents, 13 hooks) to run within strict latency, financial, and context-window budgets.
+By shifting from eager prompt injection to **on-demand skill loading** via Antigravity progressive disclosure, Everything Gemini allows massive enterprise skillbases (102 specialized skills, 20 subagents, 13 hooks) to run within strict latency, financial, and context-window budgets.

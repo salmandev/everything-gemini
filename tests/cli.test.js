@@ -90,9 +90,9 @@ it('should benchmark ecosystem components and output valid JSON with --json', ()
   const res = runCli('benchmark --json');
   assert.strictEqual(res.status, 0);
   const data = JSON.parse(res.stdout);
-  assert.strictEqual(data.totalComponents, 132);
-  assert.strictEqual(data.progressiveSkillsCount, 101);
-  assert.strictEqual(data.scopedAgentsCount, 18);
+  assert.strictEqual(data.totalComponents, 135);
+  assert.strictEqual(data.progressiveSkillsCount, 102);
+  assert.strictEqual(data.scopedAgentsCount, 20);
   assert.strictEqual(data.lifecycleHooksCount, 13);
   assert(data.totalRunbookTokens > 15000, 'Expected >15,000 runbook tokens');
   assert(data.estimatedTokensSavedPerTurn > 8000, 'Expected significant token savings');
@@ -316,7 +316,7 @@ try {
     const dryRes = runCli(`bundle --output "${bundleTarget}" --dry-run`);
     assert.strictEqual(dryRes.status, 0);
     assert.match(dryRes.stdout, /DRY RUN MODE ACTIVATED/);
-    assert.match(dryRes.stdout, /Skills to bundle: 101/);
+    assert.match(dryRes.stdout, /Skills to bundle: 102/);
     assert.strictEqual(fs.existsSync(bundleTarget), false, 'Dry run should not create destination directory');
 
     // JSON Dry-run mode
@@ -324,7 +324,7 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.components.totalCount, 132);
+    assert.strictEqual(dryData.manifest.components.totalCount, 135);
 
     // Live mode
     const liveRes = runCli(`bundle --output "${bundleTarget}"`);
@@ -477,8 +477,8 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.metrics.total_skills, 101);
-    assert.strictEqual(dryData.manifest.metrics.total_subagents, 18);
+    assert.strictEqual(dryData.manifest.metrics.total_skills, 102);
+    assert.strictEqual(dryData.manifest.metrics.total_subagents, 20);
     assert.strictEqual(dryData.manifest.metrics.total_hooks, 13);
 
     // Live mode
@@ -524,13 +524,13 @@ try {
   });
 
   // Benchmark Components Verification
-  it('should report 132 components, 101 skills, 18 subagents, and 13 hooks in benchmark --json', () => {
+  it('should report 135 components, 102 skills, 20 subagents, and 13 hooks in benchmark --json', () => {
     const res = runCli('benchmark --json');
     assert.strictEqual(res.status, 0);
     const data = JSON.parse(res.stdout);
-    assert.strictEqual(data.totalComponents, 132, 'Total components should be 132');
-    assert.strictEqual(data.progressiveSkillsCount, 101, 'Progressive skills should be 101');
-    assert.strictEqual(data.scopedAgentsCount, 18, 'Scoped agents should be 18');
+    assert.strictEqual(data.totalComponents, 135, 'Total components should be 135');
+    assert.strictEqual(data.progressiveSkillsCount, 102, 'Progressive skills should be 102');
+    assert.strictEqual(data.scopedAgentsCount, 20, 'Scoped agents should be 20');
     assert.strictEqual(data.lifecycleHooksCount, 13, 'Lifecycle hooks should be 13');
   });
 
@@ -644,8 +644,8 @@ try {
     const jsonRes = runCli('ui --json');
     assert.strictEqual(jsonRes.status, 0);
     const data = JSON.parse(jsonRes.stdout);
-    assert.strictEqual(data.metrics.totalComponents, 132);
-    assert.strictEqual(data.metrics.progressiveSkills, 101);
+    assert.strictEqual(data.metrics.totalComponents, 135);
+    assert.strictEqual(data.metrics.progressiveSkills, 102);
     assert.ok(data.endpoints.dashboard);
   });
 
@@ -918,6 +918,38 @@ try {
     assert.strictEqual(infoRes.status, 0);
     assert.match(infoRes.stdout, /superpowers/);
     assert.match(infoRes.stdout, /Agentic Superpowers Software Methodology/);
+  });
+
+  // Elephant-Goldfish Model (EGM)
+  it('should support egm command in dry-run and json modes and expose subagents', () => {
+    const dryRes = runCli('egm review --dry-run');
+    assert.strictEqual(dryRes.status, 0);
+    assert.match(dryRes.stdout, /DRY RUN/);
+
+    const jsonRes = runCli('egm review --dry-run --json');
+    assert.strictEqual(jsonRes.status, 0);
+    const data = JSON.parse(jsonRes.stdout);
+    assert.strictEqual(data.action, 'review');
+    assert.strictEqual(data.status, 'DRY_RUN');
+
+    const checkRes = runCli('egm check --json');
+    assert.strictEqual(checkRes.status, 0);
+    const checkData = JSON.parse(checkRes.stdout);
+    assert.strictEqual(checkData.action, 'check');
+    assert.strictEqual(checkData.status, 'READY');
+
+    const infoSkill = runCli('info elephant-goldfish-model');
+    assert.strictEqual(infoSkill.status, 0);
+    assert.match(infoSkill.stdout, /elephant-goldfish-model/);
+    assert.match(infoSkill.stdout, /Elephant-Goldfish Model/);
+
+    const infoElephant = runCli('info elephant-architect');
+    assert.strictEqual(infoElephant.status, 0);
+    assert.match(infoElephant.stdout, /elephant-architect/);
+
+    const infoGoldfish = runCli('info goldfish-reviewer');
+    assert.strictEqual(infoGoldfish.status, 0);
+    assert.match(infoGoldfish.stdout, /goldfish-reviewer/);
   });
 
 } finally {

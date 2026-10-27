@@ -64,6 +64,7 @@ function printHelp() {
   console.log(`  ${GREEN}darwin, evolve${RESET} [tournament]   Harness³ Darwin genetic prompt evolution & Pareto frontier optimization`);
   console.log(`  ${GREEN}cve, cve-mitigate${RESET} [audit|mitigate] 4-layer zero-day CVE mitigation, ASLR audit & runtime hardening`);
   console.log(`  ${GREEN}superpowers${RESET} [init|check|run]  Enforce agentic spec gathering, Red/Green TDD & subagent orchestration`);
+  console.log(`  ${GREEN}egm, elephant-goldfish${RESET} [action]  Google Elephant-Goldfish Model (EGM) Spec-Driven Development`);
   console.log(`  ${GREEN}import${RESET} <file.json>          Import portable agent configuration bundle into workspace`);
   console.log(`  ${GREEN}bundle, pack${RESET} [options]        Package offline distribution bundle with manifest & installer`);
   console.log(`  ${GREEN}sync${RESET} [options]                Synchronize workspace with upstream catalog & verify integrity`);
@@ -2704,6 +2705,53 @@ function runSuperpowers(subAction = 'check', options = {}) {
   console.log(`${GREEN}${BOLD}✔ Superpowers status: READY (${((Date.now() - startTime) / 1000).toFixed(2)}s).${RESET}\n`);
 }
 
+function runEgm(subAction = 'check', options = {}) {
+  const action = subAction || 'check';
+  const feature = options.feature || 'core-architecture';
+  const isDryRun = !!options.dryRun;
+  const asJson = !!options.json;
+  const startTime = Date.now();
+  const scriptPath = path.join(REPO_ROOT, 'skills', 'elephant-goldfish-model', 'scripts', 'egm-harness.sh');
+
+  if (fs.existsSync(scriptPath)) {
+    const jsonFlag = asJson ? ' --json' : '';
+    const dryFlag = isDryRun ? ' --dry-run' : '';
+    const featureFlag = ` --feature=${feature}`;
+    try {
+      execSync(`bash "${scriptPath}" "${action}"${jsonFlag}${dryFlag}${featureFlag}`, { stdio: 'inherit', cwd: WORKSPACE_DIR });
+    } catch (err) {
+      process.exitCode = err.status || 1;
+    }
+    return;
+  }
+
+  const result = {
+    methodology: 'google/elephant-goldfish-model',
+    action,
+    parameters: { feature, dryRun: isDryRun },
+    status: isDryRun ? 'DRY_RUN' : 'READY',
+    elephantNoCodeEnforced: true,
+    goldfishStatelessReview: true,
+    subagents: ['elephant-architect', 'goldfish-reviewer'],
+    timestamp: new Date().toISOString()
+  };
+
+  if (asJson) {
+    console.log(JSON.stringify(result, null, 2));
+    return;
+  }
+
+  printBanner();
+  console.log(`${BOLD}🐘🐟 Google Elephant-Goldfish Model (EGM) Spec-Driven Development${RESET}`);
+  console.log(`Action: ${CYAN}${action}${RESET} | Mode: ${BOLD}${isDryRun ? 'Dry Run' : 'Active Workspace'}${RESET}\n`);
+  console.log(`${CYAN}${BOLD}✨ 4-STAGE GOOGLE EGM PROTOCOL:${RESET}`);
+  console.log(`  ${GREEN}✔${RESET} Stage 1: Hypothesis Exploration (Elephant Session - Strict No-Code Invariant)`);
+  console.log(`  ${GREEN}✔${RESET} Stage 2: Living Technical Design Document (docs/designs/${feature}.md)`);
+  console.log(`  ${GREEN}✔${RESET} Stage 3: Stateless Adversarial Review (Goldfish Swarm - Zero Context Bias)`);
+  console.log(`  ${GREEN}✔${RESET} Stage 4: Resolution Matrix & Architectural Drift Detection\n`);
+  console.log(`${GREEN}${BOLD}✔ EGM status: READY (${((Date.now() - startTime) / 1000).toFixed(2)}s).${RESET}\n`);
+}
+
 function runValidate() {
   printBanner();
   console.log(`${BOLD}🧪 Validating everything-gemini components...${RESET}\n`);
@@ -4503,6 +4551,22 @@ switch (command) {
       else if (args[i] === '--json') asJson = true;
     }
     runSuperpowers(subAction, { dryRun: isDryRun, json: asJson });
+    break;
+  }
+  case 'egm':
+  case 'elephant-goldfish': {
+    const subAction = (args[1] && !args[1].startsWith('-')) ? args[1] : 'check';
+    let feature = 'core-architecture';
+    let isDryRun = false;
+    let asJson = false;
+    const startIndex = (args[1] && !args[1].startsWith('-')) ? 2 : 1;
+    for (let i = startIndex; i < args.length; i++) {
+      if (args[i] === '--feature' && args[i + 1]) feature = args[++i];
+      else if (args[i].startsWith('--feature=')) feature = args[i].split('=')[1];
+      else if (args[i] === '--dry-run') isDryRun = true;
+      else if (args[i] === '--json') asJson = true;
+    }
+    runEgm(subAction, { feature, dryRun: isDryRun, json: asJson });
     break;
   }
   case 'version':

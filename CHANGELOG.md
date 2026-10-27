@@ -4,6 +4,24 @@ All notable changes to **Everything Gemini (`everything-gemini`)** will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2026-10-27
+
+### Added
+- **The Dual Standard: Google Elephant-Goldfish Model (EGM) & Superpowers TDD Orchestration (135 Total Components, 102 Progressive Skills, 20 Scoped Subagents, 13 Lifecycle Hooks)**:
+  - **`elephant-goldfish-model`** ([`skills/elephant-goldfish-model/SKILL.md`](skills/elephant-goldfish-model/SKILL.md)): Implements Google's Elephant-Goldfish Model (Dave Rensin, `google/elephant-goldfish-model`) for spec-driven development. Eliminates **Context Collapse** and **Model Sycophancy** by separating long-horizon architectural exploration from stateless adversarial peer review. Enforces the strict **"NO CODE"** invariant during the Elephant specification phase.
+  - **Elephant-Goldfish Harness Engine** ([`skills/elephant-goldfish-model/scripts/egm-harness.sh`](skills/elephant-goldfish-model/scripts/egm-harness.sh)): Automated harness script supporting `brainstorm`, `draft`, `review`, `drift-report`, and `check` with full `--dry-run` and `--json` compatibility.
+  - **19th & 20th Scoped Subagents**:
+    - **`elephant-architect`** ([`agents/elephant-architect.md`](agents/elephant-architect.md)): Deep-context technical design architect bound by the strict "NO CODE" invariant, focused on living design documentation in `docs/designs/`.
+    - **`goldfish-reviewer`** ([`agents/goldfish-reviewer.md`](agents/goldfish-reviewer.md)): Stateless zero-memory adversarial peer reviewer auditing designs and code across 4 critical lenses (Design Critic, Naive Reader, Tech Lead, Codebase Auditor) with zero conversational sycophancy.
+  - **Elephant-Goldfish CLI Command (`everything-gemini egm` / `everything-gemini elephant-goldfish`)**:
+    - Automated terminal commands for living spec drafting, multi-lens goldfish auditing, and architectural drift detection.
+  - **Unified Python SDK Orchestration Pipeline**:
+    - Authored [`examples/python-sdk/elephant_goldfish_and_superpowers_pipeline.py`](examples/python-sdk/elephant_goldfish_and_superpowers_pipeline.py) orchestrating Phase 0 EGM Spec Hardening through Phase 1-5 Superpowers Red-Green TDD execution.
+  - **Expanded CLI E2E Test Suite**:
+    - Updated [`tests/cli.test.js`](tests/cli.test.js) to assert 135 total components, 102 progressive skills, 20 scoped subagents, and 13 hooks across 58 test suites.
+  - **Launch Kit v3.0.0**:
+    - Authored [`docs/LAUNCH_KIT_v3.0.0.md`](docs/LAUNCH_KIT_v3.0.0.md) with complete multi-platform social launch copy for LinkedIn, X/Twitter, Reddit, and Hacker News.
+
 ## [2.9.0] - 2026-10-27
 
 ### Added
