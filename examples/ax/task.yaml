@@ -1,0 +1,24 @@
+apiVersion: ax.io/v1alpha1
+kind: Task
+metadata:
+  name: cloud-triage-agent
+  atespace: default
+spec:
+  image: "gcr.io/ax-substrate/ate-images/ax-task-runner:latest"
+  config:
+    goal: "Diagnose failing integration tests, execute Superpowers TDD cycles, and verify zero regressions."
+  workspaces:
+    - name: fullstack-agent-workspace
+      path: "/workspace"
+  gateway:
+    name: secure-agent-gateway
+  model:
+    name: gemini-38-flash-model
+  resources:
+    requests:
+      cpu: "1000m"
+      memory: "2Gi"
+    limits:
+      cpu: "4000m"
+      memory: "8Gi"
+  debug: true # Enables live ax ssh inspection

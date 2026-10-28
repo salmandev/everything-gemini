@@ -1,0 +1,31 @@
+apiVersion: ax.io/v1alpha1
+kind: Workspace
+metadata:
+  name: fullstack-agent-workspace
+  atespace: default
+spec:
+  git:
+    - name: origin
+      repo: "https://github.com/my-org/my-production-service.git"
+      branch: "main"
+  files:
+    - path: "AGENTS.md"
+      content: |
+        # Everything Gemini Agent Rules
+        - Adhere strictly to Test-Driven Development (Superpowers TDD).
+        - Verify all code changes with local test suites before task completion.
+        - Dynamically load progressive skills from /.agents/skills/ only when triggered.
+    - path: "GEMINI.md"
+      content: |
+        # Core Gemini Coding Rules
+        - Zero-hallucination protocol: verify symbol and file existence before editing.
+        - Never modify public API contracts without explicit architectural approval.
+  skills:
+    registries:
+      - provider: google
+        query: "skills.tags:cloud,skills.tags:ai"
+        path: "/.agents/skills"
+  mcp:
+    registries:
+      - provider: google
+        query: "mcp.tags:standard"

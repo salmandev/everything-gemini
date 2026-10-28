@@ -1,0 +1,21 @@
+apiVersion: ax.io/v1alpha1
+kind: Gateway
+metadata:
+  name: secure-agent-gateway
+  atespace: default
+spec:
+  egress:
+    allowlist:
+      hosts:
+        - host: "generativelanguage.googleapis.com"
+          port: 443
+        - host: "*.googleapis.com"
+          port: 443
+        - host: "github.com"
+          port: 443
+        - host: "registry.npmjs.org"
+          port: 443
+        - host: "pypi.org"
+          port: 443
+        - host: "files.pythonhosted.org"
+          port: 443

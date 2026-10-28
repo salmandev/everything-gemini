@@ -1,0 +1,92 @@
+apiVersion: ax.io/v1alpha1
+kind: Workspace
+metadata:
+  name: fullstack-agent-workspace
+  atespace: default
+spec:
+  git:
+    - name: origin
+      repo: "https://github.com/my-org/my-production-service.git"
+      branch: "main"
+  files:
+    - path: "AGENTS.md"
+      content: |
+        # Everything Gemini Agent Rules
+        - Adhere strictly to Test-Driven Development (Superpowers TDD).
+        - Verify all code changes with local test suites before task completion.
+        - Dynamically load progressive skills from /.agents/skills/ only when triggered.
+    - path: "GEMINI.md"
+      content: |
+        # Core Gemini Coding Rules
+        - Zero-hallucination protocol: verify symbol and file existence before editing.
+        - Never modify public API contracts without explicit architectural approval.
+  skills:
+    registries:
+      - provider: google
+        query: "skills.tags:cloud,skills.tags:ai"
+        path: "/.agents/skills"
+  mcp:
+    registries:
+      - provider: google
+        query: "mcp.tags:standard"
+---
+apiVersion: ax.io/v1alpha1
+kind: Gateway
+metadata:
+  name: secure-agent-gateway
+  atespace: default
+spec:
+  egress:
+    allowlist:
+      hosts:
+        - host: "generativelanguage.googleapis.com"
+          port: 443
+        - host: "*.googleapis.com"
+          port: 443
+        - host: "github.com"
+          port: 443
+        - host: "registry.npmjs.org"
+          port: 443
+        - host: "pypi.org"
+          port: 443
+        - host: "files.pythonhosted.org"
+          port: 443
+---
+apiVersion: ax.io/v1alpha1
+kind: Model
+metadata:
+  name: gemini-38-flash-model
+  atespace: default
+spec:
+  provider: google
+  model: gemini-3.8-flash
+  secretKey:
+    name: gemini-api-credentials
+    key: GEMINI_API_KEY
+  parameters:
+    temperature: 0.7
+---
+apiVersion: ax.io/v1alpha1
+kind: Task
+metadata:
+  name: cloud-triage-agent
+  atespace: default
+spec:
+  image: "gcr.io/ax-substrate/ate-images/ax-task-runner:latest"
+  config:
+    goal: "Diagnose failing integration tests, execute Superpowers TDD cycles, and verify zero regressions."
+  workspaces:
+    - name: fullstack-agent-workspace
+      path: "/workspace"
+  gateway:
+    name: secure-agent-gateway
+  model:
+    name: gemini-38-flash-model
+  resources:
+    requests:
+      cpu: "1000m"
+      memory: "2Gi"
+    limits:
+      cpu: "4000m"
+      memory: "8Gi"
+  debug: true

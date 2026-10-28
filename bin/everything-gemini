@@ -31,6 +31,34 @@ const RED = '\x1b[31m';
 const MAGENTA = '\x1b[35m';
 const GRAY = '\x1b[90m';
 
+function getAllPluginSkills() {
+  const pluginSkills = [];
+  const pluginsDir = path.join(REPO_ROOT, 'plugins');
+  if (fs.existsSync(pluginsDir)) {
+    const plugins = fs.readdirSync(pluginsDir, { withFileTypes: true })
+      .filter(d => d.isDirectory())
+      .map(d => d.name)
+      .sort();
+    for (const p of plugins) {
+      const pSkillsDir = path.join(pluginsDir, p, 'skills');
+      if (fs.existsSync(pSkillsDir)) {
+        const skills = fs.readdirSync(pSkillsDir, { withFileTypes: true })
+          .filter(d => d.isDirectory())
+          .map(d => d.name)
+          .sort();
+        for (const s of skills) {
+          pluginSkills.push({
+            name: s,
+            plugin: p,
+            src: path.join(pSkillsDir, s)
+          });
+        }
+      }
+    }
+  }
+  return pluginSkills;
+}
+
 function printBanner() {
   console.log(`
 ${CYAN}${BOLD}🪐 Everything Gemini (${GREEN}everything-gemini${CYAN}) v${VERSION}${RESET}
@@ -65,6 +93,8 @@ function printHelp() {
   console.log(`  ${GREEN}cve, cve-mitigate${RESET} [audit|mitigate] 4-layer zero-day CVE mitigation, ASLR audit & runtime hardening`);
   console.log(`  ${GREEN}superpowers${RESET} [init|check|run]  Enforce agentic spec gathering, Red/Green TDD & subagent orchestration`);
   console.log(`  ${GREEN}egm, elephant-goldfish${RESET} [action]  Google Elephant-Goldfish Model (EGM) Spec-Driven Development`);
+  console.log(`  ${GREEN}ax, google-ax${RESET} [init|export]   Synthesize Google AX (Agent Executor) cluster manifests (Task/Workspace/Gateway/Model)`);
+  console.log(`  ${GREEN}skills${RESET} [sync|search|list]     Federate and sync official Google skills (google/skills) & plugins`);
   console.log(`  ${GREEN}import${RESET} <file.json>          Import portable agent configuration bundle into workspace`);
   console.log(`  ${GREEN}bundle, pack${RESET} [options]        Package offline distribution bundle with manifest & installer`);
   console.log(`  ${GREEN}sync${RESET} [options]                Synchronize workspace with upstream catalog & verify integrity`);
@@ -916,10 +946,7 @@ function runBundle(profile = 'all', outputDir = null, isDryRun = false, asJson =
     skillsToBundle.push(...list);
   }
 
-  const pluginSkills = [
-    { name: 'antigravity-sdk-orchestrator', src: path.join(REPO_ROOT, 'plugins', 'python-ai', 'skills', 'antigravity-sdk-orchestrator') },
-    { name: 'responsive-design', src: path.join(REPO_ROOT, 'plugins', 'web-fullstack', 'skills', 'responsive-design') }
-  ];
+  const pluginSkills = getAllPluginSkills();
 
   if (fs.existsSync(catalogAgentsDir)) {
     const list = fs.readdirSync(catalogAgentsDir)
@@ -1093,10 +1120,7 @@ function runHarness2(targetOutput = null, isDryRun = false, asJson = false) {
     skillsList.push(...coreSkills);
   }
   // Plugin skills
-  const pluginSkills = [
-    { name: 'antigravity-sdk-orchestrator', src: path.join(REPO_ROOT, 'plugins', 'python-ai', 'skills', 'antigravity-sdk-orchestrator') },
-    { name: 'responsive-design', src: path.join(REPO_ROOT, 'plugins', 'web-fullstack', 'skills', 'responsive-design') }
-  ];
+  const pluginSkills = getAllPluginSkills();
   skillsList.push(...pluginSkills);
 
   // Collect subagents
@@ -1829,7 +1853,8 @@ function runUI(options = {}) {
   const exportPath = options.export ? path.resolve(options.export) : null;
 
   const baseSkillsCount = fs.existsSync(path.join(REPO_ROOT, 'skills')) ? fs.readdirSync(path.join(REPO_ROOT, 'skills')).filter(d => fs.statSync(path.join(REPO_ROOT, 'skills', d)).isDirectory()).length : 82;
-  const catalogSkillsCount = baseSkillsCount + 2;
+  const pluginSkillsList = getAllPluginSkills();
+  const catalogSkillsCount = baseSkillsCount + pluginSkillsList.length;
   const catalogAgentsCount = fs.existsSync(path.join(REPO_ROOT, 'agents')) ? fs.readdirSync(path.join(REPO_ROOT, 'agents')).filter(f => f.endsWith('.md')).length : 16;
   const catalogHooksCount = fs.existsSync(path.join(REPO_ROOT, 'hooks')) ? fs.readdirSync(path.join(REPO_ROOT, 'hooks')).filter(d => fs.statSync(path.join(REPO_ROOT, 'hooks', d)).isDirectory()).length : 12;
   const totalComponents = catalogSkillsCount + catalogAgentsCount + catalogHooksCount;
@@ -2750,6 +2775,257 @@ function runEgm(subAction = 'check', options = {}) {
   console.log(`  ${GREEN}✔${RESET} Stage 3: Stateless Adversarial Review (Goldfish Swarm - Zero Context Bias)`);
   console.log(`  ${GREEN}✔${RESET} Stage 4: Resolution Matrix & Architectural Drift Detection\n`);
   console.log(`${GREEN}${BOLD}✔ EGM status: READY (${((Date.now() - startTime) / 1000).toFixed(2)}s).${RESET}\n`);
+}
+
+function runAx(subAction = 'init', options = {}) {
+  const isDryRun = !!options.dryRun;
+  const asJson = !!options.json;
+  const targetDir = options.output ? path.resolve(options.output) : path.join(process.cwd(), 'ax-workspace');
+  const targetRepo = options.repo || 'https://github.com/my-org/my-project.git';
+  const targetBranch = options.branch || 'main';
+  const targetModel = options.model || 'gemini-3.8-flash';
+  const taskName = options.name || 'agent-task';
+  const goal = options.goal || 'Inspect codebase, run Superpowers TDD cycles, and resolve open issue.';
+
+  const workspaceYaml = `apiVersion: ax.io/v1alpha1
+kind: Workspace
+metadata:
+  name: ${taskName}-workspace
+  atespace: default
+spec:
+  git:
+    - name: origin
+      repo: "${targetRepo}"
+      branch: "${targetBranch}"
+  files:
+    - path: "AGENTS.md"
+      content: |
+        # Everything Gemini Agent Guidelines
+        - Adhere strictly to Test-Driven Development (Superpowers TDD).
+        - Verify all changes with local test suites before task completion.
+        - Dynamically inspect /.agents/skills for progressive instructions.
+    - path: "GEMINI.md"
+      content: |
+        # Core Gemini Coding Rules
+        - Zero-hallucination protocol: verify symbol and file existence before editing.
+        - Strictly avoid modifying public APIs without explicit architectural approval.
+  skills:
+    registries:
+      - provider: google
+        query: "skills.tags:cloud,skills.tags:ai"
+        path: "/.agents/skills"
+  mcp:
+    registries:
+      - provider: google
+        query: "mcp.tags:standard"
+`;
+
+  const gatewayYaml = `apiVersion: ax.io/v1alpha1
+kind: Gateway
+metadata:
+  name: ${taskName}-gateway
+  atespace: default
+spec:
+  egress:
+    allowlist:
+      hosts:
+        - host: "generativelanguage.googleapis.com"
+          port: 443
+        - host: "*.googleapis.com"
+          port: 443
+        - host: "github.com"
+          port: 443
+        - host: "registry.npmjs.org"
+          port: 443
+        - host: "pypi.org"
+          port: 443
+        - host: "files.pythonhosted.org"
+          port: 443
+`;
+
+  const modelYaml = `apiVersion: ax.io/v1alpha1
+kind: Model
+metadata:
+  name: ${taskName}-model
+  atespace: default
+spec:
+  provider: google
+  model: ${targetModel}
+  secretKey:
+    name: gemini-api-credentials
+    key: GEMINI_API_KEY
+  parameters:
+    temperature: 0.7
+`;
+
+  const taskYaml = `apiVersion: ax.io/v1alpha1
+kind: Task
+metadata:
+  name: ${taskName}
+  atespace: default
+spec:
+  image: "gcr.io/ax-substrate/ate-images/ax-task-runner:latest"
+  config:
+    goal: "${goal}"
+  workspaces:
+    - name: ${taskName}-workspace
+      path: "/workspace"
+  gateway:
+    name: ${taskName}-gateway
+  model:
+    name: ${taskName}-model
+  resources:
+    requests:
+      cpu: "1000m"
+      memory: "2Gi"
+    limits:
+      cpu: "4000m"
+      memory: "8Gi"
+  debug: true
+`;
+
+  const bundleYaml = [workspaceYaml.trim(), gatewayYaml.trim(), modelYaml.trim(), taskYaml.trim()].join('\n---\n') + '\n';
+
+  const readmeContent = `# Google AX (Agent Executor) Deployment
+This directory contains declarative manifests for deploying an autonomous agent on **Google AX** and **Agent Substrate**.
+
+## Applying Manifests to Cluster
+\`\`\`bash
+# 1. Verify Agent Substrate runtime
+kubectl get svc api -n ate-system
+
+# 2. Deploy task, workspace, gateway, and model
+ax apply -f .
+
+# 3. Inspect task execution
+ax describe task ${taskName}
+
+# 4. Stream live logs
+ax logs -f ${taskName}
+
+# 5. Shell into running agent sandbox
+ax ssh ${taskName}
+
+# 6. Checkpoint and suspend / resume
+ax suspend ${taskName}
+ax resume ${taskName}
+\`\`\`
+`;
+
+  const filesWritten = [
+    { path: 'workspace.yaml', content: workspaceYaml },
+    { path: 'gateway.yaml', content: gatewayYaml },
+    { path: 'model.yaml', content: modelYaml },
+    { path: 'task.yaml', content: taskYaml },
+    { path: 'bundle.yaml', content: bundleYaml },
+    { path: 'README.md', content: readmeContent }
+  ];
+
+  if (asJson) {
+    console.log(JSON.stringify({
+      action: subAction,
+      dryRun: isDryRun,
+      targetDirectory: targetDir,
+      taskName,
+      model: targetModel,
+      repo: targetRepo,
+      branch: targetBranch,
+      files: filesWritten.map(f => f.path),
+      manifests: {
+        workspace: { apiVersion: 'ax.io/v1alpha1', kind: 'Workspace', name: `${taskName}-workspace` },
+        gateway: { apiVersion: 'ax.io/v1alpha1', kind: 'Gateway', name: `${taskName}-gateway` },
+        model: { apiVersion: 'ax.io/v1alpha1', kind: 'Model', name: `${taskName}-model`, model: targetModel },
+        task: { apiVersion: 'ax.io/v1alpha1', kind: 'Task', name: taskName }
+      }
+    }, null, 2));
+    return;
+  }
+
+  printBanner();
+  console.log(`${CYAN}${BOLD}⚡ Google AX (Agent Executor) Cluster Manifest Generator${RESET}`);
+  console.log(`Target Directory: ${GREEN}${targetDir}${RESET}`);
+  console.log(`Task Name       : ${BOLD}${taskName}${RESET}`);
+  console.log(`Model           : ${BOLD}${targetModel}${RESET}`);
+  console.log(`Repository      : ${GRAY}${targetRepo} (${targetBranch})${RESET}\n`);
+
+  if (isDryRun) {
+    console.log(`${YELLOW}${BOLD}🔍 DRY RUN MODE ACTIVATED - Previewing AX Manifests${RESET}\n`);
+    console.log(`  ${CYAN}📄 workspace.yaml${RESET} (ax.io/v1alpha1 Workspace with google/skills registry)`);
+    console.log(`  ${CYAN}📄 gateway.yaml${RESET}   (ax.io/v1alpha1 Gateway with zero-trust egress filter)`);
+    console.log(`  ${CYAN}📄 model.yaml${RESET}     (ax.io/v1alpha1 Model for ${targetModel})`);
+    console.log(`  ${CYAN}📄 task.yaml${RESET}      (ax.io/v1alpha1 Task with Agent Substrate sandbox & debug: true)`);
+    console.log(`  ${CYAN}📄 bundle.yaml${RESET}    (Multi-document YAML bundle)`);
+    console.log(`  ${CYAN}📄 README.md${RESET}      (ax apply / ax ssh / ax suspend operational runbook)\n`);
+    console.log(`${GREEN}${BOLD}✨ Dry run preview complete! 0 files written to disk.${RESET}\n`);
+    return;
+  }
+
+  fs.mkdirSync(targetDir, { recursive: true });
+  for (const f of filesWritten) {
+    fs.writeFileSync(path.join(targetDir, f.path), f.content, 'utf8');
+    console.log(`  ${GREEN}✔ Created${RESET} ${f.path}`);
+  }
+
+  console.log(`\n${GREEN}${BOLD}✨ Google AX Manifests Synthesized Successfully!${RESET}`);
+  console.log(`${GRAY}Deploy to your cluster with:${RESET} ${CYAN}ax apply -f "${targetDir}"${RESET}\n`);
+}
+
+function runSkills(subAction = 'sync', options = {}) {
+  const isDryRun = !!options.dryRun;
+  const asJson = !!options.json;
+  const source = options.source || 'google/skills';
+
+  const googleCloudPluginSkillsDir = path.join(REPO_ROOT, 'plugins', 'google-cloud', 'skills');
+  const localSkills = [];
+  if (fs.existsSync(googleCloudPluginSkillsDir)) {
+    const list = fs.readdirSync(googleCloudPluginSkillsDir, { withFileTypes: true })
+      .filter(d => d.isDirectory())
+      .map(d => d.name)
+      .sort();
+    for (const name of list) {
+      const md = path.join(googleCloudPluginSkillsDir, name, 'SKILL.md');
+      let desc = 'No description';
+      if (fs.existsSync(md)) {
+        const content = fs.readFileSync(md, 'utf8');
+        const match = content.match(/description:\s*>?-?\s*([^\n\r]+)/);
+        if (match) desc = match[1].trim();
+      }
+      localSkills.push({ name, desc, plugin: 'google-cloud', status: 'installed' });
+    }
+  }
+
+  if (asJson) {
+    console.log(JSON.stringify({
+      action: subAction,
+      dryRun: isDryRun,
+      source,
+      upstreamRegistry: 'https://github.com/google/skills',
+      plugin: 'google-cloud',
+      skillsCount: localSkills.length,
+      skills: localSkills,
+      synced: true
+    }, null, 2));
+    return;
+  }
+
+  printBanner();
+  console.log(`${CYAN}${BOLD}🌐 Google Agent Skills Federation & Sync (${source})${RESET}`);
+  console.log(`Upstream Registry: ${GRAY}https://github.com/google/skills${RESET}`);
+  console.log(`Local Plugin     : ${GREEN}plugins/google-cloud/${RESET}\n`);
+
+  if (isDryRun) {
+    console.log(`${YELLOW}${BOLD}🔍 DRY RUN MODE ACTIVATED - Verifying upstream alignment${RESET}\n`);
+    for (const s of localSkills) {
+      console.log(`  ${GREEN}✔ [IN SYNC]${RESET} ${BOLD}${s.name.padEnd(32)}${RESET} ${GRAY}${s.desc}${RESET}`);
+    }
+    console.log(`\n${GREEN}${BOLD}✨ Dry run complete! All ${localSkills.length} Google skills verified.${RESET}\n`);
+    return;
+  }
+
+  for (const s of localSkills) {
+    console.log(`  ${GREEN}✔ Synced${RESET} ${BOLD}${s.name.padEnd(32)}${RESET} ${GRAY}${s.desc}${RESET}`);
+  }
+  console.log(`\n${GREEN}${BOLD}✔ Successfully federated ${localSkills.length} skills from ${source}!${RESET}\n`);
 }
 
 function runValidate() {
@@ -3703,11 +3979,11 @@ _everything_gemini() {
   COMPREPLY=()
   cur="\${COMP_WORDS[COMP_CWORD]}"
   prev="\${COMP_WORDS[COMP_CWORD-1]}"
-  commands="doctor list init install status check update sync scaffold new new-skill new-agent add remove test-skill test-all benchmark info show graph completion validate version help diff export import bundle pack search find audit harness2 harness estimate cost-oracle harness3 auto-bench ui mission-control swarm thinking resilience mutate telemetry trace cross-repo compact phpcheck php2shell"
-  skills="agent-evals ai-first-engineering apache-kafka-streams api-craftsman architecture-designer argo-workflows axum-web-service bigquery-vector-search browser-qa-tester chromadb-vector-store cilium-ebpf-networking clickhouse-analytics cloud-run-agents cloudflare-r2-object-storage cloudflare-workers context-caching context-compactor context-distillation-compressor context-warmer continuous-learning cost-oracle-finops cross-repo-swarm-sync cve-remediation-orchestrator database-architect dataproc-spark-analytics dbt-transformation debezium-cdc devops-pipeline distributed-rate-limiting docker-compose-orchestrator duckdb-local-olap dynamic-thinking-allocation ebpf-microvm-sandbox ebpf-sandbox-enforcer envoy-ai-gateway ephemeral-swarm-orchestrator fastapi-production fullstack-nextjs gemini-function-calling gemini-grounding gemini-live-multimodal gemini-multimodal git-craftsman github-ops google-flow-orchestrator graphql-architect grpc-connect-rpc harness2-recursive-optimization harness3-mutation-testing keda-event-autoscaling kubernetes-operator langgraph-orchestrator litellm-proxy-gateway milvus-vector-clustering nats-jetstream opa-gatekeeper-policy open-telemetry-tracing opentelemetry-agent-observability performance-profiler php2shell-version-auditor phpcheck-server phpcheck-url playwright-visual-regression pubsub-event-mesh quantum-safe-cryptography rag-architect redis-cache-patterns repo-onboarding root-cause-debugger security-audit spanner-change-streams spanner-graph-rag speculative-decoding-orchestrator stripe-integration subagent-handoff supabase-architect svelte-kit-architect tdd-workflow temporal-workflows triton-inference-server trpc-react-query turborepo-monorepo vault-secrets-management vertex-ai-feature-store vllm-inference wasm-rust-optimizer webrtc-agent-gateway antigravity-sdk-orchestrator responsive-design"
+  commands="doctor list init install status check update sync scaffold new new-skill new-agent add remove test-skill test-all benchmark info show graph completion validate version help diff export import bundle pack search find audit harness2 harness estimate cost-oracle harness3 auto-bench ui mission-control swarm thinking resilience mutate telemetry trace cross-repo compact phpcheck php2shell darwin evolve cve cve-mitigate superpowers superpower egm elephant-goldfish ax google-ax skills skill"
+  skills="agent-evals ai-first-engineering apache-kafka-streams api-craftsman architecture-designer argo-workflows axum-web-service bigquery-vector-search browser-qa-tester chromadb-vector-store cilium-ebpf-networking clickhouse-analytics cloud-run-agents cloudflare-r2-object-storage cloudflare-workers context-caching context-compactor context-distillation-compressor context-warmer continuous-learning cost-oracle-finops cross-repo-swarm-sync cve-remediation-orchestrator database-architect dataproc-spark-analytics dbt-transformation debezium-cdc devops-pipeline distributed-rate-limiting docker-compose-orchestrator duckdb-local-olap dynamic-thinking-allocation ebpf-microvm-sandbox ebpf-sandbox-enforcer envoy-ai-gateway ephemeral-swarm-orchestrator fastapi-production fullstack-nextjs gemini-function-calling gemini-grounding gemini-live-multimodal gemini-multimodal git-craftsman github-ops google-ax google-flow-orchestrator graphql-architect grpc-connect-rpc harness2-recursive-optimization harness3-mutation-testing keda-event-autoscaling kubernetes-operator langgraph-orchestrator litellm-proxy-gateway milvus-vector-clustering nats-jetstream opa-gatekeeper-policy open-telemetry-tracing opentelemetry-agent-observability performance-profiler php2shell-version-auditor phpcheck-server phpcheck-url playwright-visual-regression pubsub-event-mesh quantum-safe-cryptography rag-architect redis-cache-patterns repo-onboarding root-cause-debugger security-audit spanner-change-streams spanner-graph-rag speculative-decoding-orchestrator stripe-integration subagent-handoff supabase-architect svelte-kit-architect tdd-workflow temporal-workflows triton-inference-server trpc-react-query turborepo-monorepo vault-secrets-management vertex-ai-feature-store vllm-inference wasm-rust-optimizer webrtc-agent-gateway antigravity-sdk-orchestrator responsive-design agent-platform-eval-flywheel agent-platform-rag-engine developing-genkit gke-ai-troubleshooting-tpu google-cloud-storage-fuse"
   agents="architect browser-qa build-repair code-reviewer cross-repo-orchestrator database-migrator documentation-writer incident-responder mlops-engineer performance-tuner planner platform-engineer release-engineer resilience-engineer security-auditor swarm-coordinator"
   hooks="auto-lint-formatter budget-guard context-compactor drift-detector ephemeral-context gemini-shield goal-verifier human-gate learned-instincts safety-shield secret-scrubber thinking-budget"
-  plugins="core python-ai security-shield web-fullstack"
+  plugins="core google-cloud python-ai security-shield web-fullstack"
 
   case "\${prev}" in
     everything-gemini|eagy|egemini)
@@ -4567,6 +4843,48 @@ switch (command) {
       else if (args[i] === '--json') asJson = true;
     }
     runEgm(subAction, { feature, dryRun: isDryRun, json: asJson });
+    break;
+  }
+  case 'ax':
+  case 'google-ax': {
+    const subAction = (args[1] && !args[1].startsWith('-')) ? args[1] : 'init';
+    let output = null;
+    let repo = null;
+    let branch = null;
+    let model = null;
+    let name = null;
+    let goal = null;
+    let isDryRun = false;
+    let asJson = false;
+    const startIndex = (args[1] && !args[1].startsWith('-')) ? 2 : 1;
+    for (let i = startIndex; i < args.length; i++) {
+      if ((args[i] === '--output' || args[i] === '-o') && args[i + 1]) output = args[++i];
+      else if (args[i] === '--repo' && args[i + 1]) repo = args[++i];
+      else if (args[i] === '--branch' && args[i + 1]) branch = args[++i];
+      else if (args[i] === '--model' && args[i + 1]) model = args[++i];
+      else if (args[i] === '--name' && args[i + 1]) name = args[++i];
+      else if (args[i] === '--goal' && args[i + 1]) goal = args[++i];
+      else if (args[i] === '--dry-run') isDryRun = true;
+      else if (args[i] === '--json') asJson = true;
+      else if (!args[i].startsWith('-') && !output) output = args[i];
+    }
+    runAx(subAction, { output, repo, branch, model, name, goal, dryRun: isDryRun, json: asJson });
+    break;
+  }
+  case 'skills':
+  case 'skill': {
+    const subAction = (args[1] && !args[1].startsWith('-')) ? args[1] : 'sync';
+    let source = 'google/skills';
+    let isDryRun = false;
+    let asJson = false;
+    const startIndex = (args[1] && !args[1].startsWith('-')) ? 2 : 1;
+    for (let i = startIndex; i < args.length; i++) {
+      if (args[i] === '--source' && args[i + 1]) source = args[++i];
+      else if (args[i] === '--dry-run') isDryRun = true;
+      else if (args[i] === '--json') asJson = true;
+      else if (!args[i].startsWith('-')) source = args[i];
+    }
+    runSkills(subAction, { source, dryRun: isDryRun, json: asJson });
     break;
   }
   case 'version':

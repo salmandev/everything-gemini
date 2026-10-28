@@ -94,7 +94,7 @@ npx everything-gemini phpcheck --server
 | :--- | :--- | :--- |
 | **`core`** | Minimalists & Speed | Safety-shield hook, TDD skill, repo-onboarding skill, baseline `GEMINI.md`. |
 | **`developer`** *(Recommended)* | Daily Software Engineers | Core + 20 Scoped Subagents (`agents/`), Frontier Skills (Google Elephant-Goldfish Model, Superpowers TDD methodology, Darwin prompt evolution, CVE mitigator, Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
-| **`full`** | Lead Engineers & Archs | Everything: all 102 progressive skills, 20 scoped subagents, full lifecycle hooks suite (13 hooks), 14 MCP blueprints, all plugins, configs, and templates (The 135-Component Landmark Release). |
+| **`full`** | Lead Engineers & Archs | Everything: all 108 progressive skills, 20 scoped subagents, full lifecycle hooks suite (13 hooks), 14 MCP blueprints, all plugins including Google Cloud & Agent Platform, configs, and templates (The 141-Component Landmark Release). |
 
 ### 5. In CI / GitHub Actions Workflows
 
@@ -172,8 +172,8 @@ everything-gemini/
 ├── bin/                          # Zero-dependency harness & scaffolding CLI
 ├── agents/                       # Scoped subagent fleet (Planner, Reviewer, Release Engineer, etc.)
 ├── scripts/                      # Automated installers and harness validators
-├── plugins/                      # Reusable modular plugins (web-fullstack, python-ai, security)
-├── skills/                       # 76 Progressive disclosure skills (74 core + 2 plugins)
+├── plugins/                      # Reusable modular plugins (web-fullstack, python-ai, security-shield, google-cloud)
+├── skills/                       # 108 Progressive disclosure skills (101 core + 7 plugins)
 ├── rules/                        # Contextual guidelines & standards
 ├── hooks/                        # Event-driven lifecycle hooks (GeminiShield, Auto-lint, ThinkingBudget)
 ├── mcp/                          # Production-ready MCP server blueprints
@@ -321,6 +321,12 @@ Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`na
 - **[`continuous-learning`](skills/continuous-learning/SKILL.md)**: Codifies corrections and developer feedback into enduring Knowledge Items.
 - **[`antigravity-sdk-orchestrator`](plugins/python-ai/skills/antigravity-sdk-orchestrator/SKILL.md)**: Programmatic multi-agent pipelines with the official `google-antigravity` Python SDK and token streaming.
 - **[`responsive-design`](plugins/web-fullstack/skills/responsive-design/SKILL.md)**: Fluid typography, mobile-first flex/grid layouts, media queries, and cross-browser accessibility.
+- **[`google-ax`](skills/google-ax/SKILL.md)**: Cluster orchestrator for Google AX (Agent Executor) on Agent Substrate, declarative `ax.io/v1alpha1` manifests (Task, Workspace, Gateway, Model), sub-second suspension/resume, and zero-trust egress gating.
+- **[`agent-platform-eval-flywheel`](plugins/google-cloud/skills/agent-platform-eval-flywheel/SKILL.md)**: Continuous evaluation, Golden Dataset curation, metric tracking (faithfulness, relevance), and regression detection on Vertex AI Agent Platform.
+- **[`agent-platform-rag-engine`](plugins/google-cloud/skills/agent-platform-rag-engine/SKILL.md)**: Enterprise RAG using Vertex AI RagCorpus, hybrid vector/lexical retrieval, and grounded Gemini responses.
+- **[`developing-genkit`](plugins/google-cloud/skills/developing-genkit/SKILL.md)**: Production flows, type-safe tools, and multimodal agents with Google Genkit across JS/TS, Python, Go, and Dart.
+- **[`gke-ai-troubleshooting-tpu`](plugins/google-cloud/skills/gke-ai-troubleshooting-tpu/SKILL.md)**: TPU v4/v5e multi-slice hang analysis, MXLA deadlock detection, and GKE workload remediation.
+- **[`google-cloud-storage-fuse`](plugins/google-cloud/skills/google-cloud-storage-fuse/SKILL.md)**: Cloud Storage FUSE POSIX mounting, SSD caching, and high-throughput model weight loading.
 
 ### 2. Lifecycle Hooks (`hooks/`)
 Hooks run shell scripts at critical lifecycle events with typed JSON contracts on `stdin`/`stdout`:
@@ -546,6 +552,16 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 
 # Ingest production telemetry failure trace into automated regression probe
 ./bin/everything-gemini harness2 ingest-trace failure-trace.json --dir ./tasks/regression
+
+# Synthesize Google AX (Agent Executor) cluster manifests (Task, Workspace, Gateway, Model)
+./bin/everything-gemini ax init --output ./ax-deploy --name cloud-agent --model gemini-3.8-flash
+./bin/everything-gemini ax init --dry-run
+./bin/everything-gemini ax init --json
+
+# Federate and sync official Google skills (google/skills) & plugins
+./bin/everything-gemini skills sync google/skills
+./bin/everything-gemini skills sync --dry-run
+./bin/everything-gemini skills sync --json
 
 # Visualize multi-agent interaction and dependency graph (terminal, Mermaid, or JSON)
 ./bin/everything-gemini graph

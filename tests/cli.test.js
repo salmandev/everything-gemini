@@ -90,8 +90,8 @@ it('should benchmark ecosystem components and output valid JSON with --json', ()
   const res = runCli('benchmark --json');
   assert.strictEqual(res.status, 0);
   const data = JSON.parse(res.stdout);
-  assert.strictEqual(data.totalComponents, 135);
-  assert.strictEqual(data.progressiveSkillsCount, 102);
+  assert.strictEqual(data.totalComponents, 141);
+  assert.strictEqual(data.progressiveSkillsCount, 108);
   assert.strictEqual(data.scopedAgentsCount, 20);
   assert.strictEqual(data.lifecycleHooksCount, 13);
   assert(data.totalRunbookTokens > 15000, 'Expected >15,000 runbook tokens');
@@ -316,7 +316,7 @@ try {
     const dryRes = runCli(`bundle --output "${bundleTarget}" --dry-run`);
     assert.strictEqual(dryRes.status, 0);
     assert.match(dryRes.stdout, /DRY RUN MODE ACTIVATED/);
-    assert.match(dryRes.stdout, /Skills to bundle: 102/);
+    assert.match(dryRes.stdout, /Skills to bundle: 108/);
     assert.strictEqual(fs.existsSync(bundleTarget), false, 'Dry run should not create destination directory');
 
     // JSON Dry-run mode
@@ -324,7 +324,7 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.components.totalCount, 135);
+    assert.strictEqual(dryData.manifest.components.totalCount, 141);
 
     // Live mode
     const liveRes = runCli(`bundle --output "${bundleTarget}"`);
@@ -477,9 +477,9 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.metrics.total_skills, 102);
-    assert.strictEqual(dryData.manifest.metrics.total_subagents, 20);
-    assert.strictEqual(dryData.manifest.metrics.total_hooks, 13);
+    assert.strictEqual(dryData.manifest.metrics.total_skills, 108);
+  assert.strictEqual(dryData.manifest.metrics.total_subagents, 20);
+  assert.strictEqual(dryData.manifest.metrics.total_hooks, 13);
 
     // Live mode
     const liveRes = runCli(`harness2 "${h2Target}"`);
@@ -524,12 +524,12 @@ try {
   });
 
   // Benchmark Components Verification
-  it('should report 135 components, 102 skills, 20 subagents, and 13 hooks in benchmark --json', () => {
+  it('should report 141 components, 108 skills, 20 subagents, and 13 hooks in benchmark --json', () => {
     const res = runCli('benchmark --json');
     assert.strictEqual(res.status, 0);
     const data = JSON.parse(res.stdout);
-    assert.strictEqual(data.totalComponents, 135, 'Total components should be 135');
-    assert.strictEqual(data.progressiveSkillsCount, 102, 'Progressive skills should be 102');
+    assert.strictEqual(data.totalComponents, 141, 'Total components should be 141');
+    assert.strictEqual(data.progressiveSkillsCount, 108, 'Progressive skills should be 108');
     assert.strictEqual(data.scopedAgentsCount, 20, 'Scoped agents should be 20');
     assert.strictEqual(data.lifecycleHooksCount, 13, 'Lifecycle hooks should be 13');
   });
@@ -644,8 +644,8 @@ try {
     const jsonRes = runCli('ui --json');
     assert.strictEqual(jsonRes.status, 0);
     const data = JSON.parse(jsonRes.stdout);
-    assert.strictEqual(data.metrics.totalComponents, 135);
-    assert.strictEqual(data.metrics.progressiveSkills, 102);
+    assert.strictEqual(data.metrics.totalComponents, 141);
+    assert.strictEqual(data.metrics.progressiveSkills, 108);
     assert.ok(data.endpoints.dashboard);
   });
 
@@ -950,6 +950,64 @@ try {
     const infoGoldfish = runCli('info goldfish-reviewer');
     assert.strictEqual(infoGoldfish.status, 0);
     assert.match(infoGoldfish.stdout, /goldfish-reviewer/);
+  });
+
+  // Google AX & Skills Federation Tests
+  it('should support ax init in dry-run and json modes and generate ax.io/v1alpha1 manifests', () => {
+    const axTarget = path.join(tempWorkspace, 'ax-test-target');
+    
+    // Dry-run mode
+    const dryRes = runCli(`ax --output "${axTarget}" --dry-run`);
+    assert.strictEqual(dryRes.status, 0);
+    assert.match(dryRes.stdout, /Google AX \(Agent Executor\) Cluster Manifest Generator/);
+    assert.match(dryRes.stdout, /DRY RUN MODE ACTIVATED/);
+    assert.strictEqual(fs.existsSync(axTarget), false);
+
+    // JSON mode
+    const jsonRes = runCli(`ax init --output "${axTarget}" --name my-test-task --model gemini-3.8-flash --dry-run --json`);
+    assert.strictEqual(jsonRes.status, 0);
+    const jsonData = JSON.parse(jsonRes.stdout);
+    assert.strictEqual(jsonData.dryRun, true);
+    assert.strictEqual(jsonData.taskName, 'my-test-task');
+    assert.strictEqual(jsonData.model, 'gemini-3.8-flash');
+    assert.strictEqual(jsonData.manifests.workspace.kind, 'Workspace');
+    assert.strictEqual(jsonData.manifests.gateway.kind, 'Gateway');
+    assert.strictEqual(jsonData.manifests.task.kind, 'Task');
+
+    // Live mode
+    const liveRes = runCli(`ax init --output "${axTarget}" --name my-test-task`);
+    assert.strictEqual(liveRes.status, 0);
+    assert.strictEqual(fs.existsSync(path.join(axTarget, 'workspace.yaml')), true);
+    assert.strictEqual(fs.existsSync(path.join(axTarget, 'gateway.yaml')), true);
+    assert.strictEqual(fs.existsSync(path.join(axTarget, 'model.yaml')), true);
+    assert.strictEqual(fs.existsSync(path.join(axTarget, 'task.yaml')), true);
+    assert.strictEqual(fs.existsSync(path.join(axTarget, 'bundle.yaml')), true);
+    assert.strictEqual(fs.existsSync(path.join(axTarget, 'README.md')), true);
+  });
+
+  it('should support skills sync google/skills in dry-run and json modes', () => {
+    // Dry-run mode
+    const dryRes = runCli('skills sync --dry-run');
+    assert.strictEqual(dryRes.status, 0);
+    assert.match(dryRes.stdout, /Google Agent Skills Federation & Sync/);
+    assert.match(dryRes.stdout, /agent-platform-eval-flywheel/);
+    assert.match(dryRes.stdout, /developing-genkit/);
+
+    // JSON mode
+    const jsonRes = runCli('skills sync --json');
+    assert.strictEqual(jsonRes.status, 0);
+    const data = JSON.parse(jsonRes.stdout);
+    assert.strictEqual(data.synced, true);
+    assert.strictEqual(data.plugin, 'google-cloud');
+    assert(data.skillsCount >= 5, 'Expected at least 5 Google Cloud skills');
+  });
+
+  it('should display info for google-ax skill and google-cloud plugin skills', () => {
+    for (const skill of ['google-ax', 'developing-genkit', 'agent-platform-eval-flywheel', 'gke-ai-troubleshooting-tpu', 'google-cloud-storage-fuse']) {
+      const res = runCli(`info ${skill}`);
+      assert.strictEqual(res.status, 0);
+      assert.match(res.stdout, new RegExp(skill));
+    }
   });
 
 } finally {
