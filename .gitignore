@@ -11,6 +11,7 @@ __pycache__/
 Thumbs.db
 .vscode/*
 !.vscode/*.json
+.agents/
 
 # Build & Logs
 *.log

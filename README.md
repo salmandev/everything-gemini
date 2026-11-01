@@ -93,8 +93,8 @@ npx everything-gemini phpcheck --server
 | Profile | Target Audience | What Gets Installed |
 | :--- | :--- | :--- |
 | **`core`** | Minimalists & Speed | Safety-shield hook, TDD skill, repo-onboarding skill, baseline `GEMINI.md`. |
-| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 20 Scoped Subagents (`agents/`), Frontier Skills (Google Elephant-Goldfish Model, Superpowers TDD methodology, Darwin prompt evolution, CVE mitigator, Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
-| **`full`** | Lead Engineers & Archs | Everything: all 108 progressive skills, 20 scoped subagents, full lifecycle hooks suite (13 hooks), 14 MCP blueprints, all plugins including Google Cloud & Agent Platform, configs, and templates (The 141-Component Landmark Release). |
+| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 21 Scoped Subagents (`agents/`), Frontier Skills (Gemini 4 Argon 3D & Spatial, Google Elephant-Goldfish Model, Superpowers TDD methodology, Darwin prompt evolution, CVE mitigator, Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack, 3D Games & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
+| **`full`** | Lead Engineers & Archs | Everything: all 113 progressive skills, 21 scoped subagents, full lifecycle hooks suite (13 hooks), 14 MCP blueprints, all plugins including Google Cloud, Agent Platform, and Gemini 4 Argon 3D Suite, configs, and templates (The 147-Component Landmark Release). |
 
 ### 5. In CI / GitHub Actions Workflows
 
@@ -211,6 +211,7 @@ Everything Gemini provides specialized subagent specifications designed for Anti
 | **[`cve-mitigator`](agents/cve-mitigator.md)** | Zero-Day CVE Remediation Specialist | 4-layer defense-in-depth virtual patching, kernel ASLR verification, container least-privilege, and memory inode auditing. |
 | **[`elephant-architect`](agents/elephant-architect.md)** | Deep-Context Technical Architect | Long-horizon design exploration, requirements decomposition, living design documents under the strict "NO CODE" invariant. |
 | **[`goldfish-reviewer`](agents/goldfish-reviewer.md)** | Zero-Memory Adversarial Reviewer | Stateless, unbiased peer review across 4 lenses (Design Critic, Naive Reader, Tech Lead, Codebase Auditor) eliminating sycophancy. |
+| **[`spatial-game-architect`](agents/spatial-game-architect.md)** | 3D Graphics & Game Architect | Three.js, WebGPU, Rapier/Cannon physics, GLSL/TSL shaders, procedural mesh synthesis, and multi-turn visual critique loops with Gemini 4 Argon. |
 
 ### 1. Skills (`skills/`)
 Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`name` and `description`) is placed into the system prompt. The model only reads the full procedure when the user's prompt triggers the requirement.
@@ -327,6 +328,11 @@ Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`na
 - **[`developing-genkit`](plugins/google-cloud/skills/developing-genkit/SKILL.md)**: Production flows, type-safe tools, and multimodal agents with Google Genkit across JS/TS, Python, Go, and Dart.
 - **[`gke-ai-troubleshooting-tpu`](plugins/google-cloud/skills/gke-ai-troubleshooting-tpu/SKILL.md)**: TPU v4/v5e multi-slice hang analysis, MXLA deadlock detection, and GKE workload remediation.
 - **[`google-cloud-storage-fuse`](plugins/google-cloud/skills/google-cloud-storage-fuse/SKILL.md)**: Cloud Storage FUSE POSIX mounting, SSD caching, and high-throughput model weight loading.
+- **[`argon-3d-scene-architect`](skills/argon-3d-scene-architect/SKILL.md)**: High-performance Three.js, WebGL2, and WebGPU 3D scene graph design, PBR materials, soft shadows, bloom/SSAO, and memory lifecycle disposal.
+- **[`argon-3d-game-engine`](skills/argon-3d-game-engine/SKILL.md)**: Playable real-time browser 3D games, decoupled fixed-timestep game loops, Rapier/Cannon physics, player controllers, and game state machines.
+- **[`argon-procedural-asset-generator`](skills/argon-procedural-asset-generator/SKILL.md)**: Algorithmic mesh generation, procedural noise heightmaps, canvas textures, and massive `InstancedMesh` batching without external downloads.
+- **[`argon-visual-critique-loop`](skills/argon-visual-critique-loop/SKILL.md)**: Multi-turn visual perceptual inspection, camera/lighting/shadow evaluation, and autonomous iterative 3D scene refinement.
+- **[`argon-webgpu-pbr`](plugins/gemini-argon-3d/skills/argon-webgpu-pbr/SKILL.md)**: Cutting-edge WebGPU rendering pipelines and Three.js Shading Language (TSL) node materials.
 
 ### 2. Lifecycle Hooks (`hooks/`)
 Hooks run shell scripts at critical lifecycle events with typed JSON contracts on `stdin`/`stdout`:
@@ -412,7 +418,7 @@ Skill Body: Loaded on-demand ONLY when invoked = ~1,500 Tokens (one-time)
 Savings: > 85% Token Reduction & 3x Faster First-Token Latency!
 ```
 
-Run the built-in diagnostic benchmark across all 135 ecosystem components (102 progressive skills, 20 scoped subagents):
+Run the built-in diagnostic benchmark across all 147 ecosystem components (113 progressive skills, 21 scoped subagents, 13 lifecycle hooks):
 ```bash
 ./bin/everything-gemini test-all
 ```

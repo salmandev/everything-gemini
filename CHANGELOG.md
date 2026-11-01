@@ -4,6 +4,26 @@ All notable changes to **Everything Gemini (`everything-gemini`)** will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 2026-11-01
+
+### Added
+- **Gemini 4 Argon 3D Games & Spatial Computing Suite (147 Total Components, 113 Progressive Skills, 21 Scoped Subagents, 13 Lifecycle Hooks)**:
+  - **`spatial-game-architect`** ([`agents/spatial-game-architect.md`](agents/spatial-game-architect.md)): 21st Scoped Subagent specializing in real-time 3D web graphics, browser game loops, procedural asset pipelines, and multi-turn visual critique loops.
+  - **`argon-3d-scene-architect`** ([`skills/argon-3d-scene-architect/SKILL.md`](skills/argon-3d-scene-architect/SKILL.md)): High-performance Three.js, WebGL2, and WebGPU scene graphs, PBR materials, soft shadows, EffectComposer post-processing (Bloom, SSAO), and WebGL context-loss recovery.
+  - **`argon-3d-game-engine`** ([`skills/argon-3d-game-engine/SKILL.md`](skills/argon-3d-game-engine/SKILL.md)): Decoupled fixed-timestep physics loops (60Hz accumulator), player controllers, camera follow rigs, and finite state machines.
+  - **`argon-procedural-asset-generator`** ([`skills/argon-procedural-asset-generator/SKILL.md`](skills/argon-procedural-asset-generator/SKILL.md)): Algorithmic mesh generation, elevation-gradient vertex-colored terrain, procedural pine trees, canvas textures, and massive `InstancedMesh` batching.
+  - **`argon-visual-critique-loop`** ([`skills/argon-visual-critique-loop/SKILL.md`](skills/argon-visual-critique-loop/SKILL.md)): Multi-turn visual critique and autonomous self-refinement evaluating camera framing, lighting contrast, shadow acne, and PBR materials.
+  - **`gemini-argon-3d` Plugin** ([`plugins/gemini-argon-3d/`](plugins/gemini-argon-3d/)): Modular plugin packaging including `argon-webgpu-pbr` skill and spatial engineering standards.
+  - **`argon-3d-spatial` Rules** ([`rules/paradigms/argon-3d-spatial.md`](rules/paradigms/argon-3d-spatial.md)): Strict browser 3D game invariants (60 FPS budget, DPR clamping, draw call ceilings, recursive `.dispose()` teardowns).
+
+## [3.1.0] - 2026-10-28
+
+### Added
+- **Enterprise Agent Substrates: Google AX & Google Cloud Plugin Federation (141 Total Components)**:
+  - **`google-ax`** ([`skills/google-ax/SKILL.md`](skills/google-ax/SKILL.md)): Declarative Kubernetes-native agent substrate orchestration using `ax.io/v1alpha1` CRDs (Task, Workspace, Gateway, Model).
+  - **`plugins/google-cloud/`**: Modular enterprise plugin with `agent-platform-eval-flywheel`, `agent-platform-rag-engine`, `developing-genkit`, `gke-ai-troubleshooting-tpu`, and `google-cloud-storage-fuse`.
+  - **CLI Federation Subcommands**: Added `everything-gemini ax init` and `everything-gemini skills sync google/skills`.
+
 ## [3.0.0] - 2026-10-27
 
 ### Added

@@ -90,9 +90,9 @@ it('should benchmark ecosystem components and output valid JSON with --json', ()
   const res = runCli('benchmark --json');
   assert.strictEqual(res.status, 0);
   const data = JSON.parse(res.stdout);
-  assert.strictEqual(data.totalComponents, 141);
-  assert.strictEqual(data.progressiveSkillsCount, 108);
-  assert.strictEqual(data.scopedAgentsCount, 20);
+  assert.strictEqual(data.totalComponents, 147);
+  assert.strictEqual(data.progressiveSkillsCount, 113);
+  assert.strictEqual(data.scopedAgentsCount, 21);
   assert.strictEqual(data.lifecycleHooksCount, 13);
   assert(data.totalRunbookTokens > 15000, 'Expected >15,000 runbook tokens');
   assert(data.estimatedTokensSavedPerTurn > 8000, 'Expected significant token savings');
@@ -316,7 +316,7 @@ try {
     const dryRes = runCli(`bundle --output "${bundleTarget}" --dry-run`);
     assert.strictEqual(dryRes.status, 0);
     assert.match(dryRes.stdout, /DRY RUN MODE ACTIVATED/);
-    assert.match(dryRes.stdout, /Skills to bundle: 108/);
+    assert.match(dryRes.stdout, /Skills to bundle: 113/);
     assert.strictEqual(fs.existsSync(bundleTarget), false, 'Dry run should not create destination directory');
 
     // JSON Dry-run mode
@@ -324,7 +324,7 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.components.totalCount, 141);
+    assert.strictEqual(dryData.manifest.components.totalCount, 147);
 
     // Live mode
     const liveRes = runCli(`bundle --output "${bundleTarget}"`);
@@ -477,8 +477,8 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.metrics.total_skills, 108);
-  assert.strictEqual(dryData.manifest.metrics.total_subagents, 20);
+    assert.strictEqual(dryData.manifest.metrics.total_skills, 113);
+  assert.strictEqual(dryData.manifest.metrics.total_subagents, 21);
   assert.strictEqual(dryData.manifest.metrics.total_hooks, 13);
 
     // Live mode
@@ -524,13 +524,13 @@ try {
   });
 
   // Benchmark Components Verification
-  it('should report 141 components, 108 skills, 20 subagents, and 13 hooks in benchmark --json', () => {
+  it('should report 147 components, 113 skills, 21 subagents, and 13 hooks in benchmark --json', () => {
     const res = runCli('benchmark --json');
     assert.strictEqual(res.status, 0);
     const data = JSON.parse(res.stdout);
-    assert.strictEqual(data.totalComponents, 141, 'Total components should be 141');
-    assert.strictEqual(data.progressiveSkillsCount, 108, 'Progressive skills should be 108');
-    assert.strictEqual(data.scopedAgentsCount, 20, 'Scoped agents should be 20');
+    assert.strictEqual(data.totalComponents, 147, 'Total components should be 147');
+    assert.strictEqual(data.progressiveSkillsCount, 113, 'Progressive skills should be 113');
+    assert.strictEqual(data.scopedAgentsCount, 21, 'Scoped agents should be 21');
     assert.strictEqual(data.lifecycleHooksCount, 13, 'Lifecycle hooks should be 13');
   });
 
@@ -644,8 +644,8 @@ try {
     const jsonRes = runCli('ui --json');
     assert.strictEqual(jsonRes.status, 0);
     const data = JSON.parse(jsonRes.stdout);
-    assert.strictEqual(data.metrics.totalComponents, 141);
-    assert.strictEqual(data.metrics.progressiveSkills, 108);
+    assert.strictEqual(data.metrics.totalComponents, 147);
+    assert.strictEqual(data.metrics.progressiveSkills, 113);
     assert.ok(data.endpoints.dashboard);
   });
 
@@ -1007,6 +1007,18 @@ try {
       const res = runCli(`info ${skill}`);
       assert.strictEqual(res.status, 0);
       assert.match(res.stdout, new RegExp(skill));
+    }
+  });
+
+  it('should display info for spatial-game-architect subagent and Argon 4 3D skills', () => {
+    const resAgent = runCli('info spatial-game-architect');
+    assert.strictEqual(resAgent.status, 0);
+    assert.match(resAgent.stdout, /Spatial Game Architect/);
+
+    for (const skill of ['argon-3d-scene-architect', 'argon-3d-game-engine', 'argon-procedural-asset-generator', 'argon-visual-critique-loop', 'argon-webgpu-pbr']) {
+      const resSkill = runCli(`info ${skill}`);
+      assert.strictEqual(resSkill.status, 0);
+      assert.match(resSkill.stdout, new RegExp(skill));
     }
   });
 
