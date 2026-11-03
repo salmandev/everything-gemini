@@ -31,3 +31,4 @@ The subagent MUST return a structured markdown Studio Release Report containing:
 - **Department Contributions**: Breakdown of engine architecture, procedural assets, audio synthesis, and visual shaders applied.
 - **Playable Verification**: Exact instructions to launch, control bindings (WASD/touch/gamepad), and objective goals.
 - **Performance & Polish Metrics**: Average FPS, draw call count, memory cleanup certification, and visual critique score.
+

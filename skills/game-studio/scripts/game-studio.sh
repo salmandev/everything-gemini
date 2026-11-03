@@ -176,3 +176,4 @@ EOF
     echo "  Available commands: gdd, plan, audit, init, status"
     ;;
 esac
+

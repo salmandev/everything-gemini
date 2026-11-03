@@ -113,3 +113,4 @@ When building games in Antigravity, delegate according to department expertise:
 | **Audio & SFX** | `game-audio-synthesizer` | Web Audio API procedural sound effects & background music. |
 | **Visual QA** | `argon-visual-critique-loop` | Canvas snapshot critique, shadow bias, PBR material tuning. |
 | **Automated Playtesting** | `browser-qa` | Automated browser navigation, keypress simulation, WebP capture. |
+
