@@ -106,3 +106,4 @@ npx everything-gemini install
 
 ⭐ Star us on GitHub: https://github.com/salmandev/everything-gemini
 ```
+
