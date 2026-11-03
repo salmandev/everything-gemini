@@ -7,7 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [3.2.0] - 2026-11-01
 
 ### Added
-- **Gemini 4 Argon 3D Games & Spatial Computing Suite (147 Total Components, 113 Progressive Skills, 21 Scoped Subagents, 13 Lifecycle Hooks)**:
+- **Gemini Game Studios & Gemini 4 Argon 3D Suite (150 Total Components, 115 Progressive Skills, 22 Scoped Subagents, 13 Lifecycle Hooks)**:
+  - **`game-director`** ([`agents/game-director.md`](agents/game-director.md)): 22nd Scoped Subagent managing multi-department game production, GDD authoring, sprint milestone roadmaps, and gold release certification.
+  - **`game-studio`** ([`skills/game-studio/SKILL.md`](skills/game-studio/SKILL.md)): Complete virtual game studio orchestrator covering creative, engineering, art, audio, and QA tracks.
+  - **`game-audio-synthesizer`** ([`skills/game-audio-synthesizer/SKILL.md`](skills/game-audio-synthesizer/SKILL.md)): Pure Web Audio API procedural sound synthesizer (lasers, jumps, explosions, coin chimes, engine drones, and dynamic ambient music).
   - **`spatial-game-architect`** ([`agents/spatial-game-architect.md`](agents/spatial-game-architect.md)): 21st Scoped Subagent specializing in real-time 3D web graphics, browser game loops, procedural asset pipelines, and multi-turn visual critique loops.
   - **`argon-3d-scene-architect`** ([`skills/argon-3d-scene-architect/SKILL.md`](skills/argon-3d-scene-architect/SKILL.md)): High-performance Three.js, WebGL2, and WebGPU scene graphs, PBR materials, soft shadows, EffectComposer post-processing (Bloom, SSAO), and WebGL context-loss recovery.
   - **`argon-3d-game-engine`** ([`skills/argon-3d-game-engine/SKILL.md`](skills/argon-3d-game-engine/SKILL.md)): Decoupled fixed-timestep physics loops (60Hz accumulator), player controllers, camera follow rigs, and finite state machines.
@@ -15,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - **`argon-visual-critique-loop`** ([`skills/argon-visual-critique-loop/SKILL.md`](skills/argon-visual-critique-loop/SKILL.md)): Multi-turn visual critique and autonomous self-refinement evaluating camera framing, lighting contrast, shadow acne, and PBR materials.
   - **`gemini-argon-3d` Plugin** ([`plugins/gemini-argon-3d/`](plugins/gemini-argon-3d/)): Modular plugin packaging including `argon-webgpu-pbr` skill and spatial engineering standards.
   - **`argon-3d-spatial` Rules** ([`rules/paradigms/argon-3d-spatial.md`](rules/paradigms/argon-3d-spatial.md)): Strict browser 3D game invariants (60 FPS budget, DPR clamping, draw call ceilings, recursive `.dispose()` teardowns).
+  - **Game Studio CLI Orchestration**: Added `everything-gemini game-studio` (`game`, `studio`) supporting `gdd`, `plan`, `audit`, and `init`.
 
 ## [3.1.0] - 2026-10-28
 

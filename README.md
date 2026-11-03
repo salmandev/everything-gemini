@@ -93,8 +93,8 @@ npx everything-gemini phpcheck --server
 | Profile | Target Audience | What Gets Installed |
 | :--- | :--- | :--- |
 | **`core`** | Minimalists & Speed | Safety-shield hook, TDD skill, repo-onboarding skill, baseline `GEMINI.md`. |
-| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 21 Scoped Subagents (`agents/`), Frontier Skills (Gemini 4 Argon 3D & Spatial, Google Elephant-Goldfish Model, Superpowers TDD methodology, Darwin prompt evolution, CVE mitigator, Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack, 3D Games & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
-| **`full`** | Lead Engineers & Archs | Everything: all 113 progressive skills, 21 scoped subagents, full lifecycle hooks suite (13 hooks), 14 MCP blueprints, all plugins including Google Cloud, Agent Platform, and Gemini 4 Argon 3D Suite, configs, and templates (The 147-Component Landmark Release). |
+| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 22 Scoped Subagents (`agents/`), Frontier Skills (Gemini Game Studios, Gemini 4 Argon 3D & Spatial, Google Elephant-Goldfish Model, Superpowers TDD methodology, Darwin prompt evolution, CVE mitigator, Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack, 3D Games & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
+| **`full`** | Lead Engineers & Archs | Everything: all 115 progressive skills, 22 scoped subagents, full lifecycle hooks suite (13 hooks), 14 MCP blueprints, all plugins including Google Cloud, Agent Platform, and Gemini 4 Argon 3D Suite, configs, and templates (The 150-Component Landmark Release). |
 
 ### 5. In CI / GitHub Actions Workflows
 
@@ -212,6 +212,7 @@ Everything Gemini provides specialized subagent specifications designed for Anti
 | **[`elephant-architect`](agents/elephant-architect.md)** | Deep-Context Technical Architect | Long-horizon design exploration, requirements decomposition, living design documents under the strict "NO CODE" invariant. |
 | **[`goldfish-reviewer`](agents/goldfish-reviewer.md)** | Zero-Memory Adversarial Reviewer | Stateless, unbiased peer review across 4 lenses (Design Critic, Naive Reader, Tech Lead, Codebase Auditor) eliminating sycophancy. |
 | **[`spatial-game-architect`](agents/spatial-game-architect.md)** | 3D Graphics & Game Architect | Three.js, WebGPU, Rapier/Cannon physics, GLSL/TSL shaders, procedural mesh synthesis, and multi-turn visual critique loops with Gemini 4 Argon. |
+| **[`game-director`](agents/game-director.md)** | Executive Game Director & Studio Producer | Orchestrates multi-department game development, GDD authorship, core loops, milestone roadmaps, and 60 FPS gold release certification. |
 
 ### 1. Skills (`skills/`)
 Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`name` and `description`) is placed into the system prompt. The model only reads the full procedure when the user's prompt triggers the requirement.
@@ -333,6 +334,8 @@ Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`na
 - **[`argon-procedural-asset-generator`](skills/argon-procedural-asset-generator/SKILL.md)**: Algorithmic mesh generation, procedural noise heightmaps, canvas textures, and massive `InstancedMesh` batching without external downloads.
 - **[`argon-visual-critique-loop`](skills/argon-visual-critique-loop/SKILL.md)**: Multi-turn visual perceptual inspection, camera/lighting/shadow evaluation, and autonomous iterative 3D scene refinement.
 - **[`argon-webgpu-pbr`](plugins/gemini-argon-3d/skills/argon-webgpu-pbr/SKILL.md)**: Cutting-edge WebGPU rendering pipelines and Three.js Shading Language (TSL) node materials.
+- **[`game-studio`](skills/game-studio/SKILL.md)**: Virtual game development studio orchestrator, standardized GDD authoring, core loops, sprint planning, and multi-department review.
+- **[`game-audio-synthesizer`](skills/game-audio-synthesizer/SKILL.md)**: Procedural Web Audio API sound effects (SFX) and dynamic ambient background music with zero external audio assets.
 
 ### 2. Lifecycle Hooks (`hooks/`)
 Hooks run shell scripts at critical lifecycle events with typed JSON contracts on `stdin`/`stdout`:
@@ -418,7 +421,7 @@ Skill Body: Loaded on-demand ONLY when invoked = ~1,500 Tokens (one-time)
 Savings: > 85% Token Reduction & 3x Faster First-Token Latency!
 ```
 
-Run the built-in diagnostic benchmark across all 147 ecosystem components (113 progressive skills, 21 scoped subagents, 13 lifecycle hooks):
+Run the built-in diagnostic benchmark across all 150 ecosystem components (115 progressive skills, 22 scoped subagents, 13 lifecycle hooks):
 ```bash
 ./bin/everything-gemini test-all
 ```

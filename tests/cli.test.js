@@ -90,9 +90,9 @@ it('should benchmark ecosystem components and output valid JSON with --json', ()
   const res = runCli('benchmark --json');
   assert.strictEqual(res.status, 0);
   const data = JSON.parse(res.stdout);
-  assert.strictEqual(data.totalComponents, 147);
-  assert.strictEqual(data.progressiveSkillsCount, 113);
-  assert.strictEqual(data.scopedAgentsCount, 21);
+  assert.strictEqual(data.totalComponents, 150);
+  assert.strictEqual(data.progressiveSkillsCount, 115);
+  assert.strictEqual(data.scopedAgentsCount, 22);
   assert.strictEqual(data.lifecycleHooksCount, 13);
   assert(data.totalRunbookTokens > 15000, 'Expected >15,000 runbook tokens');
   assert(data.estimatedTokensSavedPerTurn > 8000, 'Expected significant token savings');
@@ -316,7 +316,7 @@ try {
     const dryRes = runCli(`bundle --output "${bundleTarget}" --dry-run`);
     assert.strictEqual(dryRes.status, 0);
     assert.match(dryRes.stdout, /DRY RUN MODE ACTIVATED/);
-    assert.match(dryRes.stdout, /Skills to bundle: 113/);
+    assert.match(dryRes.stdout, /Skills to bundle: 115/);
     assert.strictEqual(fs.existsSync(bundleTarget), false, 'Dry run should not create destination directory');
 
     // JSON Dry-run mode
@@ -324,7 +324,7 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.components.totalCount, 147);
+    assert.strictEqual(dryData.manifest.components.totalCount, 150);
 
     // Live mode
     const liveRes = runCli(`bundle --output "${bundleTarget}"`);
@@ -477,8 +477,8 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.metrics.total_skills, 113);
-  assert.strictEqual(dryData.manifest.metrics.total_subagents, 21);
+    assert.strictEqual(dryData.manifest.metrics.total_skills, 115);
+  assert.strictEqual(dryData.manifest.metrics.total_subagents, 22);
   assert.strictEqual(dryData.manifest.metrics.total_hooks, 13);
 
     // Live mode
@@ -524,13 +524,13 @@ try {
   });
 
   // Benchmark Components Verification
-  it('should report 147 components, 113 skills, 21 subagents, and 13 hooks in benchmark --json', () => {
+  it('should report 150 components, 115 skills, 22 subagents, and 13 hooks in benchmark --json', () => {
     const res = runCli('benchmark --json');
     assert.strictEqual(res.status, 0);
     const data = JSON.parse(res.stdout);
-    assert.strictEqual(data.totalComponents, 147, 'Total components should be 147');
-    assert.strictEqual(data.progressiveSkillsCount, 113, 'Progressive skills should be 113');
-    assert.strictEqual(data.scopedAgentsCount, 21, 'Scoped agents should be 21');
+    assert.strictEqual(data.totalComponents, 150, 'Total components should be 150');
+    assert.strictEqual(data.progressiveSkillsCount, 115, 'Progressive skills should be 115');
+    assert.strictEqual(data.scopedAgentsCount, 22, 'Scoped agents should be 22');
     assert.strictEqual(data.lifecycleHooksCount, 13, 'Lifecycle hooks should be 13');
   });
 
@@ -644,8 +644,8 @@ try {
     const jsonRes = runCli('ui --json');
     assert.strictEqual(jsonRes.status, 0);
     const data = JSON.parse(jsonRes.stdout);
-    assert.strictEqual(data.metrics.totalComponents, 147);
-    assert.strictEqual(data.metrics.progressiveSkills, 113);
+    assert.strictEqual(data.metrics.totalComponents, 150);
+    assert.strictEqual(data.metrics.progressiveSkills, 115);
     assert.ok(data.endpoints.dashboard);
   });
 
@@ -1016,6 +1016,40 @@ try {
     assert.match(resAgent.stdout, /Spatial Game Architect/);
 
     for (const skill of ['argon-3d-scene-architect', 'argon-3d-game-engine', 'argon-procedural-asset-generator', 'argon-visual-critique-loop', 'argon-webgpu-pbr']) {
+      const resSkill = runCli(`info ${skill}`);
+      assert.strictEqual(resSkill.status, 0);
+      assert.match(resSkill.stdout, new RegExp(skill));
+    }
+  });
+
+  it('should support game-studio command and display info for game-director and game-studio skills', () => {
+    // game-studio status in JSON mode
+    const resStatus = runCli('game-studio status --json');
+    assert.strictEqual(resStatus.status, 0);
+    const dataStatus = JSON.parse(resStatus.stdout);
+    assert.strictEqual(dataStatus.action, 'status');
+    assert.strictEqual(dataStatus.status, 'ACTIVE');
+
+    // game-studio gdd dry-run
+    const resGdd = runCli('game-studio gdd test-racer --dry-run --json');
+    assert.strictEqual(resGdd.status, 0);
+    const dataGdd = JSON.parse(resGdd.stdout);
+    assert.strictEqual(dataGdd.action, 'gdd');
+    assert.strictEqual(dataGdd.dryRun, true);
+
+    // game-studio plan dry-run
+    const resPlan = runCli('game-studio plan test-racer --dry-run --json');
+    assert.strictEqual(resPlan.status, 0);
+    const dataPlan = JSON.parse(resPlan.stdout);
+    assert.strictEqual(dataPlan.action, 'plan');
+
+    // game-director subagent info
+    const resDirector = runCli('info game-director');
+    assert.strictEqual(resDirector.status, 0);
+    assert.match(resDirector.stdout, /Game Director/);
+
+    // game-studio and game-audio-synthesizer info
+    for (const skill of ['game-studio', 'game-audio-synthesizer']) {
       const resSkill = runCli(`info ${skill}`);
       assert.strictEqual(resSkill.status, 0);
       assert.match(resSkill.stdout, new RegExp(skill));

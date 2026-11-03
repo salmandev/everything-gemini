@@ -93,6 +93,7 @@ function printHelp() {
   console.log(`  ${GREEN}cve, cve-mitigate${RESET} [audit|mitigate] 4-layer zero-day CVE mitigation, ASLR audit & runtime hardening`);
   console.log(`  ${GREEN}superpowers${RESET} [init|check|run]  Enforce agentic spec gathering, Red/Green TDD & subagent orchestration`);
   console.log(`  ${GREEN}egm, elephant-goldfish${RESET} [action]  Google Elephant-Goldfish Model (EGM) Spec-Driven Development`);
+  console.log(`  ${GREEN}game-studio, game${RESET} [gdd|plan|audit] Autonomous Multi-Agent Game Studio for Gemini 4 Argon & Three.js`);
   console.log(`  ${GREEN}ax, google-ax${RESET} [init|export]   Synthesize Google AX (Agent Executor) cluster manifests (Task/Workspace/Gateway/Model)`);
   console.log(`  ${GREEN}skills${RESET} [sync|search|list]     Federate and sync official Google skills (google/skills) & plugins`);
   console.log(`  ${GREEN}import${RESET} <file.json>          Import portable agent configuration bundle into workspace`);
@@ -2970,6 +2971,53 @@ ax resume ${taskName}
   console.log(`${GRAY}Deploy to your cluster with:${RESET} ${CYAN}ax apply -f "${targetDir}"${RESET}\n`);
 }
 
+function runGameStudio(subAction = 'status', options = {}) {
+  const action = subAction || 'status';
+  const title = options.title || 'gemini-game';
+  const isDryRun = !!options.dryRun;
+  const asJson = !!options.json;
+  const startTime = Date.now();
+  const scriptPath = path.join(REPO_ROOT, 'skills', 'game-studio', 'scripts', 'game-studio.sh');
+
+  if (fs.existsSync(scriptPath)) {
+    const jsonFlag = asJson ? ' --json' : '';
+    const dryFlag = isDryRun ? ' --dry-run' : '';
+    const titleFlag = ` --title "${title}"`;
+    try {
+      execSync(`bash "${scriptPath}" "${action}"${titleFlag}${jsonFlag}${dryFlag}`, { stdio: 'inherit', cwd: WORKSPACE_DIR });
+    } catch (err) {
+      process.exitCode = err.status || 1;
+    }
+    return;
+  }
+
+  const result = {
+    studio: 'Everything Gemini Game Studio',
+    action,
+    title,
+    status: isDryRun ? 'DRY_RUN' : 'READY',
+    subagents: ['game-director', 'spatial-game-architect', 'browser-qa'],
+    skills: ['game-studio', 'argon-3d-scene-architect', 'argon-3d-game-engine', 'argon-procedural-asset-generator', 'argon-visual-critique-loop', 'game-audio-synthesizer'],
+    timestamp: new Date().toISOString()
+  };
+
+  if (asJson) {
+    console.log(JSON.stringify(result, null, 2));
+    return;
+  }
+
+  printBanner();
+  console.log(`${BOLD}🎮 Everything Gemini Game Studio Orchestrator${RESET}`);
+  console.log(`Action: ${CYAN}${action}${RESET} | Project: ${BOLD}${title}${RESET} | Mode: ${BOLD}${isDryRun ? 'Dry Run' : 'Active Workspace'}${RESET}\n`);
+  console.log(`${CYAN}${BOLD}✨ VIRTUAL GAME STUDIO DEPARTMENTS:${RESET}`);
+  console.log(`  ${GREEN}✔${RESET} Creative: Game Director & GDD Authorship`);
+  console.log(`  ${GREEN}✔${RESET} Engineering: Spatial Game Architect & Decoupled 60Hz Physics`);
+  console.log(`  ${GREEN}✔${RESET} Art & World: Procedural Mesh Generator & Instanced Shaders`);
+  console.log(`  ${GREEN}✔${RESET} Audio: Web Audio API Procedural SFX & Ambient Synthesizer`);
+  console.log(`  ${GREEN}✔${RESET} QA & Polish: Visual Critique Loop & 60 FPS Profiling\n`);
+  console.log(`${GREEN}${BOLD}✔ Game Studio status: READY (${((Date.now() - startTime) / 1000).toFixed(2)}s).${RESET}\n`);
+}
+
 function runSkills(subAction = 'sync', options = {}) {
   const isDryRun = !!options.dryRun;
   const asJson = !!options.json;
@@ -4869,6 +4917,24 @@ switch (command) {
       else if (!args[i].startsWith('-') && !output) output = args[i];
     }
     runAx(subAction, { output, repo, branch, model, name, goal, dryRun: isDryRun, json: asJson });
+    break;
+  }
+  case 'game-studio':
+  case 'game':
+  case 'studio': {
+    const subAction = (args[1] && !args[1].startsWith('-')) ? args[1] : 'status';
+    let title = 'gemini-game';
+    let isDryRun = false;
+    let asJson = false;
+    const startIndex = (args[1] && !args[1].startsWith('-')) ? 2 : 1;
+    for (let i = startIndex; i < args.length; i++) {
+      if ((args[i] === '-t' || args[i] === '--title') && args[i + 1]) title = args[++i];
+      else if (args[i].startsWith('--title=')) title = args[i].split('=')[1];
+      else if (args[i] === '--dry-run') isDryRun = true;
+      else if (args[i] === '--json') asJson = true;
+      else if (!args[i].startsWith('-') && title === 'gemini-game') title = args[i];
+    }
+    runGameStudio(subAction, { title, dryRun: isDryRun, json: asJson });
     break;
   }
   case 'skills':

@@ -1,24 +1,29 @@
 # Everything Gemini (everything-gemini) v3.2.0 Launch Kit
-## Gemini 4 Argon 3D Games & Spatial Computing Suite (147 Production Components)
+## Gemini Game Studios & Gemini 4 Argon 3D Suite (150 Production Components)
 
 ---
 
 ### 📦 Release Metadata
 - **Release Version**: `v3.2.0`
-- **Release Codename**: *Argon Spatial & 3D Web Games*
+- **Release Codename**: *Gemini Game Studios & Argon Spatial Engine*
 - **Git Commit / Tag**: `v3.2.0`
-- **Total Production Components**: **147** (113 Progressive Skills, 21 Scoped Subagents, 13 Lifecycle Hooks, 6 Curated Plugins)
+- **Total Production Components**: **150** (115 Progressive Skills, 22 Scoped Subagents, 13 Lifecycle Hooks, 6 Curated Plugins)
 - **Primary Milestones**:
-  1. **Gemini 4 Argon 3D & Spatial Engine**:
+  1. **Autonomous Gemini Game Studios (`game-studio`)**:
+     - Complete virtual game development studio pipeline mirroring professional studio tracks (Creative, Engineering, Art & World, Audio, QA).
+     - 22nd Scoped Subagent: [`agents/game-director.md`](../agents/game-director.md) overseeing creative vision, standardized GDDs, sprint milestones, and gold master release gates.
+     - Progressive Skills: [`game-studio`](../skills/game-studio/SKILL.md) and [`game-audio-synthesizer`](../skills/game-audio-synthesizer/SKILL.md) (pure Web Audio API procedural SFX & dynamic ambient music).
+     - CLI Command: `everything-gemini game-studio [gdd|plan|audit|init]`.
+  2. **Gemini 4 Argon 3D & Spatial Engine**:
      - Harnesses Gemini 4 Argon's spatial reasoning, procedural mesh generation, and multi-turn visual critique loops.
      - 21st Scoped Subagent: [`agents/spatial-game-architect.md`](../agents/spatial-game-architect.md).
-  2. **Core 3D Skills Suite**:
+  3. **Core 3D Skills Suite**:
      - [`argon-3d-scene-architect`](../skills/argon-3d-scene-architect/SKILL.md): Three.js/WebGPU scene graphs, ACESFilmic, DPR clamping, and post-processing (UnrealBloom, SSAO).
      - [`argon-3d-game-engine`](../skills/argon-3d-game-engine/SKILL.md): Decoupled fixed-timestep physics (60Hz accumulator) with Rapier/Cannon, kinematic player controllers, and follow cameras.
      - [`argon-procedural-asset-generator`](../skills/argon-procedural-asset-generator/SKILL.md): Algorithmic low-poly meshes, vertex-color elevation terrain, canvas textures, and `InstancedMesh` scattering.
      - [`argon-visual-critique-loop`](../skills/argon-visual-critique-loop/SKILL.md): Automated canvas snapshot perceptual auditing across 6 spatial dimensions.
-  3. **New Plugin**: [`plugins/gemini-argon-3d/`](../plugins/gemini-argon-3d/) featuring [`argon-webgpu-pbr`](../plugins/gemini-argon-3d/skills/argon-webgpu-pbr/SKILL.md) for Three.js Shading Language (TSL) node materials.
-  4. **Spatial Rules**: [`rules/paradigms/argon-3d-spatial.md`](../rules/paradigms/argon-3d-spatial.md) enforcing 60 FPS budgets, zero memory leaks, and context-loss recovery.
+  4. **New Plugin**: [`plugins/gemini-argon-3d/`](../plugins/gemini-argon-3d/) featuring [`argon-webgpu-pbr`](../plugins/gemini-argon-3d/skills/argon-webgpu-pbr/SKILL.md) for Three.js Shading Language (TSL) node materials.
+  5. **Spatial Rules**: [`rules/paradigms/argon-3d-spatial.md`](../rules/paradigms/argon-3d-spatial.md) enforcing 60 FPS budgets, zero memory leaks, and context-loss recovery.
 
 ---
 
@@ -129,3 +134,4 @@ Key additions:
 Check it out on GitHub: https://github.com/salmandev/everything-gemini
 Feedback and contributions are welcome!
 ```
+
