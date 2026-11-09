@@ -94,6 +94,7 @@ function printHelp() {
   console.log(`  ${GREEN}superpowers${RESET} [init|check|run]  Enforce agentic spec gathering, Red/Green TDD & subagent orchestration`);
   console.log(`  ${GREEN}egm, elephant-goldfish${RESET} [action]  Google Elephant-Goldfish Model (EGM) Spec-Driven Development`);
   console.log(`  ${GREEN}game-studio, game${RESET} [gdd|plan|audit] Autonomous Multi-Agent Game Studio for Gemini 4 Argon & Three.js`);
+  console.log(`  ${GREEN}agency, company${RESET} [boardroom|sprint|status] Autonomous Enterprise AI Agency & C-Suite Swarm OS`);
   console.log(`  ${GREEN}ax, google-ax${RESET} [init|export]   Synthesize Google AX (Agent Executor) cluster manifests (Task/Workspace/Gateway/Model)`);
   console.log(`  ${GREEN}skills${RESET} [sync|search|list]     Federate and sync official Google skills (google/skills) & plugins`);
   console.log(`  ${GREEN}import${RESET} <file.json>          Import portable agent configuration bundle into workspace`);
@@ -3018,6 +3019,56 @@ function runGameStudio(subAction = 'status', options = {}) {
   console.log(`${GREEN}${BOLD}✔ Game Studio status: READY (${((Date.now() - startTime) / 1000).toFixed(2)}s).${RESET}\n`);
 }
 
+function runAgency(subAction = 'status', options = {}) {
+  const action = subAction || 'status';
+  const topic = options.topic || 'enterprise-initiative';
+  const isDryRun = !!options.dryRun;
+  const asJson = !!options.json;
+  const startTime = Date.now();
+  const scriptPath = path.join(REPO_ROOT, 'skills', 'agency-boardroom', 'scripts', 'agency-boardroom.sh');
+
+  if (fs.existsSync(scriptPath)) {
+    const jsonFlag = asJson ? ' --json' : '';
+    const dryFlag = isDryRun ? ' --dry-run' : '';
+    const topicFlag = ` --topic "${topic}"`;
+    try {
+      execSync(`bash "${scriptPath}" "${action}"${topicFlag}${jsonFlag}${dryFlag}`, { stdio: 'inherit', cwd: WORKSPACE_DIR });
+    } catch (err) {
+      process.exitCode = err.status || 1;
+    }
+    return;
+  }
+
+  const result = {
+    agency: 'Everything Gemini Enterprise Agency',
+    action,
+    topic,
+    status: isDryRun ? 'DRY_RUN' : 'READY',
+    divisions: {
+      executive: ['ceo', 'cto', 'ciso', 'cpo'],
+      delivery: ['fullstack-developer', 'automation-tester'],
+      operations: ['spatial-game-architect', 'game-director']
+    },
+    skills: ['agency-boardroom', 'agency-sprint-runner'],
+    timestamp: new Date().toISOString()
+  };
+
+  if (asJson) {
+    console.log(JSON.stringify(result, null, 2));
+    return;
+  }
+
+  printBanner();
+  console.log(`${BOLD}🏢 Everything Gemini Enterprise Agency & C-Suite Swarm OS${RESET}`);
+  console.log(`Action: ${CYAN}${action}${RESET} | Topic: ${BOLD}${topic}${RESET} | Mode: ${BOLD}${isDryRun ? 'Dry Run' : 'Active Workspace'}${RESET}\n`);
+  console.log(`${CYAN}${BOLD}✨ VIRTUAL ENTERPRISE DIVISIONS:${RESET}`);
+  console.log(`  ${GREEN}✔${RESET} Executive: CEO, CTO, CISO, CPO`);
+  console.log(`  ${GREEN}✔${RESET} Delivery: Fullstack Developer, Automation Tester`);
+  console.log(`  ${GREEN}✔${RESET} Operations: Spatial Game Architect, Game Director`);
+  console.log(`  ${GREEN}✔${RESET} Governance: Boardroom Debate & Unilateral Security Veto\n`);
+  console.log(`${GREEN}${BOLD}✔ Agency status: OPERATIONAL (${((Date.now() - startTime) / 1000).toFixed(2)}s).${RESET}\n`);
+}
+
 function runSkills(subAction = 'sync', options = {}) {
   const isDryRun = !!options.dryRun;
   const asJson = !!options.json;
@@ -4935,6 +4986,23 @@ switch (command) {
       else if (!args[i].startsWith('-') && title === 'gemini-game') title = args[i];
     }
     runGameStudio(subAction, { title, dryRun: isDryRun, json: asJson });
+    break;
+  }
+  case 'agency':
+  case 'company': {
+    const subAction = (args[1] && !args[1].startsWith('-')) ? args[1] : 'status';
+    let topic = 'enterprise-initiative';
+    let isDryRun = false;
+    let asJson = false;
+    const startIndex = (args[1] && !args[1].startsWith('-')) ? 2 : 1;
+    for (let i = startIndex; i < args.length; i++) {
+      if ((args[i] === '-t' || args[i] === '--topic') && args[i + 1]) topic = args[++i];
+      else if (args[i].startsWith('--topic=')) topic = args[i].split('=')[1];
+      else if (args[i] === '--dry-run') isDryRun = true;
+      else if (args[i] === '--json') asJson = true;
+      else if (!args[i].startsWith('-') && topic === 'enterprise-initiative') topic = args[i];
+    }
+    runAgency(subAction, { topic, dryRun: isDryRun, json: asJson });
     break;
   }
   case 'skills':

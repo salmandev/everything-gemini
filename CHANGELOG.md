@@ -4,6 +4,26 @@ All notable changes to **Everything Gemini (`everything-gemini`)** will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.0] - 2026-11-10
+
+### Added
+- **Autonomous Company OS & C-Suite Boardroom Intelligence (158 Total Components, 117 Progressive Skills, 28 Scoped Subagents, 13 Lifecycle Hooks)**:
+  - **Autonomous C-Suite & Engineering Avatars Fleet** (`agents/`):
+    - **`ceo`** ([`agents/ceo.md`](agents/ceo.md)): Chief Executive Officer setting overarching company vision, OKRs, MVP feature boundaries, executive consensus, and final ship/no-ship authority.
+    - **`cto`** ([`agents/cto.md`](agents/cto.md)): Chief Technology Officer leading system architecture, ADR governance, non-functional requirements, and tech debt containment.
+    - **`ciso`** ([`agents/ciso.md`](agents/ciso.md)): Chief Information Security Officer enforcing zero-trust defense, STRIDE threat modeling, OWASP compliance, and holding unilateral security veto authority.
+    - **`cpo`** ([`agents/cpo.md`](agents/cpo.md)): Chief Product Officer authoring PRDs, user journey maps, feature roadmaps, and BDD acceptance criteria.
+    - **`fullstack-developer`** ([`agents/fullstack-developer.md`](agents/fullstack-developer.md)): Lead Fullstack Engineer implementing production features with clean architecture, surgical diffs, API endpoints, modern frontend UI, and database schemas.
+    - **`automation-tester`** ([`agents/automation-tester.md`](agents/automation-tester.md)): Senior QA Automation Engineer building Playwright E2E suites, visual regression pixel testing, fuzzing suites, and certifying gold release criteria.
+  - **Executive Boardroom & Sprint Runner Skills** (`skills/`):
+    - **`agency-boardroom`** ([`skills/agency-boardroom/SKILL.md`](skills/agency-boardroom/SKILL.md)): Structured boardroom debate and consensus protocol inspired by `agency-agents`. Convenes executive avatars to resolve strategic dilemmas, enforce security/architecture vetoes, and synthesize formal Sprint Directives.
+    - **Boardroom Runner Engine** ([`skills/agency-boardroom/scripts/agency-boardroom.sh`](skills/agency-boardroom/scripts/agency-boardroom.sh)): Automated CLI runner supporting `debate`, `plan`, `veto-check`, and `status` with `--dry-run` and `--json`.
+    - **`agency-sprint-runner`** ([`skills/agency-sprint-runner/SKILL.md`](skills/agency-sprint-runner/SKILL.md)): Four-stage autonomous software delivery pipeline (Spec $\rightarrow$ Build $\rightarrow$ Verify $\rightarrow$ Certify) orchestrating CPO, Fullstack Dev, Automation QA, and C-Suite sign-offs.
+  - **Agency CLI Command (`everything-gemini agency` / `everything-gemini company`)**:
+    - Direct CLI orchestration for executive debates, boardroom status dashboards, and CISO/CTO/CEO veto checks.
+  - **Comprehensive Test Suite & Ecosystem Validation**:
+    - Expanded [`tests/cli.test.js`](tests/cli.test.js) to assert 158 total components, 117 progressive skills, 28 scoped subagents, and 13 hooks across 64 test suites.
+
 ## [3.3.0] - 2026-11-03
 
 ### Added

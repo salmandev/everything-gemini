@@ -93,8 +93,8 @@ npx everything-gemini phpcheck --server
 | Profile | Target Audience | What Gets Installed |
 | :--- | :--- | :--- |
 | **`core`** | Minimalists & Speed | Safety-shield hook, TDD skill, repo-onboarding skill, baseline `GEMINI.md`. |
-| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 22 Scoped Subagents (`agents/`), Frontier Skills (Gemini Game Studios, Gemini 4 Argon 3D & Spatial, Google Elephant-Goldfish Model, Superpowers TDD methodology, Darwin prompt evolution, CVE mitigator, Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack, 3D Games & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
-| **`full`** | Lead Engineers & Archs | Everything: all 115 progressive skills, 22 scoped subagents, full lifecycle hooks suite (13 hooks), 14 MCP blueprints, all plugins including Google Cloud, Agent Platform, and Gemini 4 Argon 3D Suite, configs, and templates (The 150-Component Landmark Release). |
+| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 28 Scoped Subagents (`agents/`), Autonomous Company OS & C-Suite Avatars (`ceo`, `cto`, `ciso`, `cpo`, `fullstack-developer`, `automation-tester`), Frontier Skills (Agency Boardroom, Sprint Runner, Gemini Game Studios, Gemini 4 Argon 3D & Spatial, Google Elephant-Goldfish Model, Superpowers TDD methodology, Darwin prompt evolution, CVE mitigator, Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack, 3D Games & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
+| **`full`** | Lead Engineers & Archs | Everything: all 117 progressive skills, 28 scoped subagents, full lifecycle hooks suite (13 hooks), 14 MCP blueprints, all plugins including Google Cloud, Agent Platform, and Gemini 4 Argon 3D Suite, configs, and templates (The 158-Component Landmark Release). |
 
 ### 5. In CI / GitHub Actions Workflows
 
@@ -158,7 +158,7 @@ flowchart TB
 | **Context Window & Caching** | 200k tokens, ephemeral | **1M-2M+ tokens with Native Prefix Context Caching (~75% cost savings)** |
 | **Memory System** | Flat markdown files | **Knowledge Items (KI)** + **Adaptive Learned Instincts** |
 | **UI & Visual Multimodality** | Standard text output | **Native `browser_subagent` + WebP Screen Video Recording + Vision** |
-| **Subagents Fleet** | Manual sub-prompts | **10 Scoped Subagents (`agents/`) with Formal Handoff Protocol** |
+| **Subagents Fleet** | Manual sub-prompts | **28 Scoped Subagents (`agents/`) with Formal Handoff Protocol & Autonomous C-Suite Avatars** |
 | **Lifecycle Hooks** | Shell scripts | Typed protojson contracts (`PreToolUse`, `PostToolUse`, `PreInvocation`, `PostInvocation`, `Stop`) |
 | **Tool Integration** | Claude tool use | **MCP standard (Stdio & SSE)** with auto-discovery & namespacing |
 
@@ -173,7 +173,7 @@ everything-gemini/
 ├── agents/                       # Scoped subagent fleet (Planner, Reviewer, Release Engineer, etc.)
 ├── scripts/                      # Automated installers and harness validators
 ├── plugins/                      # Reusable modular plugins (web-fullstack, python-ai, security-shield, google-cloud)
-├── skills/                       # 108 Progressive disclosure skills (101 core + 7 plugins)
+├── skills/                       # 117 Progressive disclosure skills (108 core + 9 plugins)
 ├── rules/                        # Contextual guidelines & standards
 ├── hooks/                        # Event-driven lifecycle hooks (GeminiShield, Auto-lint, ThinkingBudget)
 ├── mcp/                          # Production-ready MCP server blueprints
@@ -213,6 +213,12 @@ Everything Gemini provides specialized subagent specifications designed for Anti
 | **[`goldfish-reviewer`](agents/goldfish-reviewer.md)** | Zero-Memory Adversarial Reviewer | Stateless, unbiased peer review across 4 lenses (Design Critic, Naive Reader, Tech Lead, Codebase Auditor) eliminating sycophancy. |
 | **[`spatial-game-architect`](agents/spatial-game-architect.md)** | 3D Graphics & Game Architect | Three.js, WebGPU, Rapier/Cannon physics, GLSL/TSL shaders, procedural mesh synthesis, and multi-turn visual critique loops with Gemini 4 Argon. |
 | **[`game-director`](agents/game-director.md)** | Executive Game Director & Studio Producer | Orchestrates multi-department game development, GDD authorship, core loops, milestone roadmaps, and 60 FPS gold release certification. |
+| **[`ceo`](agents/ceo.md)** | Chief Executive Officer | Strategic vision, OKRs, MVP feature scoping, executive consensus, and final ship/no-ship authority. |
+| **[`cto`](agents/cto.md)** | Chief Technology Officer | Architecture blueprints, ADR governance, tech debt containment, and non-functional requirements. |
+| **[`ciso`](agents/ciso.md)** | Chief Information Security Officer | Zero-trust defense, STRIDE threat modeling, OWASP compliance, and unilateral security veto. |
+| **[`cpo`](agents/cpo.md)** | Chief Product Officer | PRD authorship, user journey mapping, feature prioritization, and BDD acceptance criteria. |
+| **[`fullstack-developer`](agents/fullstack-developer.md)** | Lead Fullstack Engineer | Clean architecture, surgical diffs, backend APIs, modern frontend, and database schema integration. |
+| **[`automation-tester`](agents/automation-tester.md)** | Senior QA Automation Engineer | Playwright E2E suites, visual regression pixel testing, boundary fuzzing, and release certification. |
 
 ### 1. Skills (`skills/`)
 Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`name` and `description`) is placed into the system prompt. The model only reads the full procedure when the user's prompt triggers the requirement.
@@ -336,6 +342,8 @@ Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`na
 - **[`argon-webgpu-pbr`](plugins/gemini-argon-3d/skills/argon-webgpu-pbr/SKILL.md)**: Cutting-edge WebGPU rendering pipelines and Three.js Shading Language (TSL) node materials.
 - **[`game-studio`](skills/game-studio/SKILL.md)**: Virtual game development studio orchestrator, standardized GDD authoring, core loops, sprint planning, and multi-department review.
 - **[`game-audio-synthesizer`](skills/game-audio-synthesizer/SKILL.md)**: Procedural Web Audio API sound effects (SFX) and dynamic ambient background music with zero external audio assets.
+- **[`agency-boardroom`](skills/agency-boardroom/SKILL.md)**: Executive C-Suite boardroom debate & consensus protocol (inspired by `agency-agents`). Convenes CEO, CTO, CISO, and CPO avatars to resolve strategic trade-offs, enforce security/architecture vetoes, and synthesize formal Sprint Directives.
+- **[`agency-sprint-runner`](skills/agency-sprint-runner/SKILL.md)**: Four-stage autonomous software delivery pipeline (Spec $\rightarrow$ Build $\rightarrow$ Verify $\rightarrow$ Certify). Dispatches CPO specs to Fullstack Developer, triggers Automation QA suites, and verifies C-Suite sign-off gates.
 
 ### 2. Lifecycle Hooks (`hooks/`)
 Hooks run shell scripts at critical lifecycle events with typed JSON contracts on `stdin`/`stdout`:
@@ -421,7 +429,7 @@ Skill Body: Loaded on-demand ONLY when invoked = ~1,500 Tokens (one-time)
 Savings: > 85% Token Reduction & 3x Faster First-Token Latency!
 ```
 
-Run the built-in diagnostic benchmark across all 150 ecosystem components (115 progressive skills, 22 scoped subagents, 13 lifecycle hooks):
+Run the built-in diagnostic benchmark across all 158 ecosystem components (117 progressive skills, 28 scoped subagents, 13 lifecycle hooks):
 ```bash
 ./bin/everything-gemini test-all
 ```
@@ -571,6 +579,13 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 ./bin/everything-gemini skills sync google/skills
 ./bin/everything-gemini skills sync --dry-run
 ./bin/everything-gemini skills sync --json
+
+# Autonomous Company OS & C-Suite Boardroom Intelligence (inspired by agency-agents)
+./bin/everything-gemini agency status
+./bin/everything-gemini agency debate "Zero-Trust Enterprise Cloud Platform"
+./bin/everything-gemini agency debate "Multi-tenant SaaS" --dry-run
+./bin/everything-gemini agency veto-check
+./bin/everything-gemini agency status --json
 
 # Visualize multi-agent interaction and dependency graph (terminal, Mermaid, or JSON)
 ./bin/everything-gemini graph
