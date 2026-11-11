@@ -87,3 +87,4 @@ everything-gemini agency status
 # 3. Verify security veto criteria
 everything-gemini agency veto-check
 ```
+

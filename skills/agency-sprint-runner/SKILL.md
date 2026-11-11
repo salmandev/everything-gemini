@@ -85,3 +85,4 @@ Trigger an autonomous sprint in chat:
 > *2. Stage 2 (Build): Fullstack Developer creates the database schema, auth API, and login page.*
 > *3. Stage 3 (Verify): Automation Tester runs E2E tests for successful login and expired token handling.*
 > *4. Stage 4 (Certify): CISO audits for credential hygiene, and CEO approves the release."*
+

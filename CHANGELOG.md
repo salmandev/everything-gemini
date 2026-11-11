@@ -4,6 +4,24 @@ All notable changes to **Everything Gemini (`everything-gemini`)** will be docum
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.0] - 2026-11-11
+
+### Added
+- **Autonomous Company OS Phase 2: Growth, Marketing & Product Design Division (164 Total Components, 119 Progressive Skills, 32 Scoped Subagents, 13 Lifecycle Hooks)**:
+  - **Growth & Design Avatars Fleet** (`agents/`):
+    - **`cmo`** ([`agents/cmo.md`](agents/cmo.md)): Chief Marketing Officer directing brand positioning, competitive differentiators, multi-channel GTM launch campaigns, DevRel distribution, and marketing OKRs.
+    - **`growth-hacker`** ([`agents/growth-hacker.md`](agents/growth-hacker.md)): Growth & Viral Loop Engineer designing product-led growth (PLG) mechanics, AARRR pirate metric funnels, viral sharing incentives ($K$-factor $\ge 1.2$), and scientific A/B test experiments.
+    - **`ui-ux-designer`** ([`agents/ui-ux-designer.md`](agents/ui-ux-designer.md)): Lead Product & Interaction Designer architecting design token systems, responsive wireframe layouts, WCAG AAA accessibility compliance, and 6-state component catalogs.
+    - **`copywriter`** ([`agents/copywriter.md`](agents/copywriter.md)): Senior Technical Copywriter crafting high-converting landing page value propositions, multi-platform social launch packs (LinkedIn, X/Twitter, Reddit), developer documentation quickstarts, and empathetic terminal microcopy.
+  - **Growth Engine & Design System Skills** (`skills/`):
+    - **`agency-growth-engine`** ([`skills/agency-growth-engine/SKILL.md`](skills/agency-growth-engine/SKILL.md)): GTM campaign orchestrator and AARRR conversion pipeline builder with automated runner script ([`skills/agency-growth-engine/scripts/agency-growth.sh`](skills/agency-growth-engine/scripts/agency-growth.sh)).
+    - **`agency-design-system`** ([`skills/agency-design-system/SKILL.md`](skills/agency-design-system/SKILL.md)): Scalable design token architecture, typographic scales, 4px/8px spacing grids, responsive breakpoints, and WCAG 2.1 AA/AAA accessibility matrices.
+  - **Agency CLI Enhancements (`everything-gemini agency`)**:
+    - Added `agency campaign` subcommand for rapid GTM campaign synthesis and growth playbook generation.
+    - Updated `agency status` to report 10 active avatars across Executive, Growth & Design, Delivery, and Operations divisions.
+  - **Comprehensive Test Suite & Ecosystem Validation**:
+    - Updated [`tests/cli.test.js`](tests/cli.test.js) validating all 164 ecosystem components across 64 tests with 0 failures.
+
 ## [3.4.0] - 2026-11-10
 
 ### Added

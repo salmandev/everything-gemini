@@ -93,8 +93,8 @@ npx everything-gemini phpcheck --server
 | Profile | Target Audience | What Gets Installed |
 | :--- | :--- | :--- |
 | **`core`** | Minimalists & Speed | Safety-shield hook, TDD skill, repo-onboarding skill, baseline `GEMINI.md`. |
-| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 28 Scoped Subagents (`agents/`), Autonomous Company OS & C-Suite Avatars (`ceo`, `cto`, `ciso`, `cpo`, `fullstack-developer`, `automation-tester`), Frontier Skills (Agency Boardroom, Sprint Runner, Gemini Game Studios, Gemini 4 Argon 3D & Spatial, Google Elephant-Goldfish Model, Superpowers TDD methodology, Darwin prompt evolution, CVE mitigator, Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack, 3D Games & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
-| **`full`** | Lead Engineers & Archs | Everything: all 117 progressive skills, 28 scoped subagents, full lifecycle hooks suite (13 hooks), 14 MCP blueprints, all plugins including Google Cloud, Agent Platform, and Gemini 4 Argon 3D Suite, configs, and templates (The 158-Component Landmark Release). |
+| **`developer`** *(Recommended)* | Daily Software Engineers | Core + 32 Scoped Subagents (`agents/`), Autonomous Company OS with C-Suite & Growth Avatars (`ceo`, `cto`, `ciso`, `cpo`, `cmo`, `growth-hacker`, `ui-ux-designer`, `copywriter`, `fullstack-developer`, `automation-tester`), Frontier Skills (Agency Boardroom, Sprint Runner, Growth Engine, Design System, Gemini Game Studios, Gemini 4 Argon 3D & Spatial, Google Elephant-Goldfish Model, Superpowers TDD methodology, Darwin prompt evolution, CVE mitigator, Multimodal vision, 2M context caching, Subagent handoff, Security audit), Fullstack, 3D Games & Python AI plugins, Auto-formatter & Goal-verifier hooks. |
+| **`full`** | Lead Engineers & Archs | Everything: all 119 progressive skills, 32 scoped subagents, full lifecycle hooks suite (13 hooks), 14 MCP blueprints, all plugins including Google Cloud, Agent Platform, and Gemini 4 Argon 3D Suite, configs, and templates (The 164-Component Landmark Release). |
 
 ### 5. In CI / GitHub Actions Workflows
 
@@ -158,7 +158,7 @@ flowchart TB
 | **Context Window & Caching** | 200k tokens, ephemeral | **1M-2M+ tokens with Native Prefix Context Caching (~75% cost savings)** |
 | **Memory System** | Flat markdown files | **Knowledge Items (KI)** + **Adaptive Learned Instincts** |
 | **UI & Visual Multimodality** | Standard text output | **Native `browser_subagent` + WebP Screen Video Recording + Vision** |
-| **Subagents Fleet** | Manual sub-prompts | **28 Scoped Subagents (`agents/`) with Formal Handoff Protocol & Autonomous C-Suite Avatars** |
+| **Subagents Fleet** | Manual sub-prompts | **32 Scoped Subagents (`agents/`) with Formal Handoff Protocol & Autonomous Enterprise Avatars** |
 | **Lifecycle Hooks** | Shell scripts | Typed protojson contracts (`PreToolUse`, `PostToolUse`, `PreInvocation`, `PostInvocation`, `Stop`) |
 | **Tool Integration** | Claude tool use | **MCP standard (Stdio & SSE)** with auto-discovery & namespacing |
 
@@ -173,7 +173,7 @@ everything-gemini/
 ├── agents/                       # Scoped subagent fleet (Planner, Reviewer, Release Engineer, etc.)
 ├── scripts/                      # Automated installers and harness validators
 ├── plugins/                      # Reusable modular plugins (web-fullstack, python-ai, security-shield, google-cloud)
-├── skills/                       # 117 Progressive disclosure skills (108 core + 9 plugins)
+├── skills/                       # 119 Progressive disclosure skills (110 core + 9 plugins)
 ├── rules/                        # Contextual guidelines & standards
 ├── hooks/                        # Event-driven lifecycle hooks (GeminiShield, Auto-lint, ThinkingBudget)
 ├── mcp/                          # Production-ready MCP server blueprints
@@ -219,6 +219,10 @@ Everything Gemini provides specialized subagent specifications designed for Anti
 | **[`cpo`](agents/cpo.md)** | Chief Product Officer | PRD authorship, user journey mapping, feature prioritization, and BDD acceptance criteria. |
 | **[`fullstack-developer`](agents/fullstack-developer.md)** | Lead Fullstack Engineer | Clean architecture, surgical diffs, backend APIs, modern frontend, and database schema integration. |
 | **[`automation-tester`](agents/automation-tester.md)** | Senior QA Automation Engineer | Playwright E2E suites, visual regression pixel testing, boundary fuzzing, and release certification. |
+| **[`cmo`](agents/cmo.md)** | Chief Marketing Officer | Brand strategy, GTM launch planning, competitive positioning, DevRel distribution, and marketing OKRs. |
+| **[`growth-hacker`](agents/growth-hacker.md)** | Growth & Viral Loop Engineer | Product-led growth (PLG), AARRR pirate metric funnels, viral loop mechanics, and scientific A/B experiments. |
+| **[`ui-ux-designer`](agents/ui-ux-designer.md)** | Lead Product & Interaction Designer | Design token architecture, responsive wireframes, WCAG AAA accessibility, and component state mapping. |
+| **[`copywriter`](agents/copywriter.md)** | Senior Technical Copywriter | High-converting landing page value propositions, social launch kits, developer documentation, and terminal microcopy. |
 
 ### 1. Skills (`skills/`)
 Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`name` and `description`) is placed into the system prompt. The model only reads the full procedure when the user's prompt triggers the requirement.
@@ -344,6 +348,8 @@ Skills in Antigravity are lazy-loaded runbooks. Only their YAML frontmatter (`na
 - **[`game-audio-synthesizer`](skills/game-audio-synthesizer/SKILL.md)**: Procedural Web Audio API sound effects (SFX) and dynamic ambient background music with zero external audio assets.
 - **[`agency-boardroom`](skills/agency-boardroom/SKILL.md)**: Executive C-Suite boardroom debate & consensus protocol (inspired by `agency-agents`). Convenes CEO, CTO, CISO, and CPO avatars to resolve strategic trade-offs, enforce security/architecture vetoes, and synthesize formal Sprint Directives.
 - **[`agency-sprint-runner`](skills/agency-sprint-runner/SKILL.md)**: Four-stage autonomous software delivery pipeline (Spec $\rightarrow$ Build $\rightarrow$ Verify $\rightarrow$ Certify). Dispatches CPO specs to Fullstack Developer, triggers Automation QA suites, and verifies C-Suite sign-off gates.
+- **[`agency-growth-engine`](skills/agency-growth-engine/SKILL.md)**: GTM campaign and growth funnel orchestrator. Generates AARRR pirate metric funnels, viral loop mechanisms ($K$-factor $\ge 1.2$), and prioritized ICE growth experiment roadmaps.
+- **[`agency-design-system`](skills/agency-design-system/SKILL.md)**: UI design token architecture, typography scales, 4px/8px spacing grids, responsive breakpoints, WCAG AAA accessible color contrast matrices, and 6-state component catalogs.
 
 ### 2. Lifecycle Hooks (`hooks/`)
 Hooks run shell scripts at critical lifecycle events with typed JSON contracts on `stdin`/`stdout`:
@@ -429,7 +435,7 @@ Skill Body: Loaded on-demand ONLY when invoked = ~1,500 Tokens (one-time)
 Savings: > 85% Token Reduction & 3x Faster First-Token Latency!
 ```
 
-Run the built-in diagnostic benchmark across all 158 ecosystem components (117 progressive skills, 28 scoped subagents, 13 lifecycle hooks):
+Run the built-in diagnostic benchmark across all 164 ecosystem components (119 progressive skills, 32 scoped subagents, 13 lifecycle hooks):
 ```bash
 ./bin/everything-gemini test-all
 ```
@@ -584,6 +590,7 @@ The zero-dependency `everything-gemini` CLI manages your configurations effortle
 ./bin/everything-gemini agency status
 ./bin/everything-gemini agency debate "Zero-Trust Enterprise Cloud Platform"
 ./bin/everything-gemini agency debate "Multi-tenant SaaS" --dry-run
+./bin/everything-gemini agency campaign "Developer Growth Loop" --dry-run
 ./bin/everything-gemini agency veto-check
 ./bin/everything-gemini agency status --json
 

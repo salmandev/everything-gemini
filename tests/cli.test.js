@@ -90,9 +90,9 @@ it('should benchmark ecosystem components and output valid JSON with --json', ()
   const res = runCli('benchmark --json');
   assert.strictEqual(res.status, 0);
   const data = JSON.parse(res.stdout);
-  assert.strictEqual(data.totalComponents, 158);
-  assert.strictEqual(data.progressiveSkillsCount, 117);
-  assert.strictEqual(data.scopedAgentsCount, 28);
+  assert.strictEqual(data.totalComponents, 164);
+  assert.strictEqual(data.progressiveSkillsCount, 119);
+  assert.strictEqual(data.scopedAgentsCount, 32);
   assert.strictEqual(data.lifecycleHooksCount, 13);
   assert(data.totalRunbookTokens > 15000, 'Expected >15,000 runbook tokens');
   assert(data.estimatedTokensSavedPerTurn > 8000, 'Expected significant token savings');
@@ -316,7 +316,7 @@ try {
     const dryRes = runCli(`bundle --output "${bundleTarget}" --dry-run`);
     assert.strictEqual(dryRes.status, 0);
     assert.match(dryRes.stdout, /DRY RUN MODE ACTIVATED/);
-    assert.match(dryRes.stdout, /Skills to bundle: 117/);
+    assert.match(dryRes.stdout, /Skills to bundle: 119/);
     assert.strictEqual(fs.existsSync(bundleTarget), false, 'Dry run should not create destination directory');
 
     // JSON Dry-run mode
@@ -324,7 +324,7 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.components.totalCount, 158);
+    assert.strictEqual(dryData.manifest.components.totalCount, 164);
 
     // Live mode
     const liveRes = runCli(`bundle --output "${bundleTarget}"`);
@@ -477,8 +477,8 @@ try {
     assert.strictEqual(jsonRes.status, 0);
     const dryData = JSON.parse(jsonRes.stdout);
     assert.strictEqual(dryData.dryRun, true);
-    assert.strictEqual(dryData.manifest.metrics.total_skills, 117);
-  assert.strictEqual(dryData.manifest.metrics.total_subagents, 28);
+    assert.strictEqual(dryData.manifest.metrics.total_skills, 119);
+  assert.strictEqual(dryData.manifest.metrics.total_subagents, 32);
   assert.strictEqual(dryData.manifest.metrics.total_hooks, 13);
 
     // Live mode
@@ -524,13 +524,13 @@ try {
   });
 
   // Benchmark Components Verification
-  it('should report 158 components, 117 skills, 28 subagents, and 13 hooks in benchmark --json', () => {
+  it('should report 164 components, 119 skills, 32 subagents, and 13 hooks in benchmark --json', () => {
     const res = runCli('benchmark --json');
     assert.strictEqual(res.status, 0);
     const data = JSON.parse(res.stdout);
-    assert.strictEqual(data.totalComponents, 158, 'Total components should be 158');
-    assert.strictEqual(data.progressiveSkillsCount, 117, 'Progressive skills should be 117');
-    assert.strictEqual(data.scopedAgentsCount, 28, 'Scoped agents should be 28');
+    assert.strictEqual(data.totalComponents, 164, 'Total components should be 164');
+    assert.strictEqual(data.progressiveSkillsCount, 119, 'Progressive skills should be 119');
+    assert.strictEqual(data.scopedAgentsCount, 32, 'Scoped agents should be 32');
     assert.strictEqual(data.lifecycleHooksCount, 13, 'Lifecycle hooks should be 13');
   });
 
@@ -644,8 +644,8 @@ try {
     const jsonRes = runCli('ui --json');
     assert.strictEqual(jsonRes.status, 0);
     const data = JSON.parse(jsonRes.stdout);
-    assert.strictEqual(data.metrics.totalComponents, 158);
-    assert.strictEqual(data.metrics.progressiveSkills, 117);
+    assert.strictEqual(data.metrics.totalComponents, 164);
+    assert.strictEqual(data.metrics.progressiveSkills, 119);
     assert.ok(data.endpoints.dashboard);
   });
 
@@ -1064,7 +1064,7 @@ try {
     const dataStatus = JSON.parse(resStatus.stdout);
     assert.strictEqual(dataStatus.action, 'status');
     assert.strictEqual(dataStatus.status, 'OPERATIONAL');
-    assert.strictEqual(dataStatus.active_avatars, 6);
+    assert.strictEqual(dataStatus.active_avatars, 10);
 
     // agency debate dry-run
     const resDebate = runCli('agency debate "AI Fintech API" --dry-run --json');
@@ -1072,6 +1072,13 @@ try {
     const dataDebate = JSON.parse(resDebate.stdout);
     assert.strictEqual(dataDebate.action, 'debate');
     assert.strictEqual(dataDebate.dryRun, true);
+
+    // agency campaign dry-run
+    const resCampaign = runCli('agency campaign "Developer Platform" --dry-run --json');
+    assert.strictEqual(resCampaign.status, 0);
+    const dataCampaign = JSON.parse(resCampaign.stdout);
+    assert.strictEqual(dataCampaign.action, 'campaign');
+    assert.strictEqual(dataCampaign.dryRun, true);
 
     // agency veto-check
     const resVeto = runCli('agency veto-check --json');
@@ -1081,8 +1088,8 @@ try {
     assert.strictEqual(dataVeto.status, 'CLEAR');
     assert.ok(dataVeto.checks.cisoSecurityVeto);
 
-    // C-Suite avatars info verification
-    const avatars = ['ceo', 'cto', 'ciso', 'cpo', 'fullstack-developer', 'automation-tester'];
+    // Enterprise avatars info verification
+    const avatars = ['ceo', 'cto', 'ciso', 'cpo', 'cmo', 'growth-hacker', 'ui-ux-designer', 'copywriter', 'fullstack-developer', 'automation-tester'];
     for (const avatar of avatars) {
       const resAvatar = runCli(`info ${avatar}`);
       assert.strictEqual(resAvatar.status, 0);
@@ -1090,7 +1097,7 @@ try {
     }
 
     // agency skills info verification
-    for (const skill of ['agency-boardroom', 'agency-sprint-runner']) {
+    for (const skill of ['agency-boardroom', 'agency-sprint-runner', 'agency-growth-engine', 'agency-design-system']) {
       const resSkill = runCli(`info ${skill}`);
       assert.strictEqual(resSkill.status, 0);
       assert.match(resSkill.stdout, new RegExp(skill));

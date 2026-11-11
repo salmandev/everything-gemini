@@ -28,3 +28,4 @@ The subagent MUST return a structured markdown Security Audit & Threat Model (`d
 - **Credential & Secret Verification**: Confirmation of zero hardcoded API keys or private tokens in repo history.
 - **Compliance & Privacy Checklist**: Verification of OWASP, RLS policies, and encryption at rest/transit.
 - **CISO Release Authorization**: Explicit Security Clearance ("APPROVED" or "VETOED" with required remediation steps).
+

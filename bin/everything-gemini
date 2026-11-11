@@ -3046,10 +3046,11 @@ function runAgency(subAction = 'status', options = {}) {
     status: isDryRun ? 'DRY_RUN' : 'READY',
     divisions: {
       executive: ['ceo', 'cto', 'ciso', 'cpo'],
+      growth: ['cmo', 'growth-hacker', 'ui-ux-designer', 'copywriter'],
       delivery: ['fullstack-developer', 'automation-tester'],
       operations: ['spatial-game-architect', 'game-director']
     },
-    skills: ['agency-boardroom', 'agency-sprint-runner'],
+    skills: ['agency-boardroom', 'agency-sprint-runner', 'agency-growth-engine', 'agency-design-system'],
     timestamp: new Date().toISOString()
   };
 
@@ -3063,9 +3064,10 @@ function runAgency(subAction = 'status', options = {}) {
   console.log(`Action: ${CYAN}${action}${RESET} | Topic: ${BOLD}${topic}${RESET} | Mode: ${BOLD}${isDryRun ? 'Dry Run' : 'Active Workspace'}${RESET}\n`);
   console.log(`${CYAN}${BOLD}✨ VIRTUAL ENTERPRISE DIVISIONS:${RESET}`);
   console.log(`  ${GREEN}✔${RESET} Executive: CEO, CTO, CISO, CPO`);
+  console.log(`  ${GREEN}✔${RESET} Growth & Marketing: CMO, Growth Hacker, UI/UX Designer, Copywriter`);
   console.log(`  ${GREEN}✔${RESET} Delivery: Fullstack Developer, Automation Tester`);
   console.log(`  ${GREEN}✔${RESET} Operations: Spatial Game Architect, Game Director`);
-  console.log(`  ${GREEN}✔${RESET} Governance: Boardroom Debate & Unilateral Security Veto\n`);
+  console.log(`  ${GREEN}✔${RESET} Governance: Boardroom Debate, GTM Campaigns & Unilateral Security Veto\n`);
   console.log(`${GREEN}${BOLD}✔ Agency status: OPERATIONAL (${((Date.now() - startTime) / 1000).toFixed(2)}s).${RESET}\n`);
 }
 

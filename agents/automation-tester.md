@@ -26,3 +26,4 @@ The subagent MUST return a structured markdown QA Test Report (`docs/qa/TEST_REP
 - **Coverage Breakdown**: Verified user flows, API routes, and visual viewports.
 - **Defects Identified**: Reproduction steps, console logs, and visual screenshots of any discovered issues.
 - **QA Sign-Off**: Formal release greenlight certifying that the build is bug-free and regression-proof.
+

@@ -28,3 +28,4 @@ The subagent MUST return a structured markdown Architecture Specification (`docs
 - **Data Flow & Concurrency Matrix**: State management, idempotency keys, and transaction boundary models.
 - **Technical Debt & Scalability Guardrails**: Maximum latency percentiles (P95/P99), database indexing rules, and caching strategies.
 - **Engineering Approval**: Formal technical sign-off on the implementation plan.
+

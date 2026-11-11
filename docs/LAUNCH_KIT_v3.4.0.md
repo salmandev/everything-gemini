@@ -158,3 +158,4 @@ NPM: https://www.npmjs.com/package/everything-gemini
 
 Feedback and PRs are welcome!
 ```
+

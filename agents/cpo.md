@@ -28,3 +28,4 @@ The subagent MUST return a structured markdown Product Requirements Document (`d
 - **Detailed Functional Requirements**: Input validation rules, UX state transitions, and responsive behavior.
 - **Executable BDD Scenarios**: Formatted `Given-When-Then` test cases for automation engineers.
 - **Product Acceptance Sign-Off**: Formal verification that the feature meets customer expectations.
+

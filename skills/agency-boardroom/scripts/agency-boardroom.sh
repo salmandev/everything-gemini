@@ -105,6 +105,20 @@ EOF
     echo "  ✨ All Executive Veto Gates: PASSED"
     ;;
 
+  campaign)
+    GROWTH_SCRIPT="$(dirname "$0")/../../agency-growth-engine/scripts/agency-growth.sh"
+    if [ -f "$GROWTH_SCRIPT" ]; then
+      DRY_FLAG=""
+      JSON_FLAG=""
+      [ "$IS_DRY_RUN" = true ] && DRY_FLAG="--dry-run"
+      [ "$AS_JSON" = true ] && JSON_FLAG="--json"
+      bash "$GROWTH_SCRIPT" campaign -t "$TOPIC" $DRY_FLAG $JSON_FLAG
+      exit 0
+    fi
+    echo "Growth script not found."
+    exit 1
+    ;;
+
   status|*)
     if [ "$AS_JSON" = true ]; then
       cat <<EOF
@@ -112,13 +126,14 @@ EOF
   "agency": "Everything Gemini Enterprise Agency",
   "action": "status",
   "status": "OPERATIONAL",
-  "active_avatars": 6,
+  "active_avatars": 10,
   "divisions": {
     "executive": ["ceo", "cto", "ciso", "cpo"],
+    "growth": ["cmo", "growth-hacker", "ui-ux-designer", "copywriter"],
     "delivery": ["fullstack-developer", "automation-tester"],
     "operations": ["spatial-game-architect", "game-director"]
   },
-  "skills": ["agency-boardroom", "agency-sprint-runner"],
+  "skills": ["agency-boardroom", "agency-sprint-runner", "agency-growth-engine", "agency-design-system"],
   "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 }
 EOF
@@ -126,7 +141,8 @@ EOF
     fi
     echo "🪐 Everything Gemini Enterprise Agency is operational."
     echo "  Executive Avatars : CEO, CTO, CISO, CPO"
+    echo "  Growth Avatars    : CMO, Growth Hacker, UI/UX Designer, Copywriter"
     echo "  Delivery Avatars  : Fullstack Developer, Automation Tester"
-    echo "  Available Actions : debate, plan, veto-check, status"
+    echo "  Available Actions : debate, plan, veto-check, campaign, status"
     ;;
 esac

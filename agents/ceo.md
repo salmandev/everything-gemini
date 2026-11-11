@@ -28,3 +28,4 @@ The subagent MUST return a structured markdown Executive Strategy Document (`doc
 - **Objectives & Key Results (OKRs)**: Quantifiable metrics for project success.
 - **Boardroom Consensus & Directives**: Specific instructions delegated to CTO, CPO, and CISO.
 - **Ship/No-Ship Decision**: Formal executive go/no-go sign-off.
+

@@ -27,3 +27,4 @@ The subagent MUST return a structured markdown Pull Request Report containing:
 - **Changed Files Manifest**: Breakdown of files created, modified, or migrated.
 - **Verification Evidence**: Test results and type-checking output showing 0 errors.
 - **Handoff to Automation Tester**: Exact URLs, routes, and edge cases ready for end-to-end testing.
+
