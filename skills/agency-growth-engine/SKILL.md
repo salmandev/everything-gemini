@@ -61,3 +61,4 @@ bash skills/agency-growth-engine/scripts/agency-growth.sh status --json
 - **Never Rely on Vanity Metrics**: Focus strictly on Activated Users and Retained Trajectories rather than raw page views.
 - **Instrument Telemetry First**: Ensure analytics events are wired before launching any marketing campaign.
 - **Respect Privacy**: Enforce privacy-first, cookie-less analytics and zero deceptive dark patterns.
+

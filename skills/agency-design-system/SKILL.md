@@ -70,3 +70,4 @@ Every component specification delivered by `ui-ux-designer` must account for all
 | **Loading** | Pulse skeleton or spinner | `aria-busy="true"`, `aria-live="polite"` |
 | **Disabled** | $50\%$ opacity, cursor not-allowed | `aria-disabled="true"`, non-focusable |
 | **Error** | Danger border, helper text below | `aria-invalid="true"`, `aria-describedby` |
+

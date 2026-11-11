@@ -29,3 +29,4 @@ The subagent MUST return a structured markdown Copywriting & Launch Kit Document
 - **Social Launch Pack**: Formatted copy ready for immediate publication on X/Twitter, LinkedIn, and Reddit.
 - **Developer Documentation Introduction**: Punchy 3-paragraph "Quickstart & Why It Matters" primer.
 - **Terminal Microcopy Spec**: Exact wording for CLI success, warning, and actionable error prompts.
+

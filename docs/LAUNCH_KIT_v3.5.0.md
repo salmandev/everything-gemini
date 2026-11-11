@@ -182,3 +182,4 @@ NPM: https://www.npmjs.com/package/everything-gemini
 
 Would love your feedback on the boardroom debate protocol and departmental role boundaries!
 ```
+

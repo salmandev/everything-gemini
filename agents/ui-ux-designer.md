@@ -28,3 +28,4 @@ The subagent MUST return a structured markdown Design System & Wireframe Documen
 - **Component State Catalog**: Explicit behavior for buttons, inputs, modals, cards, and tables.
 - **Accessibility & ARIA Guide**: WCAG 2.1 AA/AAA compliance checklist and keyboard navigation map.
 - **Developer Handoff Notes**: Tailored implementation instructions for frontend CSS/Tailwind engineers.
+

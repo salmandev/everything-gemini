@@ -28,3 +28,4 @@ The subagent MUST return a structured markdown Growth & Viral Strategy Document 
 - **Viral Loop Architecture**: Mechanics, incentives, and UI placement for organic user acquisition.
 - **Experiment Backlog**: Prioritized ICE (Impact, Confidence, Ease) scoring for growth experiments.
 - **Telemetry Event Taxonomy**: Standardized event names and property schemas for analytics tracking.
+
